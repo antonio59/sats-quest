@@ -170,6 +170,32 @@
           </div>
         </div>
 
+        <div class="exam-section">
+          <h2 class="section-title">📝 Exam Mode</h2>
+          <div class="exam-cards-grid">
+            <div class="exam-card" data-exam="reading">
+              <span class="exam-card-emoji">📖</span>
+              <h4>Reading Paper</h4>
+              <p>15 questions · 30 min</p>
+            </div>
+            <div class="exam-card" data-exam="writing">
+              <span class="exam-card-emoji">✍️</span>
+              <h4>Grammar Paper</h4>
+              <p>20 questions · 20 min</p>
+            </div>
+            <div class="exam-card" data-exam="math">
+              <span class="exam-card-emoji">🔢</span>
+              <h4>Maths Paper</h4>
+              <p>20 questions · 30 min</p>
+            </div>
+            <div class="exam-card exam-card-full" data-exam="full">
+              <span class="exam-card-emoji">📝</span>
+              <h4>Full Mock SATs</h4>
+              <p>30 questions · 45 min</p>
+            </div>
+          </div>
+        </div>
+
         <div class="daily-challenge" id="daily-challenge">
           <h3>🎯 Daily Challenge</h3>
           <p>Complete 5 questions today to keep your streak!</p>
@@ -269,10 +295,70 @@
 
       </div>
     </div>
+
+    <!-- ===== EXAM SELECT SCREEN ===== -->
+    <div id="exam-screen" class="screen">
+      <div class="screen-header">
+        <button class="btn-back" data-back>← Back</button>
+        <h2>📝 Exam Mode</h2>
+        <div></div>
+      </div>
+      <div class="exam-body">
+        <p class="exam-intro">Pick a paper to start. You'll be timed — just like the real thing!</p>
+        <div id="exam-list" class="exam-list"></div>
+      </div>
+    </div>
+
+    <!-- ===== EXAM ACTIVE SCREEN ===== -->
+    <div id="exam-active-screen" class="screen">
+      <div class="exam-active-header">
+        <div class="exam-timer" id="exam-timer">⏱️ 30:00</div>
+        <div class="exam-progress-text" id="exam-progress-text">1 / 15</div>
+        <button class="btn-back btn-sm" id="exam-finish-btn">Finish Exam</button>
+      </div>
+      <div id="exam-question-area" class="question-area">
+        <div id="exam-passage" class="question-passage hidden"></div>
+        <div id="exam-question-text" class="question-text"></div>
+        <div id="exam-options" class="question-options"></div>
+      </div>
+      <div class="exam-nav">
+        <button class="btn btn-secondary btn-sm" id="exam-prev-btn">← Back</button>
+        <span id="exam-nav-dots" class="exam-nav-dots"></span>
+        <button class="btn btn-sm" id="exam-next-btn">Next →</button>
+      </div>
+    </div>
+
+    <!-- ===== EXAM RESULTS SCREEN ===== -->
+    <div id="exam-results-screen" class="screen">
+      <div class="screen-header">
+        <div></div>
+        <h2>📋 Results</h2>
+        <div></div>
+      </div>
+      <div class="exam-results-body">
+        <div class="exam-score-circle" id="exam-score-circle">
+          <span id="exam-score-percent" class="exam-score-num">0%</span>
+          <span id="exam-score-mark" class="exam-score-label">needs practice</span>
+        </div>
+        <div class="exam-score-stats">
+          <div class="stat"><span class="stat-value" id="exam-correct-count">0</span><span class="stat-label">✅ Correct</span></div>
+          <div class="stat"><span class="stat-value" id="exam-wrong-count">0</span><span class="stat-label">❌ Incorrect</span></div>
+          <div class="stat"><span class="stat-value" id="exam-time-taken">0m</span><span class="stat-label">⏱️ Time</span></div>
+        </div>
+        <div id="exam-results-breakdown" class="exam-results-breakdown"></div>
+        <div class="exam-results-actions">
+          <button class="btn" id="exam-review-btn">Review Answers 📝</button>
+          <button class="btn btn-secondary" id="exam-retry-btn">Try Again 🔄</button>
+          <button class="btn btn-secondary" id="exam-home-btn">Back Home 🏠</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script src="src/convex-client.js"></script>
   <script src="src/mini-games.js"></script>
+  <script src="src/exam-engine.js"></script>
   <script src="src/questions.js"></script>
   <script src="src/questions-reading.js"></script>
   <script src="src/questions-grammar.js"></script>

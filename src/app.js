@@ -302,6 +302,190 @@
     return 'q_' + Math.abs(h);
   }
 
+  // ===== EXAM MODE =====
+  const examState = { questions: [], answers: [], current: 0, config: null, startTime: 0, timerInterval: null, elapsed: 0 };
+
+  // Exam card clicks on dashboard
+  document.querySelectorAll('.exam-card').forEach(card => {
+    card.addEventListener('click', () => startExamFromDashboard(card.dataset.exam));
+  });
+
+  function startExamFromDashboard(world) {
+    const config = window.ExamEngine.getExamConfig(world);
+    examState.questions = window.ExamEngine.selectQuestions(world, config.questions);
+    examState.answers = new Array(examState.questions.length).fill(-1);
+    examState.current = 0;
+    examState.config = config;
+    examState.startTime = Date.now();
+    examState.elapsed = 0;
+
+    showScreen('game');
+    // Hijack game screen for exam
+    document.getElementById('game-screen').classList.remove('active');
+    document.getElementById('exam-active-screen').classList.add('active');
+
+    showExamQuestion();
+    startExamTimer();
+  }
+
+  function showExamQuestion() {
+    const q = examState.questions[examState.current];
+    if (!q) return;
+
+    document.getElementById('exam-progress-text').textContent = `${examState.current + 1} / ${examState.questions.length}`;
+
+    // Passage
+    const passageEl = document.getElementById('exam-passage');
+    if (q.passage) {
+      passageEl.textContent = q.passage;
+      passageEl.classList.remove('hidden');
+    } else {
+      passageEl.classList.add('hidden');
+    }
+
+    // Question
+    document.getElementById('exam-question-text').textContent = q.question;
+
+    // Options
+    const optionsEl = document.getElementById('exam-options');
+    optionsEl.innerHTML = '';
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = opt;
+      if (examState.answers[examState.current] === i) btn.style.borderColor = 'var(--accent)';
+      btn.addEventListener('click', () => {
+        examState.answers[examState.current] = i;
+        showExamQuestion(); // refresh
+      });
+      optionsEl.appendChild(btn);
+    });
+
+    // Nav dots
+    const dotsEl = document.getElementById('exam-nav-dots');
+    dotsEl.innerHTML = '';
+    examState.questions.forEach((_, i) => {
+      const dot = document.createElement('span');
+      dot.className = 'exam-dot';
+      if (examState.answers[i] >= 0) dot.classList.add('answered');
+      if (i === examState.current) dot.classList.add('current');
+      dot.addEventListener('click', () => { examState.current = i; showExamQuestion(); });
+      dotsEl.appendChild(dot);
+    });
+
+    // Nav buttons
+    document.getElementById('exam-prev-btn').disabled = examState.current === 0;
+    document.getElementById('exam-next-btn').textContent = examState.current === examState.questions.length - 1 ? 'Finish →' : 'Next →';
+  }
+
+  document.getElementById('exam-prev-btn').addEventListener('click', () => {
+    if (examState.current > 0) { examState.current--; showExamQuestion(); }
+  });
+
+  document.getElementById('exam-next-btn').addEventListener('click', () => {
+    if (examState.current < examState.questions.length - 1) { examState.current++; showExamQuestion(); }
+    else finishExam();
+  });
+
+  document.getElementById('exam-finish-btn').addEventListener('click', () => {
+    if (confirm('Finish exam? You can\'t go back after this.')) finishExam();
+  });
+
+  function startExamTimer() {
+    const totalMs = examState.config.timeMinutes * 60 * 1000;
+    examState.timerInterval = setInterval(() => {
+      examState.elapsed = Date.now() - examState.startTime;
+      const remaining = Math.max(0, totalMs - examState.elapsed);
+      const mins = Math.floor(remaining / 60000);
+      const secs = Math.floor((remaining % 60000) / 1000);
+      document.getElementById('exam-timer').textContent = `⏱️ ${mins}:${secs.toString().padStart(2, '0')}`;
+      if (remaining <= 0) {
+        document.getElementById('exam-timer').style.color = 'var(--danger)';
+        finishExam();
+      }
+    }, 1000);
+  }
+
+  function finishExam() {
+    clearInterval(examState.timerInterval);
+    document.getElementById('exam-active-screen').classList.remove('active');
+
+    // Score
+    let correct = 0;
+    examState.questions.forEach((q, i) => {
+      if (examState.answers[i] === q.correctIndex) correct++;
+    });
+    const total = examState.questions.length;
+    const percent = Math.round((correct / total) * 100);
+    const timeMins = Math.round(examState.elapsed / 60000);
+
+    // Award XP
+    const xpEarned = correct * 15;
+    player.xp = (player.xp || 0) + xpEarned;
+    player.level = Math.floor(player.xp / 500) + 1;
+    localStorage.setItem('sq_session', JSON.stringify(player));
+
+    // Results screen
+    document.getElementById('exam-results-screen').classList.add('active');
+    document.getElementById('exam-score-percent').textContent = percent + '%';
+    document.getElementById('exam-correct-count').textContent = correct;
+    document.getElementById('exam-wrong-count').textContent = total - correct;
+    document.getElementById('exam-time-taken').textContent = timeMins + 'm';
+
+    // Score label
+    const label = percent >= 80 ? '🌟 Excellent!' : percent >= 60 ? '👍 Good job!' : percent >= 40 ? '💪 Getting there' : '📝 Keep practicing';
+    document.getElementById('exam-score-mark').textContent = label;
+
+    // Score circle colour
+    const circle = document.getElementById('exam-score-circle');
+    circle.style.borderColor = percent >= 60 ? 'var(--success)' : percent >= 40 ? 'var(--gold)' : 'var(--primary)';
+
+    // Breakdown
+    const breakdown = document.getElementById('exam-results-breakdown');
+    breakdown.innerHTML = examState.questions.map((q, i) => {
+      const wasCorrect = examState.answers[i] === q.correctIndex;
+      const worldIcon = q.world === 'reading' ? '📖' : q.world === 'writing' ? '✍️' : '🔢';
+      return `<div class="exam-result-row">
+        <span class="exam-result-icon">${wasCorrect ? '✅' : '❌'}</span>
+        <span>${worldIcon} ${q.question.substring(0, 60)}${q.question.length > 60 ? '...' : ''}</span>
+      </div>`;
+    }).join('');
+
+    // Buttons
+    document.getElementById('exam-review-btn').onclick = () => {
+      document.getElementById('exam-results-screen').classList.remove('active');
+      showExamReview();
+    };
+    document.getElementById('exam-retry-btn').onclick = () => {
+      document.getElementById('exam-results-screen').classList.remove('active');
+      startExamFromDashboard(Object.keys(window.ExamEngine.getAllExams()).find(k =>
+        window.ExamEngine.getAllExams(k).name === examState.config.name
+      ) || 'reading');
+    };
+    document.getElementById('exam-home-btn').onclick = () => {
+      document.getElementById('exam-results-screen').classList.remove('active');
+      showScreen('dashboard');
+    };
+  }
+
+  function showExamReview() {
+    // Show review screen with exam answers
+    const list = document.getElementById('review-list');
+    list.innerHTML = examState.questions.map((q, i) => {
+      const wasCorrect = examState.answers[i] === q.correctIndex;
+      const worldIcon = q.world === 'reading' ? '📖' : q.world === 'writing' ? '✍️' : '🔢';
+      return `<div class="review-card ${wasCorrect ? 'correct-card' : ''}">
+        <h4>${worldIcon} ${wasCorrect ? '✅' : '❌'} Question ${i + 1}</h4>
+        ${q.passage ? `<p style="font-style:italic;color:var(--text-dim);margin-bottom:6px;">${q.passage.substring(0, 100)}...</p>` : ''}
+        <p><strong>Q:</strong> ${q.question}</p>
+        ${!wasCorrect ? `<p style="color:var(--danger);margin-top:4px;">Your answer: ${q.options[examState.answers[i]] || 'Skipped'}</p>` : ''}
+        <p style="color:var(--success);margin-top:4px;">Correct: ${q.options[q.correctIndex]}</p>
+        <p style="margin-top:6px;font-style:italic;">${q.explanation}</p>
+      </div>`;
+    }).join('');
+    showScreen('review');
+  }
+
   // ===== REPORTS =====
   function renderReports() {
     if (!player) return;

@@ -1,6 +1,6 @@
 // SAT Quest — Convex Client
 window.SATClient = (function() {
-  const CONVEX_URL = 'https://pending-piglet-358.eu-west-1.convex.cloud';
+  const CONVEX_URL = 'https://combative-viper-883.eu-west-1.convex.cloud';
 
   let convexClient = null;
   let convexLoaded = false;
