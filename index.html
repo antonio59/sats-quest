@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>SAT Quest 🚀</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+  <meta name="description" content="SAT prep that feels like a game. 15 minutes a day. Zero boredom.">
+  <meta name="theme-color" content="#0f0e17">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ===== LANDING ===== -->
+    <div id="landing-screen" class="screen active">
+      <div class="landing">
+        <div class="landing-particles" id="particles"></div>
+        <div class="landing-hero">
+          <div class="landing-emoji">🚀</div>
+          <h1>SAT Quest</h1>
+          <p class="landing-tagline">15 minutes a day. Zero boredom. Maximum growth.</p>
+        </div>
+
+        <div class="landing-features">
+          <div class="feature-card">
+            <span class="feature-emoji">📚</span>
+            <h3>3 Worlds</h3>
+            <p>Reading, Writing & Math — each with 10 levels to conquer</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-emoji">⚡</span>
+            <h3>Bite-Sized</h3>
+            <p>Quick challenges you can finish in minutes, not hours</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-emoji">🔥</span>
+            <h3>Build Streaks</h3>
+            <p>Daily practice builds momentum. Don't break the chain!</p>
+          </div>
+        </div>
+
+        <div class="landing-worlds">
+          <h2>Your Worlds</h2>
+          <div class="world-preview">
+            <div class="world-chip reading">📖 Reading</div>
+            <div class="world-chip writing">✍️ Writing</div>
+            <div class="world-chip math">🔢 Math</div>
+          </div>
+        </div>
+
+        <div class="landing-cta">
+          <button class="btn btn-lg" id="landing-start-btn">Start Your Journey 🚀</button>
+          <p class="landing-sub">No email needed — just a name and your birthday</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== AUTH ===== -->
+    <div id="auth-screen" class="screen">
+      <div class="auth-container">
+        <button class="btn-back" id="auth-back" style="align-self:flex-start;margin-bottom:16px;">← Back</button>
+        <div class="auth-hero">
+          <span class="auth-logo">🚀</span>
+          <h1>SAT Quest</h1>
+        </div>
+        <div class="auth-form">
+          <div class="auth-tabs">
+            <button class="auth-tab active" data-tab="login">Log In</button>
+            <button class="auth-tab" data-tab="signup">Sign Up</button>
+          </div>
+          <div id="login-form" class="auth-panel active">
+            <input type="text" id="login-name" placeholder="Your name" maxlength="20" autocomplete="off">
+            <input type="password" id="login-pin" placeholder="Birthday PIN (MMDDYYYY)" maxlength="8" inputmode="numeric">
+            <button class="btn" id="login-btn">Let's Go! 🚀</button>
+          </div>
+          <div id="signup-form" class="auth-panel">
+            <input type="text" id="signup-name" placeholder="Pick a name" maxlength="20" autocomplete="off">
+            <input type="password" id="signup-pin" placeholder="Birthday (MMDDYYYY)" maxlength="8" inputmode="numeric">
+            <p class="auth-hint">Your PIN is your birthday — like 03152012</p>
+            <button class="btn" id="signup-btn">Create Account 🎉</button>
+          </div>
+          <p id="auth-error" class="auth-error"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== DASHBOARD ===== -->
+    <div id="dashboard-screen" class="screen">
+      <header class="dash-header">
+        <div class="dash-user">
+          <span id="dash-avatar" class="avatar-badge">🚀</span>
+          <div>
+            <span id="dash-name" class="user-name">Player</span>
+            <span id="dash-level" class="user-level">Level 1</span>
+          </div>
+        </div>
+        <div class="dash-nav">
+          <button class="nav-btn" data-view="review" title="Review">📝</button>
+          <button class="nav-btn" id="logout-btn" title="Log out">🚪</button>
+        </div>
+      </header>
+
+      <div class="dash-body">
+        <section class="stats-bar">
+          <div class="stat">
+            <span class="stat-value" id="stat-xp">0</span>
+            <span class="stat-label">⚡ XP</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="stat-streak">0</span>
+            <span class="stat-label">🔥 Streak</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="stat-accuracy">0%</span>
+            <span class="stat-label">🎯 Accuracy</span>
+          </div>
+        </section>
+
+        <h2 class="section-title">Choose Your World</h2>
+        <div class="worlds-grid" id="worlds-grid">
+          <div class="world-card reading" data-world="reading">
+            <span class="world-emoji">📖</span>
+            <h3>Reading</h3>
+            <p>Passages, vocab & comprehension</p>
+            <div class="world-progress">
+              <div class="world-bar"><div class="world-bar-fill" id="reading-bar"></div></div>
+              <span id="reading-level">Level 1</span>
+            </div>
+          </div>
+          <div class="world-card writing" data-world="writing">
+            <span class="world-emoji">✍️</span>
+            <h3>Writing</h3>
+            <p>Grammar, style & clarity</p>
+            <div class="world-progress">
+              <div class="world-bar"><div class="world-bar-fill" id="writing-bar"></div></div>
+              <span id="writing-level">Level 1</span>
+            </div>
+          </div>
+          <div class="world-card math" data-world="math">
+            <span class="world-emoji">🔢</span>
+            <h3>Math</h3>
+            <p>Algebra, geometry & data</p>
+            <div class="world-progress">
+              <div class="world-bar"><div class="world-bar-fill" id="math-bar"></div></div>
+              <span id="math-level">Level 1</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="daily-challenge" id="daily-challenge">
+          <h3>🎯 Daily Challenge</h3>
+          <p>Complete 5 questions today to keep your streak!</p>
+          <div class="daily-progress">
+            <div class="daily-dots" id="daily-dots">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </div>
+            <span id="daily-count">0/5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== GAME SCREEN ===== -->
+    <div id="game-screen" class="screen">
+      <div class="game-header">
+        <button id="back-btn" class="btn-back">← Back</button>
+        <div class="game-header-center">
+          <span id="game-world-icon">📖</span>
+          <span id="game-level-label">Level 1</span>
+        </div>
+        <div class="game-header-right">
+          <span id="game-xp" class="xp-badge">⚡ 0</span>
+          <span id="game-streak" class="streak-badge">🔥 0</span>
+        </div>
+      </div>
+
+      <div id="question-area" class="question-area">
+        <div id="question-passage" class="question-passage hidden"></div>
+        <div id="question-text" class="question-text"></div>
+        <div id="question-options" class="question-options"></div>
+      </div>
+
+      <div id="question-feedback" class="question-feedback hidden">
+        <div id="feedback-icon" class="feedback-icon"></div>
+        <p id="feedback-text" class="feedback-text"></p>
+        <p id="feedback-explanation" class="feedback-explanation"></p>
+        <button class="btn" id="next-btn">Next →</button>
+      </div>
+
+      <div class="game-footer">
+        <div id="progress-bar-container">
+          <div id="progress-bar"></div>
+        </div>
+        <p id="game-message" class="game-message"></p>
+      </div>
+    </div>
+
+    <!-- ===== REVIEW SCREEN ===== -->
+    <div id="review-screen" class="screen">
+      <div class="screen-header">
+        <button class="btn-back" data-back>← Back</button>
+        <h2>📝 Recent Answers</h2>
+        <div></div>
+      </div>
+      <div id="review-list" class="review-list"></div>
+    </div>
+  </div>
+
+  <script src="src/convex-client.js"></script>
+  <script src="src/questions.js"></script>
+  <script src="src/app.js"></script>
+</body>
+</html>
