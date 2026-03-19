@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/antonio59/sat-quest.git"
+    "url": "git+https://github.com/antonio59/sats-quest.git"
   },
   "dependencies": {
     "convex": "^1.33.1",
