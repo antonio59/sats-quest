@@ -123,7 +123,7 @@
             <span class="world-emoji">📖</span>
             <h3>Reading</h3>
             <p>Stories, non-fiction Passages, vocab & comprehension inference</p>
-            <div class="world-progress">
+            <div class="world-question-count" id="reading-count"></div>
               <div class="world-bar"><div class="world-bar-fill" id="reading-bar"></div></div>
               <span id="reading-level">Level 1</span>
             </div>
@@ -132,7 +132,7 @@
             <span class="world-emoji">✍️</span>
             <h3>Grammar</h3>
             <p>Punctuation, spelling Grammar, style & clarity grammar</p>
-            <div class="world-progress">
+            <div class="world-question-count" id="reading-count"></div>
               <div class="world-bar"><div class="world-bar-fill" id="writing-bar"></div></div>
               <span id="writing-level">Level 1</span>
             </div>
@@ -141,7 +141,7 @@
             <span class="world-emoji">🔢</span>
             <h3>Maths</h3>
             <p>Number, measures Algebra, geometry & data geometry</p>
-            <div class="world-progress">
+            <div class="world-question-count" id="reading-count"></div>
               <div class="world-bar"><div class="world-bar-fill" id="math-bar"></div></div>
               <span id="math-level">Level 1</span>
             </div>
@@ -231,6 +231,16 @@
   <script src="src/convex-client.js"></script>
   <script src="src/mini-games.js"></script>
   <script src="src/questions.js"></script>
+  <script src="src/questions-reading.js"></script>
+  <script src="src/questions-grammar.js"></script>
+  <script src="src/questions-maths.js"></script>
+  <script>
+    // Merge separate question banks into one
+    if (!window.QuestionBank) window.QuestionBank = { reading: [], writing: [], math: [] };
+    if (window.ReadingQuestions) window.QuestionBank.reading.push(...window.ReadingQuestions);
+    if (window.GrammarQuestions) window.QuestionBank.writing.push(...window.GrammarQuestions);
+    if (window.MathsQuestions) window.QuestionBank.math.push(...window.MathsQuestions);
+  </script>
   <script src="src/app.js"></script>
 </body>
 </html>
