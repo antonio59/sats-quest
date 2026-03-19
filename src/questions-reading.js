@@ -505,8 +505,4 @@ window.ReadingQuestions = [
   },
 
   // 2e - Complex prediction
-  {
-    world: "reading",
-    level: 5,
-    type: "multiple-choice",
-    passage: "The explorers had been walking for hours when the sky began to darken. The temperature dropped suddenly, and a biting wind swept across the plain. Their water supply was running low, and the nearest shelter was still
+];

@@ -642,4 +642,4 @@ window.QuestionBank = {
         "D) Noun"
       ],
       correctIndex: 1,
-      explanation: "Well done! 'Quickly' is an adverb
+      explanation: "Well done! 'Quickly' is an adverb because it describes how the cheetah ran (the
