@@ -505,4 +505,491 @@ window.ReadingQuestions = [
   },
 
   // 2e - Complex prediction
+  {
+    world: "reading",
+    level: 5,
+    type: "multiple-choice",
+    passage: "The spacecraft's engines hummed to life as the countdown reached ten. Commander Chen checked her instruments one last time. Outside the window, Earth hung like a blue marble against the blackness. 'This is it,' she whispered to her crew. 'History begins now.'",
+    question: "What is most likely to happen next in this story?",
+    options: ["A) The mission will be cancelled", "B) The spacecraft will launch into space", "C) The crew will go home", "D) The spacecraft will sink into the ocean"],
+    correctIndex: 1,
+    explanation: "Excellent prediction! The countdown, engines humming, and Commander Chen's words all point to an imminent launch. The phrase 'History begins now' suggests the mission is about to start!",
+    tags: ["predict", "2e", "fiction"]
+  },
+
+  // ============================================
+  // ADDITIONAL QUESTIONS - LEVEL 1
+  // ============================================
+
+  // 2b - Retrieve information
+  {
+    world: "reading",
+    level: 1,
+    type: "multiple-choice",
+    passage: "Butterflies start life as tiny eggs. When they hatch, they become caterpillars. After eating lots of leaves, they form a chrysalis. Finally, they emerge as beautiful butterflies.",
+    question: "What comes after the caterpillar stage?",
+    options: ["A) Butterfly", "B) Egg", "C) Chrysalis", "D) Worm"],
+    correctIndex: 2,
+    explanation: "Well done! The passage tells us the order: egg, caterpillar, chrysalis, then butterfly. The chrysalis comes right after the caterpillar!",
+    tags: ["retrieve", "2b", "non-fiction"]
+  },
+
+  // 2a - Vocabulary
+  {
+    world: "reading",
+    level: 1,
+    type: "multiple-choice",
+    passage: "The children were ecstatic when they heard school was closed due to snow. They cheered and ran outside to build snowmen.",
+    question: "What does 'ecstatic' mean in this passage?",
+    options: ["A) Very sad", "B) Very happy and excited", "C) Very tired", "D) Very angry"],
+    correctIndex: 1,
+    explanation: "Great work! 'Ecstatic' means extremely happy and excited. The children cheering shows just how happy they were!",
+    tags: ["vocabulary", "2a", "fiction"]
+  },
+
+  // 2d - Inference
+  {
+    world: "reading",
+    level: 1,
+    type: "multiple-choice",
+    passage: "Sam's dog wagged its tail and jumped up when Sam picked up the lead. The dog ran to the front door and barked happily.",
+    question: "What does the dog want to do?",
+    options: ["A) Go for a walk", "B) Eat dinner", "C) Go to sleep", "D) Play with a toy"],
+    correctIndex: 0,
+    explanation: "Clever thinking! Dogs wag their tails and get excited when they see a lead because they know it means walk time!",
+    tags: ["inference", "2d", "fiction"]
+  },
+
+  // 2c - Summarise
+  {
+    world: "reading",
+    level: 1,
+    type: "multiple-choice",
+    passage: "Tomatoes need sunlight and water to grow. Farmers plant tomato seeds in warm soil. With care, the seeds sprout and grow into plants that produce juicy red tomatoes.",
+    question: "What is this passage mainly about?",
+    options: ["A) How to cook tomatoes", "B) How tomatoes grow", "C) Where to buy tomatoes", "D) Different types of tomatoes"],
+    correctIndex: 1,
+    explanation: "Perfect! The passage explains what tomatoes need to grow and how they develop from seeds to plants. It's all about growing tomatoes!",
+    tags: ["summarise", "2c", "non-fiction"]
+  },
+
+  // 2e - Predict
+  {
+    world: "reading",
+    level: 1,
+    type: "multiple-choice",
+    passage: "Lily put on her swimming costume and grabbed her towel. Her mum was waiting by the car with a picnic basket. 'Don't forget your goggles!' Mum called.",
+    question: "Where is Lily most likely going?",
+    options: ["A) To the library", "B) To the swimming pool or beach", "C) To school", "D) To the shops"],
+    correctIndex: 1,
+    explanation: "Great prediction! Swimming costume, towel, and goggles are all things you need for swimming. The picnic suggests a fun day out!",
+    tags: ["predict", "2e", "fiction"]
+  },
+
+  // 2g - Word choice
+  {
+    world: "reading",
+    level: 1,
+    type: "multiple-choice",
+    passage: "The baby bird chirped pitifully, its tiny wings trembling. It had fallen from the nest and didn't know how to fly back up.",
+    question: "Why does the author use the word 'pitifully'?",
+    options: ["A) To show the bird is singing happily", "B) To show the bird sounds sad and needs help", "C) To show the bird is angry", "D) To show the bird is loud"],
+    correctIndex: 1,
+    explanation: "Excellent! 'Pitifully' means in a way that makes you feel sorry for someone. The baby bird sounds sad and helpless, which makes us want to help it!",
+    tags: ["word-choice", "2g", "fiction"]
+  },
+
+  // 2h - Comparison
+  {
+    world: "reading",
+    level: 1,
+    type: "multiple-choice",
+    passage: "Apples grow on trees and have a crisp texture. Bananas grow on large plants and have a soft, smooth texture. Both fruits are sweet and healthy to eat.",
+    question: "What is one difference between apples and bananas mentioned in the passage?",
+    options: ["A) Apples are sweet but bananas are not", "B) Apples are crisp but bananas are soft", "C) Both grow on trees", "D) Both are healthy"],
+    correctIndex: 1,
+    explanation: "Well done! The passage tells us apples are crisp while bananas are soft. That's a difference in their texture!",
+    tags: ["compare", "2h", "non-fiction"]
+  },
+
+  // ============================================
+  // ADDITIONAL QUESTIONS - LEVEL 2
+  // ============================================
+
+  // 2b - Retrieve information
+  {
+    world: "reading",
+    level: 2,
+    type: "multiple-choice",
+    passage: "The solar system has eight planets. Mercury is closest to the Sun and is very hot. Neptune is the farthest planet and is extremely cold. Earth is the third planet from the Sun and is just right for life.",
+    question: "Which planet is closest to the Sun?",
+    options: ["A) Earth", "B) Neptune", "C) Mercury", "D) Mars"],
+    correctIndex: 2,
+    explanation: "Excellent! The passage clearly states that Mercury is closest to the Sun. You're great at finding facts!",
+    tags: ["retrieve", "2b", "non-fiction"]
+  },
+
+  // 2a - Vocabulary
+  {
+    world: "reading",
+    level: 2,
+    type: "multiple-choice",
+    passage: "The mountain path was treacherous. Loose stones made it easy to slip, and the steep drop on one side was dangerous. Hikers had to be very careful.",
+    question: "What does 'treacherous' mean in this passage?",
+    options: ["A) Safe and easy", "B) Dangerous and risky", "C) Short and simple", "D) Beautiful and colourful"],
+    correctIndex: 1,
+    explanation: "Super! 'Treacherous' means dangerous or unsafe. The loose stones and steep drop show why the path was risky!",
+    tags: ["vocabulary", "2a", "fiction"]
+  },
+
+  // 2d - Inference
+  {
+    world: "reading",
+    level: 2,
+    type: "multiple-choice",
+    passage: "The shopkeeper frowned as he looked at the broken vase. Jamie's face turned red and he looked down at his shoes. 'I'm really sorry,' he mumbled.",
+    question: "What probably happened?",
+    options: ["A) Jamie bought the vase", "B) Jamie accidentally broke the vase", "C) Jamie cleaned the vase", "D) Jamie painted the vase"],
+    correctIndex: 1,
+    explanation: "Great detective work! Jamie's red face, looking down, and apology all suggest he accidentally broke the vase. Well spotted!",
+    tags: ["inference", "2d", "fiction"]
+  },
+
+  // 2c - Summarise
+  {
+    world: "reading",
+    level: 2,
+    type: "multiple-choice",
+    passage: "Brushing your teeth twice a day helps keep them healthy. It removes food and plaque that can cause cavities. Using fluoride toothpaste makes your teeth stronger. Don't forget to floss too!",
+    question: "What is the main message of this passage?",
+    options: ["A) How to eat healthy food", "B) How to keep your teeth healthy", "C) How to brush your hair", "D) How to use dental floss"],
+    correctIndex: 1,
+    explanation: "Perfect summary! The passage gives different tips about brushing teeth and keeping them healthy. That's the main message!",
+    tags: ["summarise", "2c", "non-fiction"]
+  },
+
+  // 2e - Predict
+  {
+    world: "reading",
+    level: 2,
+    type: "multiple-choice",
+    passage: "The cake was in the oven. Emma set the timer for 30 minutes and started washing the mixing bowls. After a few minutes, she smelled something burning.",
+    question: "What is most likely to happen next?",
+    options: ["A) The cake will be perfect", "B) Emma will take the cake out early", "C) Emma will go to bed", "D) The cake will turn into soup"],
+    correctIndex: 1,
+    explanation: "Smart thinking! If Emma smells burning, she'll probably check the cake and take it out early to stop it burning. Good prediction!",
+    tags: ["predict", "2e", "fiction"]
+  },
+
+  // 2g - Word choice
+  {
+    world: "reading",
+    level: 2,
+    type: "multiple-choice",
+    passage: "The storm raged through the night, pounding the windows with rain and shaking the trees with violent gusts of wind.",
+    question: "Why does the author use the word 'raged'?",
+    options: ["A) To show the storm is gentle", "B) To show the storm is fierce and powerful", "C) To show the storm is quiet", "D) To show the storm is small"],
+    correctIndex: 1,
+    explanation: "Excellent! 'Raged' makes the storm sound angry and violent. It helps us understand how fierce and powerful the storm was!",
+    tags: ["word-choice", "2g", "fiction"]
+  },
+
+  // 2h - Comparison
+  {
+    world: "reading",
+    level: 2,
+    type: "multiple-choice",
+    passage: "Frogs begin life as tadpoles living underwater with gills and tails. As they grow, they develop legs and lungs. Adult frogs can live on land but need to stay near water.",
+    question: "How are tadpoles and adult frogs different?",
+    options: ["A) Tadpoles have lungs, adults have gills", "B) Tadpoles have gills and tails, adults have legs and lungs", "C) They are exactly the same", "D) Tadpoles live on land, adults live in water"],
+    correctIndex: 1,
+    explanation: "Well done! The passage tells us tadpoles have gills and tails while adult frogs have legs and lungs. They change as they grow!",
+    tags: ["compare", "2h", "non-fiction"]
+  },
+
+  // ============================================
+  // ADDITIONAL QUESTIONS - LEVEL 3
+  // ============================================
+
+  // 2b - Retrieve information
+  {
+    world: "reading",
+    level: 3,
+    type: "multiple-choice",
+    passage: "The Amazon rainforest is home to millions of species. It covers over 5 million square kilometres across nine countries. The forest produces about 20% of the world's oxygen. Sadly, large areas are being cut down every year.",
+    question: "How much of the world's oxygen does the Amazon produce?",
+    options: ["A) 5%", "B) 10%", "C) About 20%", "D) 50%"],
+    correctIndex: 2,
+    explanation: "Excellent fact-finding! The passage states that the Amazon produces about 20% of the world's oxygen. That's a lot!",
+    tags: ["retrieve", "2b", "non-fiction"]
+  },
+
+  // 2a - Vocabulary
+  {
+    world: "reading",
+    level: 3,
+    type: "multiple-choice",
+    passage: "The museum exhibit was fascinating. Ancient artefacts from Egypt were displayed in glass cases. Visitors crowded around to see the golden treasures and read about their history.",
+    question: "What does 'artefacts' mean in this passage?",
+    options: ["A) Modern inventions", "B) Objects made by humans in the past", "C) Natural rocks", "D) Food items"],
+    correctIndex: 1,
+    explanation: "Great work! 'Artefacts' are objects made by people in the past, especially things of historical interest. The golden treasures from Egypt are perfect examples!",
+    tags: ["vocabulary", "2a", "non-fiction"]
+  },
+
+  // 2d - Inference
+  {
+    world: "reading",
+    level: 3,
+    type: "multiple-choice",
+    passage: "Mr. Henderson paused at the door of the empty classroom. He touched the desks gently and smiled at the drawings still pinned to the walls. 'Another year done,' he whispered, wiping his eyes.",
+    question: "How does Mr. Henderson probably feel?",
+    options: ["A) Angry at the students", "B) Sad but proud as the school year ends", "C) Excited to clean the room", "D) Tired and bored"],
+    correctIndex: 1,
+    explanation: "Beautiful inference! Mr. Henderson's gentle touch, smile, and wiping his eyes suggest he feels emotional about the year ending. He seems sad but also proud of his students!",
+    tags: ["inference", "2d", "fiction"]
+  },
+
+  // 2c - Summarise
+  {
+    world: "reading",
+    level: 3,
+    type: "multiple-choice",
+    passage: "Regular exercise is important for staying healthy. It strengthens your heart and muscles. Exercise also helps reduce stress and improves sleep. Even 30 minutes of walking each day can make a big difference to your health.",
+    question: "What is the main idea of this passage?",
+    options: ["A) How to sleep better", "B) Why exercise is good for your health", "C) How to walk properly", "D) Why stress is bad"],
+    correctIndex: 1,
+    explanation: "Perfect summary! The passage explains different benefits of exercise for your health. That's the main message!",
+    tags: ["summarise", "2c", "non-fiction"]
+  },
+
+  // 2e - Predict
+  {
+    world: "reading",
+    level: 3,
+    type: "multiple-choice",
+    passage: "The scientist mixed the two chemicals together carefully. Suddenly, the liquid began to bubble and turn bright purple. Smoke rose from the beaker and the temperature gauge climbed rapidly.",
+    question: "What is most likely to happen next?",
+    options: ["A) The liquid will freeze", "B) The scientist will likely step back or take safety precautions", "C) Nothing will happen", "D) The beaker will turn into gold"],
+    correctIndex: 1,
+    explanation: "Great prediction! Bubbling, smoke, and rising temperature suggest a chemical reaction. A careful scientist would step back and make sure everything is safe!",
+    tags: ["predict", "2e", "fiction"]
+  },
+
+  // 2g - Word choice
+  {
+    world: "reading",
+    level: 3,
+    type: "multiple-choice",
+    passage: "The abandoned garden was a wilderness of tangled weeds and overgrown bushes. Once-beautiful flowers choked beneath thorns, and paths had vanished beneath creeping vines.",
+    question: "Why does the author describe the garden as a 'wilderness'?",
+    options: ["A) To show it is neat and tidy", "B) To show it has become wild and overgrown", "C) To show it is small", "D) To show it is in a city"],
+    correctIndex: 1,
+    explanation: "Excellent! 'Wilderness' suggests an untamed, wild place. The tangled weeds, overgrown bushes and choked flowers all show the garden has become wild and uncared for!",
+    tags: ["word-choice", "2g", "fiction"]
+  },
+
+  // 2h - Comparison
+  {
+    world: "reading",
+    level: 3,
+    type: "multiple-choice",
+    passage: "Volcanoes and geysers both involve heat from inside the Earth reaching the surface. However, volcanoes erupt with molten rock called lava, while geysers shoot out hot water and steam.",
+    question: "What is one similarity between volcanoes and geysers?",
+    options: ["A) They both shoot out lava", "B) They both involve Earth's internal heat reaching the surface", "C) They both shoot out water", "D) They are both safe to touch"],
+    correctIndex: 1,
+    explanation: "Well done! The passage tells us both volcanoes and geysers involve heat from inside the Earth coming to the surface. That's what they have in common!",
+    tags: ["compare", "2h", "non-fiction"]
+  },
+
+  // ============================================
+  // ADDITIONAL QUESTIONS - LEVEL 4
+  // ============================================
+
+  // 2b - Retrieve information
+  {
+    world: "reading",
+    level: 4,
+    type: "multiple-choice",
+    passage: "Shakespeare wrote approximately 37 plays and 154 sonnets. His works have been translated into over 100 languages. Hamlet, Romeo and Juliet, and Macbeth are among his most famous tragedies. His comedies include A Midsummer Night's Dream and Twelfth Night.",
+    question: "According to the passage, which of these is one of Shakespeare's tragedies?",
+    options: ["A) A Midsummer Night's Dream", "B) Twelfth Night", "C) Romeo and Juliet", "D) None of the above"],
+    correctIndex: 2,
+    explanation: "Excellent! The passage lists Romeo and Juliet as one of Shakespeare's most famous tragedies. The other two options are mentioned as comedies!",
+    tags: ["retrieve", "2b", "non-fiction"]
+  },
+
+  // 2a - Vocabulary
+  {
+    world: "reading",
+    level: 4,
+    type: "multiple-choice",
+    passage: "The evidence was inconclusive. While some witnesses claimed to see the suspect at the scene, there was no fingerprint or DNA evidence to confirm their statements. The detective knew more investigation was needed.",
+    question: "What does 'inconclusive' mean in this passage?",
+    options: ["A) Completely proven", "B) Not leading to a definite conclusion or result", "C) Very obvious", "D) Completely false"],
+    correctIndex: 1,
+    explanation: "Superb! 'Inconclusive' means not leading to a definite conclusion. The witness statements weren't backed up by physical evidence, so no definite answer could be reached!",
+    tags: ["vocabulary", "2a", "fiction"]
+  },
+
+  // 2d - Inference
+  {
+    world: "reading",
+    level: 4,
+    type: "multiple-choice",
+    passage: "The artist stepped back from her canvas, tilting her head to one side. She mixed a new colour on her palette and made a few small strokes. After several minutes, she smiled and laid down her brush. 'Finished,' she whispered.",
+    question: "What can you infer about the artist's work?",
+    options: ["A) She is unhappy with her painting", "B) She has completed her painting and is satisfied", "C) She has run out of paint", "D) She wants to start over"],
+    correctIndex: 1,
+    explanation: "Brilliant inference! The artist's smile, laying down her brush, and saying 'Finished' all suggest she has completed her work and is pleased with it!",
+    tags: ["inference", "2d", "fiction"]
+  },
+
+  // 2c - Summarise
+  {
+    world: "reading",
+    level: 4,
+    type: "multiple-choice",
+    passage: "Many experts believe reading for pleasure is one of the most important factors in a child's educational success. Children who read regularly develop better vocabulary, imagination, and empathy. They also tend to perform better in all subjects at school. Libraries and book clubs can help encourage this habit.",
+    question: "What is the main argument of this passage?",
+    options: ["A) Libraries are important buildings", "B) Reading for pleasure helps children succeed in education", "C) Children should only read educational books", "D) Book clubs are fun"],
+    correctIndex: 1,
+    explanation: "Excellent summary! The passage argues that reading for pleasure is very important for children's educational success and lists various benefits. That's the main argument!",
+    tags: ["summarise", "2c", "non-fiction"]
+  },
+
+  // 2e - Predict
+  {
+    world: "reading",
+    level: 4,
+    type: "multiple-choice",
+    passage: "The archaeological team carefully brushed away centuries of dirt from the stone doorway. Hieroglyphics became visible, and the lead archaeologist gasped. 'This has never been opened,' she said, her voice trembling with excitement.",
+    question: "What is most likely to happen next?",
+    options: ["A) They will cover it up and leave", "B) They will carefully enter and explore the chamber", "C) They will destroy the doorway", "D) They will go home for lunch"],
+    correctIndex: 1,
+    explanation: "Great prediction! The team's careful work, the discovery of hieroglyphics, and the archaeologist's excitement all suggest they will enter and explore this untouched chamber!",
+    tags: ["predict", "2e", "fiction"]
+  },
+
+  // 2g - Word choice
+  {
+    world: "reading",
+    level: 4,
+    type: "multiple-choice",
+    passage: "Memories flooded back as she walked through the old house. Each creaking floorboard whispered stories of her childhood. The peeling wallpaper held ghosts of laughter and tears from years gone by.",
+    question: "Why does the author describe the floorboards as 'whispering' and the wallpaper as holding 'ghosts'?",
+    options: ["A) To show the house is haunted by real ghosts", "B) To create a sense of memories and the past coming alive in the house", "C) To show the house is scary", "D) To show the house is new"],
+    correctIndex: 1,
+    explanation: "Wonderful analysis! The 'whispering' floorboards and 'ghosts' of memories create a feeling that the past is still present in the house. It's not about real ghosts, but about memories feeling alive!",
+    tags: ["word-choice", "2g", "fiction"]
+  },
+
+  // 2h - Comparison
+  {
+    world: "reading",
+    level: 4,
+    type: "multiple-choice",
+    passage: "Both email and letters allow people to communicate over distances. However, email arrives instantly and costs nothing to send. Letters take days to arrive and require postage. On the other hand, letters can be kept as physical mementos and feel more personal.",
+    question: "According to the passage, what is one advantage of email over letters?",
+    options: ["A) Email can be kept as physical mementos", "B) Email arrives instantly and is free", "C) Email feels more personal", "D) Email takes days to arrive"],
+    correctIndex: 1,
+    explanation: "Excellent comparison! The passage tells us email arrives instantly and costs nothing, while letters take days and need postage. That's an advantage of email!",
+    tags: ["compare", "2h", "non-fiction"]
+  },
+
+  // ============================================
+  // ADDITIONAL QUESTIONS - LEVEL 5
+  // ============================================
+
+  // 2b - Retrieve information
+  {
+    world: "reading",
+    level: 5,
+    type: "multiple-choice",
+    passage: "The Industrial Revolution began in Britain in the late 18th century. It brought mechanisation to agriculture and manufacturing. Steam power and factories transformed how goods were produced. However, it also led to poor working conditions in cities and environmental pollution.",
+    question: "Which of these is mentioned as a negative effect of the Industrial Revolution?",
+    options: ["A) Mechanisation of agriculture", "B) Steam power", "C) Poor working conditions and pollution", "D) Factory production"],
+    correctIndex: 2,
+    explanation: "Excellent! The passage mentions poor working conditions and environmental pollution as negative effects. The other options are described as transformations or changes, not negative effects!",
+    tags: ["retrieve", "2b", "non-fiction", "history"]
+  },
+
+  // 2a - Vocabulary
+  {
+    world: "reading",
+    level: 5,
+    type: "multiple-choice",
+    passage: "The CEO's decision to cancel the project was contentious. Some board members praised her for cutting losses, while others argued they should have invested more to make it succeed. The meeting ended with heated debate.",
+    question: "What does 'contentious' mean in this passage?",
+    options: ["A) Popular and widely approved", "B) Causing disagreement and argument", "C) Boring and uninteresting", "D) Quick and efficient"],
+    correctIndex: 1,
+    explanation: "Superb! 'Contentious' means causing disagreement or argument. The board members had opposite views, and the meeting ended with heated debate - showing the decision was definitely contentious!",
+    tags: ["vocabulary", "2a", "non-fiction"]
+  },
+
+  // 2d - Inference
+  {
+    world: "reading",
+    level: 5,
+    type: "multiple-choice",
+    passage: "The old professor shuffled into the lecture hall, his briefcase overflowing with papers. Students chatted loudly until he placed his battered hat on the desk. Then, as if by magic, silence fell. He looked up, his eyes twinkling, and began to speak.",
+    question: "What can you infer about the professor?",
+    options: ["A) Students dislike him", "B) He is respected and students want to hear him speak", "C) He is a new teacher", "D) Students are afraid of his hat"],
+    correctIndex: 1,
+    explanation: "Outstanding inference! The students falling silent when he arrives, and his twinkling eyes, suggest he is respected and students are eager to listen. His presence commands attention!",
+    tags: ["inference", "2d", "fiction"]
+  },
+
+  // 2c - Summarise
+  {
+    world: "reading",
+    level: 5,
+    type: "multiple-choice",
+    passage: "Social media has transformed how people communicate and share information. It allows instant connection across the globe and gives everyone a platform to express opinions. However, critics argue it spreads misinformation, reduces face-to-face interaction, and can harm mental health through unrealistic comparisons. Governments and platforms continue to debate how to balance free expression with regulation.",
+    question: "What is the main argument of this passage?",
+    options: ["A) Social media should be banned", "B) Social media has both benefits and drawbacks, creating ongoing debates", "C) Social media is only harmful", "D) Social media is perfect"],
+    correctIndex: 1,
+    explanation: "Excellent summary! The passage presents both the positive aspects (instant connection, expression) and negative aspects (misinformation, mental health) of social media, and notes ongoing debates about regulation!",
+    tags: ["summarise", "2c", "non-fiction"]
+  },
+
+  // 2e - Predict
+  {
+    world: "reading",
+    level: 5,
+    type: "multiple-choice",
+    passage: "The jury had deliberated for three days. When they finally filed back into the courtroom, their faces were unreadable. The defendant gripped the table, knuckles white. The foreperson stood and cleared her throat.",
+    question: "What is most likely to happen next?",
+    options: ["A) The jury will ask for more time", "B) The foreperson will announce the verdict", "C) The defendant will leave", "D) The judge will dismiss the case"],
+    correctIndex: 1,
+    explanation: "Great prediction! After three days of deliberation, the jury returning to the courtroom with the foreperson standing to speak strongly suggests they are ready to announce their verdict!",
+    tags: ["predict", "2e", "fiction"]
+  },
+
+  // 2g - Word choice
+  {
+    world: "reading",
+    level: 5,
+    type: "multiple-choice",
+    passage: "Hope withered in his chest like a flower denied water. Each rejection letter was another nail in the coffin of his dreams. The future stretched before him, grey and empty as a winter sky.",
+    question: "How does the author's word choice create meaning in this passage?",
+    options: ["A) It creates a happy, optimistic mood", "B) It uses metaphors of death and decay to show despair and lost hope", "C) It describes a beautiful garden", "D) It shows excitement about the future"],
+    correctIndex: 1,
+    explanation: "Brilliant analysis! Words like 'withered', 'nail in the coffin', and 'grey and empty' all use metaphors of death, decay, and barrenness to powerfully convey the character's despair and crushed dreams!",
+    tags: ["word-choice", "2g", "fiction"]
+  },
+
+  // 2h - Comparison
+  {
+    world: "reading",
+    level: 5,
+    type: "multiple-choice",
+    passage: "Text A: The rain fell steadily, nourishing the parched earth. Farmers smiled as their crops drank in the precious water. Gardens burst into colour overnight. Text B: Rain lashed against the windows, driven by howling winds. Streets became rivers. People huddled indoors, praying for the storm to pass.",
+    question: "How does Text A present rain differently from Text B?",
+    options: ["A) Text A shows rain as welcome and beneficial, while Text B shows it as destructive and frightening", "B) Both texts show rain as dangerous", "C) Text A shows rain as scary, while Text B shows it as helpful", "D) Both texts show rain as gentle"],
+    correctIndex: 0,
+    explanation: "Outstanding analysis! Text A uses positive words like 'nourishing' and 'precious' to show rain as beneficial. Text B uses violent words like 'lashed' and 'howling' to show rain as threatening. Same weather, completely different portrayals!",
+    tags: ["compare", "2h", "fiction"]
+  }
+
 ];
