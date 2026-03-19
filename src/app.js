@@ -10,6 +10,7 @@
     dashboard: document.getElementById('dashboard-screen'),
     game: document.getElementById('game-screen'),
     review: document.getElementById('review-screen'),
+    reports: document.getElementById('reports-screen'),
   };
 
   const els = {
@@ -68,6 +69,7 @@
     screens[name].classList.add('active');
     if (name === 'dashboard') refreshDashboard();
     if (name === 'review') renderReview();
+    if (name === 'reports') renderReports();
   }
 
   // ===== LANDING =====
@@ -298,6 +300,133 @@
     let h = 0;
     for (let i = 0; i < s.length; i++) { h = ((h << 5) - h) + s.charCodeAt(i); h |= 0; }
     return 'q_' + Math.abs(h);
+  }
+
+  // ===== REPORTS =====
+  function renderReports() {
+    if (!player) return;
+    const answers = db.getRecentAnswers(player.playerId);
+    const progress = db.getProgress(player.playerId);
+
+    // Calculate per-tag stats
+    const tagStats = {};
+    for (const a of answers) {
+      const q = findQuestionFromAnswer(a);
+      if (!q || !q.tags) continue;
+      for (const tag of q.tags) {
+        if (!tagStats[tag]) tagStats[tag] = { correct: 0, total: 0 };
+        tagStats[tag].total++;
+        if (a.correct) tagStats[tag].correct++;
+      }
+    }
+
+    // Sort tags by accuracy
+    const tagList = Object.entries(tagStats).map(([tag, stats]) => ({
+      tag,
+      accuracy: Math.round((stats.correct / stats.total) * 100),
+      total: stats.total,
+    })).sort((a, b) => b.accuracy - a.accuracy);
+
+    // Categorize
+    const excels = tagList.filter(t => t.accuracy >= 80 && t.total >= 3);
+    const ok = tagList.filter(t => t.accuracy >= 50 && t.accuracy < 80 && t.total >= 2);
+    const focus = tagList.filter(t => t.accuracy < 50 || (t.accuracy < 60 && t.total >= 3));
+
+    // Render tag groups
+    document.getElementById('excels-list').innerHTML = excels.length
+      ? excels.map(t => `<span class="report-tag good">${formatTag(t.tag)} <span class="accuracy">${t.accuracy}%</span></span>`).join('')
+      : '<p style="color:var(--text-dim);font-size:0.85rem;">Play more questions to see what you\'re good at!</p>';
+    document.getElementById('ok-list').innerHTML = ok.length
+      ? ok.map(t => `<span class="report-tag ok">${formatTag(t.tag)} <span class="accuracy">${t.accuracy}%</span></span>`).join('')
+      : '<p style="color:var(--text-dim);font-size:0.85rem;">Keep going!</p>';
+    document.getElementById('focus-list').innerHTML = focus.length
+      ? focus.map(t => `<span class="report-tag focus">${formatTag(t.tag)} <span class="accuracy">${t.accuracy}%</span></span>`).join('')
+      : '<p style="color:var(--text-dim);font-size:0.85rem;">Nothing to worry about yet — you\'re doing great!</p>';
+
+    // Per-world breakdown
+    const worldGrid = document.getElementById('report-world-breakdown');
+    const worldColors = { reading: 'var(--reading)', writing: 'var(--writing)', math: 'var(--math)' };
+    const worldEmojis = { reading: '📖', writing: '✍️', math: '🔢' };
+    const worldNames = { reading: 'Reading', writing: 'Grammar', math: 'Maths' };
+
+    worldGrid.innerHTML = ['reading', 'writing', 'math'].map(world => {
+      const p = progress[world] || { level: 1, answered: 0, correct: 0, xp: 0 };
+      const acc = p.answered > 0 ? Math.round((p.correct / p.answered) * 100) : 0;
+      return `
+        <div class="report-world-row">
+          <span class="report-world-icon">${worldEmojis[world]}</span>
+          <div class="report-world-info">
+            <h4>${worldNames[world]} — Level ${p.level}</h4>
+            <div class="report-world-bar"><div class="report-world-bar-fill" style="width:${acc}%;background:${worldColors[world]}"></div></div>
+            <div class="report-world-stats">
+              <span>${acc}% accuracy</span>
+              <span>${p.correct}/${p.answered} correct</span>
+              <span>${p.xp} XP</span>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    // Recommendations
+    const recs = [];
+    if (focus.length > 0) {
+      recs.push(`<strong>Focus on:</strong> Practice ${formatTag(focus[0].tag)} questions — you're at ${focus[0].accuracy}% accuracy and could use more reps.`);
+    }
+    if (progress.reading && progress.reading.answered < 10) {
+      recs.push(`<strong>Get started:</strong> Answer at least 10 Reading questions to unlock your first skills report.`);
+    }
+    if (excels.length > 2) {
+      recs.push(`<strong>Challenge yourself:</strong> Try harder questions in ${formatTag(excels[0].tag)} — you're already at ${excels[0].accuracy}%!`);
+    }
+    const session = db.getDailyCount(player.playerId);
+    if (session < 3) {
+      recs.push(`<strong>Daily streak:</strong> You've done ${session}/5 daily questions today. Finish all 5 to keep your streak alive!`);
+    }
+    if (Object.keys(progress).length > 0) {
+      const weakest = ['reading', 'writing', 'math'].reduce((a, b) => {
+        const pA = progress[a] || { answered: 0, correct: 0 };
+        const pB = progress[b] || { answered: 0, correct: 0 };
+        const accA = pA.answered > 0 ? pA.correct / pA.answered : 1;
+        const accB = pB.answered > 0 ? pB.correct / pB.answered : 1;
+        return accA < accB ? a : b;
+      });
+      recs.push(`<strong>Weakest world:</strong> ${worldNames[weakest]} — spend 10 minutes there today to build up your skills.`);
+    }
+    if (recs.length === 0) {
+      recs.push('Play some questions first and your personalised recommendations will appear here!');
+    }
+    document.getElementById('report-recommendations').innerHTML = recs.map(r => `<div class="report-rec">${r}</div>`).join('');
+
+    // 7-day heatmap
+    const heatmap = document.getElementById('report-heatmap');
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const today = new Date();
+    let html = '';
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().split('T')[0];
+      const daily = JSON.parse(localStorage.getItem('sq_daily_' + player.playerId) || '{}');
+      const count = daily[dateStr] || 0;
+      const active = count > 0 ? 'active' : '';
+      html += `<div class="heatmap-day ${active}"><span>${days[d.getDay()]}</span><span class="heat-count">${count}</span></div>`;
+    }
+    heatmap.innerHTML = html;
+  }
+
+  function findQuestionFromAnswer(answer) {
+    const bank = window.QuestionBank;
+    if (!bank) return null;
+    for (const world of Object.values(bank)) {
+      for (const q of world) {
+        if (q.question === answer.question) return q;
+      }
+    }
+    return null;
+  }
+
+  function formatTag(tag) {
+    return tag.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   }
 
   // ===== MINI GAMES =====

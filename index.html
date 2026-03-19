@@ -96,6 +96,7 @@
           </div>
         </div>
         <div class="dash-nav">
+          <button class="nav-btn" data-view="reports" title="Reports">📊</button>
           <button class="nav-btn" data-view="review" title="Review">📝</button>
           <button class="nav-btn" id="logout-btn" title="Log out">🚪</button>
         </div>
@@ -225,6 +226,48 @@
         <div></div>
       </div>
       <div id="review-list" class="review-list"></div>
+    </div>
+
+    <!-- ===== REPORTS SCREEN ===== -->
+    <div id="reports-screen" class="screen">
+      <div class="screen-header">
+        <button class="btn-back" data-back>← Back</button>
+        <h2>📊 Your Report</h2>
+        <div></div>
+      </div>
+      <div class="reports-body">
+
+        <section class="report-summary">
+          <div class="report-card report-good" id="report-excels">
+            <h3>🌟 You're smashing it at</h3>
+            <div id="excels-list" class="report-tags"></div>
+          </div>
+          <div class="report-card report-ok" id="report-ok">
+            <h3>👍 Getting there</h3>
+            <div id="ok-list" class="report-tags"></div>
+          </div>
+          <div class="report-card report-focus" id="report-focus">
+            <h3>🎯 Focus here next</h3>
+            <div id="focus-list" class="report-tags"></div>
+          </div>
+        </section>
+
+        <section class="report-worlds">
+          <h2 class="section-title">Per-World Breakdown</h2>
+          <div id="report-world-breakdown" class="report-world-grid"></div>
+        </section>
+
+        <section class="report-recommendations">
+          <h2 class="section-title">💡 Recommendations</h2>
+          <div id="report-recommendations" class="report-rec-list"></div>
+        </section>
+
+        <section class="report-history">
+          <h2 class="section-title">📈 Last 7 Days</h2>
+          <div id="report-heatmap" class="report-heatmap"></div>
+        </section>
+
+      </div>
     </div>
   </div>
 
