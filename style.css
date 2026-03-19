@@ -173,14 +173,14 @@ input, button, select { font-family: inherit; }
 }
 
 .dash-body { flex: 1; padding: 20px; max-width: 700px; margin: 0 auto; width: 100%; }
-.stats-bar { display: flex; gap: 10px; margin-bottom: 24px; }
+.stats-bar { display: flex; gap: 10px; margin-bottom: 12px; }
 .stat {
   flex: 1; background: var(--card); border-radius: var(--radius-sm); padding: 14px; text-align: center;
 }
 .stat-value { font-size: 1.5rem; font-weight: 700; display: block; }
 .stat-label { color: var(--text-dim); font-size: 0.82rem; font-weight: 500; }
 
-.section-title { font-size: 1.2rem; margin-bottom: 14px; color: var(--text-dim); }
+.section-title { font-size: 1.15rem; margin-bottom: 14px; margin-top: 28px; color: var(--text-dim); font-weight: 600; }
 
 /* ===== WORLDS ===== */
 .worlds-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
@@ -218,6 +218,7 @@ input, button, select { font-family: inherit; }
 .daily-challenge {
   background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(168,85,247,0.08));
   border: 1px solid rgba(251,191,36,0.2); border-radius: var(--radius); padding: 20px;
+  margin-top: 28px;
 }
 .daily-challenge h3 { margin-bottom: 6px; font-size: 1.05rem; }
 .daily-challenge p { color: var(--text-dim); font-size: 0.88rem; margin-bottom: 12px; }
@@ -319,7 +320,7 @@ input, button, select { font-family: inherit; }
 .shake { animation: shake 0.4s; }
 
 /* ===== MINI GAMES ===== */
-.mini-games-section { margin-bottom: 24px; }
+.mini-games-section { margin-bottom: 8px; }
 .mini-games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
 .mini-game-card {
   background: var(--card); border-radius: var(--radius-sm); padding: 16px; text-align: center;
@@ -396,7 +397,7 @@ input, button, select { font-family: inherit; }
 .heatmap-day .heat-count { font-size: 1rem; font-weight: 700; color: var(--text); display: block; }
 
 /* ===== EXAM MODE ===== */
-.exam-section { margin-bottom: 24px; }
+.exam-section { margin-bottom: 8px; }
 .exam-cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .exam-card {
   background: var(--card); border-radius: var(--radius-sm); padding: 18px; text-align: center;
