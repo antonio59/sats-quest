@@ -300,6 +300,101 @@
     return 'q_' + Math.abs(h);
   }
 
+  // ===== MINI GAMES =====
+  document.querySelectorAll('.mini-game-card').forEach(card => {
+    card.addEventListener('click', () => startMiniGame(card.dataset.game));
+  });
+
+  function startMiniGame(gameId) {
+    if (gameId === 'speed-math') startSpeedMath();
+    // Other games can be added here
+  }
+
+  function startSpeedMath() {
+    showScreen('game');
+    els.backBtn.onclick = () => showScreen('dashboard');
+    els.questionPassage.classList.add('hidden');
+    els.questionFeedback.classList.add('hidden');
+    els.progressBar.style.width = '0%';
+
+    const problems = [
+      { q: '15 × 12', a: 180 }, { q: '23 × 7', a: 161 }, { q: '144 ÷ 12', a: 12 },
+      { q: '45 + 67', a: 112 }, { q: '200 - 87', a: 113 }, { q: '8 × 9', a: 72 },
+      { q: '250 ÷ 5', a: 50 }, { q: '36 + 48', a: 84 }, { q: '17 × 6', a: 102 },
+      { q: '300 - 156', a: 144 }, { q: '12 × 11', a: 132 }, { q: '72 ÷ 8', a: 9 },
+      { q: '56 + 89', a: 145 }, { q: '9 × 7', a: 63 }, { q: '240 ÷ 6', a: 40 },
+    ];
+
+    let current = 0;
+    let score = 0;
+    let startTime = Date.now();
+    let timeLimit = 60000; // 60 seconds
+
+    function showProblem() {
+      if (current >= problems.length || (Date.now() - startTime) > timeLimit) {
+        finishSpeedMath(score, current);
+        return;
+      }
+
+      const p = problems[current];
+      els.questionText.innerHTML = '';
+      els.questionOptions.innerHTML = `
+        <div class="speed-math-area">
+          <div class="speed-timer" id="speed-timer">⏱️ 60s</div>
+          <div class="speed-problem">${p.q} = ?</div>
+          <input type="number" class="speed-input" id="speed-answer" autofocus>
+          <p class="speed-score" id="speed-score">Score: ${score}/${current}</p>
+        </div>
+      `;
+
+      const input = document.getElementById('speed-answer');
+      const timer = document.getElementById('speed-timer');
+
+      input.focus();
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const answer = parseInt(input.value);
+          if (answer === p.a) {
+            score++;
+            input.style.borderColor = 'var(--success)';
+          } else {
+            input.style.borderColor = 'var(--danger)';
+            input.value = p.a;
+          }
+          current++;
+          els.progressBar.style.width = Math.min(100, (current / problems.length) * 100) + '%';
+          setTimeout(showProblem, 400);
+        }
+      });
+
+      // Timer
+      const timerInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, Math.ceil((timeLimit - elapsed) / 1000));
+        if (timer) timer.textContent = `⏱️ ${remaining}s`;
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          finishSpeedMath(score, current);
+        }
+      }, 1000);
+    }
+
+    showProblem();
+  }
+
+  function finishSpeedMath(score, total) {
+    const xpEarned = score * 5;
+    player.xp = (player.xp || 0) + xpEarned;
+    player.level = Math.floor(player.xp / 500) + 1;
+    localStorage.setItem('sq_session', JSON.stringify(player));
+
+    showScreen('dashboard');
+    setTimeout(() => {
+      const msg = score >= 12 ? '🔥 Math speed demon!' : score >= 8 ? '⚡ Quick thinker!' : '💪 Keep practicing!';
+      alert(`Speed Math Complete!\n\n${msg}\n\nScore: ${score}/${total}\nXP earned: +${xpEarned}`);
+    }, 200);
+  }
+
   // ===== INIT =====
   function init() {
     const session = JSON.parse(localStorage.getItem('sq_session') || 'null');
