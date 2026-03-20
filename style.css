@@ -460,6 +460,27 @@ input, button, select { font-family: inherit; }
 .exam-result-icon { font-size: 1.1rem; }
 .exam-results-actions { display: flex; flex-direction: column; gap: 10px; }
 
+/* ===== MODAL ===== */
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; display: flex; align-items: center; justify-content: center; }
+.modal.hidden { display: none; }
+.modal-backdrop { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
+.modal-content {
+  position: relative; background: var(--card); border-radius: var(--radius); padding: 24px;
+  width: 90%; max-width: 400px; box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+}
+.modal-content h3 { margin-bottom: 4px; font-size: 1.15rem; }
+.report-textarea {
+  width: 100%; padding: 12px; background: var(--bg); border: 2px solid transparent;
+  border-radius: var(--radius-sm); color: var(--text); font-size: 0.95rem;
+  resize: vertical; outline: none; font-family: inherit; margin-bottom: 10px;
+}
+.report-textarea:focus { border-color: var(--accent); }
+.report-textarea::placeholder { color: var(--text-muted); }
+.report-options { margin-bottom: 14px; }
+.report-check { font-size: 0.88rem; color: var(--text-dim); display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.report-check input { accent-color: var(--accent); }
+.modal-actions { display: flex; flex-direction: column; gap: 8px; }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
   .landing h1 { font-size: 2.5rem; }

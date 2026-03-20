@@ -302,6 +302,50 @@
     return 'q_' + Math.abs(h);
   }
 
+  // ===== REPORT PROBLEM =====
+  const reportBtn = document.getElementById('report-btn');
+  const reportModal = document.getElementById('report-modal');
+  const reportBackdrop = document.getElementById('report-backdrop');
+  const reportText = document.getElementById('report-text');
+  const reportSendBtn = document.getElementById('report-send-btn');
+  const reportCancelBtn = document.getElementById('report-cancel-btn');
+  const reportSuccess = document.getElementById('report-success');
+
+  reportBtn.addEventListener('click', () => {
+    reportModal.classList.remove('hidden');
+    reportText.value = '';
+    reportSuccess.classList.add('hidden');
+    reportText.focus();
+  });
+
+  reportBackdrop.addEventListener('click', () => reportModal.classList.add('hidden'));
+  reportCancelBtn.addEventListener('click', () => reportModal.classList.add('hidden'));
+
+  reportSendBtn.addEventListener('click', () => {
+    const desc = reportText.value.trim();
+    if (!desc) { reportText.style.borderColor = 'var(--danger)'; return; }
+
+    const includeWhere = document.getElementById('report-screenshot').checked;
+    const screen = document.querySelector('.screen.active')?.id || 'unknown';
+    const subject = `[SAT Quest Bug] Report from ${player?.name || 'unknown'}`;
+    const body = `Hi Uncle Antonio,
+
+I found a problem on SAT Quest:
+
+${desc}
+
+${includeWhere ? `I was on the: ${screen} screen` : ''}
+Player: ${player?.name || 'unknown'}
+Level: ${player?.level || 1}
+XP: ${player?.xp || 0}
+Browser: ${navigator.userAgent}
+Time: ${new Date().toISOString()}`;
+
+    window.open(`mailto:ant@antoniosmith.xyz?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+    reportSuccess.classList.remove('hidden');
+    setTimeout(() => reportModal.classList.add('hidden'), 2000);
+  });
+
   // ===== EXAM MODE =====
   const examState = { questions: [], answers: [], current: 0, config: null, startTime: 0, timerInterval: null, elapsed: 0 };
 

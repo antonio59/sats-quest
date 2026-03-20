@@ -98,6 +98,7 @@
         <div class="dash-nav">
           <button class="nav-btn" data-view="reports" title="Reports">📊</button>
           <button class="nav-btn" data-view="review" title="Review">📝</button>
+          <button class="nav-btn" id="report-btn" title="Report a problem">🐛</button>
           <button class="nav-btn" id="logout-btn" title="Log out">🚪</button>
         </div>
       </header>
@@ -351,6 +352,24 @@
           <button class="btn btn-secondary" id="exam-retry-btn">Try Again 🔄</button>
           <button class="btn btn-secondary" id="exam-home-btn">Back Home 🏠</button>
         </div>
+      </div>
+    </div>
+
+    <!-- ===== REPORT PROBLEM MODAL ===== -->
+    <div id="report-modal" class="modal hidden">
+      <div class="modal-backdrop" id="report-backdrop"></div>
+      <div class="modal-content">
+        <h3>🐛 Report a Problem</h3>
+        <p style="color:var(--text-dim);font-size:0.88rem;margin-bottom:14px;">Something not working? Tell Uncle Antonio and he'll fix it!</p>
+        <textarea id="report-text" class="report-textarea" placeholder="Describe what happened..." rows="4"></textarea>
+        <div class="report-options">
+          <label class="report-check"><input type="checkbox" id="report-screenshot" checked> Include where I was</label>
+        </div>
+        <div class="modal-actions">
+          <button class="btn" id="report-send-btn">Send Report 📧</button>
+          <button class="btn btn-secondary" id="report-cancel-btn">Cancel</button>
+        </div>
+        <p id="report-success" class="hidden" style="color:var(--success);text-align:center;margin-top:10px;">✅ Thanks! Report sent.</p>
       </div>
     </div>
 
