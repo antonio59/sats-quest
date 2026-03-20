@@ -103,7 +103,7 @@
     const pin = els.signupPin.value.trim();
     if (!name || !pin) { els.authError.textContent = 'Fill in both fields!'; return; }
     if (name.length < 2) { els.authError.textContent = 'Name needs 2+ characters!'; return; }
-    if (!/^\d{8}$/.test(pin)) { els.authError.textContent = 'PIN = 8 digits (MMDDYYYY)'; return; }
+    if (!/^\d{8}$/.test(pin)) { els.authError.textContent = 'PIN = 8 digits (DDMMYYYY)'; return; }
     els.authError.textContent = 'Creating account...';
     const result = await db.signUp(name, pin);
     if (result.error) els.authError.textContent = result.error;

@@ -1,0 +1,46 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Check JavaScript syntax
+        run: |
+          for f in src/*.js; do
+            echo "Checking $f..."
+            bun -e "import('$f')" 2>/dev/null || node --check "$f"
+          done
+
+      - name: Check HTML structure
+        run: |
+          python3 -c "
+          import re
+          with open('index.html') as f:
+              html = f.read()
+          opens = len(re.findall(r'<div', html))
+          closes = len(re.findall(r'</div>', html))
+          if opens != closes:
+              print(f'ERROR: Unbalanced divs: {opens} open, {closes} close')
+              exit(1)
+          print(f'OK: {opens} divs balanced')
+          "
+
+      - name: Check for hardcoded secrets
+        run: |
+          if grep -rn "sk-\|ghp_\|xox[bps]-" --include="*.js" --include="*.html" src/ .; then
+            echo "ERROR: Possible hardcoded secret found"
+            exit 1
+          fi
+          echo "OK: No hardcoded secrets"

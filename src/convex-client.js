@@ -73,7 +73,7 @@ window.SATClient = (function() {
       const players = local._get('players') || {};
       const player = players[name.toLowerCase().trim()];
       if (!player) return { error: 'No player found!' };
-      if (player.pin !== pin) return { error: 'Wrong PIN! Hint: your birthday (MMDDYYYY)' };
+      if (player.pin !== pin) return { error: 'Wrong PIN! Hint: your birthday (DDMMYYYY)' };
       const session = { playerId: player.playerId, name: player.name, avatar: player.avatar, xp: player.xp||0, level: player.level||1, streak: player.streak||1 };
       localStorage.setItem('sq_session', JSON.stringify(session));
       return session;
