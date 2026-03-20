@@ -4,7 +4,7 @@ Hey Isabella!
 
 I built you something special — a little website that helps you practice for your SATs, but it feels more like a game than revision. I made it because I know how much you're capable of, and I wanted to give you something that makes preparing a bit more fun and a lot less stressful.
 
-It's at: sat.antoniosmith.xyz
+It's at: sats.antoniosmith.xyz
 
 Here's how it works:
 
@@ -33,7 +33,7 @@ Each world has 5 difficulty levels. Start at Level 1 and work your way up!
 - More mini-games coming soon!
 
 **How to get started:**
-1. Go to sat.antoniosmith.xyz
+1. Go to sats.antoniosmith.xyz
 2. Tap "Start Your Journey"
 3. Pick any name you like
 4. Your PIN is your birthday in 8 digits (like 15032015)

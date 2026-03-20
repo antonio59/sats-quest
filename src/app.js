@@ -321,29 +321,40 @@
   reportBackdrop.addEventListener('click', () => reportModal.classList.add('hidden'));
   reportCancelBtn.addEventListener('click', () => reportModal.classList.add('hidden'));
 
-  reportSendBtn.addEventListener('click', () => {
+  reportSendBtn.addEventListener('click', async () => {
     const desc = reportText.value.trim();
     if (!desc) { reportText.style.borderColor = 'var(--danger)'; return; }
 
-    const includeWhere = document.getElementById('report-screenshot').checked;
     const screen = document.querySelector('.screen.active')?.id || 'unknown';
-    const subject = `[SAT Quest Bug] Report from ${player?.name || 'unknown'}`;
-    const body = `Hi Uncle Antonio,
+    reportSendBtn.disabled = true;
+    reportSendBtn.textContent = 'Sending...';
 
-I found a problem on SAT Quest:
+    try {
+      const res = await fetch('/api/report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          description: desc,
+          player: { name: player?.name, level: player?.level, xp: player?.xp },
+          screen,
+          userAgent: navigator.userAgent,
+          timestamp: new Date().toISOString(),
+        }),
+      });
 
-${desc}
+      if (res.ok) {
+        reportSuccess.classList.remove('hidden');
+        reportText.style.borderColor = 'transparent';
+        setTimeout(() => reportModal.classList.add('hidden'), 2000);
+      } else {
+        alert('Failed to send report. Please try again.');
+      }
+    } catch (e) {
+      alert('Failed to send report. Please try again.');
+    }
 
-${includeWhere ? `I was on the: ${screen} screen` : ''}
-Player: ${player?.name || 'unknown'}
-Level: ${player?.level || 1}
-XP: ${player?.xp || 0}
-Browser: ${navigator.userAgent}
-Time: ${new Date().toISOString()}`;
-
-    window.open(`mailto:ant@antoniosmith.xyz?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
-    reportSuccess.classList.remove('hidden');
-    setTimeout(() => reportModal.classList.add('hidden'), 2000);
+    reportSendBtn.disabled = false;
+    reportSendBtn.textContent = 'Send Report 📧';
   });
 
   // ===== EXAM MODE =====
