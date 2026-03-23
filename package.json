@@ -12,6 +12,6 @@
   },
   "dependencies": {
     "convex": "^1.33.1",
-    "esbuild": "^0.25.0"
+    "esbuild": "^0.27.4"
   }
 }
