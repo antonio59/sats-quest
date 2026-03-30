@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### CI/CD
 
 - Add automatic changelog workflow
+- Add automatic changelog workflow
 
 ### Changes
 
@@ -176,5 +177,10 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 ### Chores
 
 - Add git-cliff config for changelog generation
+- Add git-cliff config for changelog generation
+
+### Documentation
+
+- Update changelog [skip ci]
 
 
