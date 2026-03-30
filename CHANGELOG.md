@@ -178,9 +178,11 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 - Add git-cliff config for changelog generation
 - Add git-cliff config for changelog generation
+- Add git-cliff config for changelog generation
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 
 
