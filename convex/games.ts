@@ -168,3 +168,36 @@ export const seedQuestions = mutation({
     return { inserted: count };
   },
 });
+
+// Migrate progress from localStorage
+export const migrateProgress = mutation({
+  args: {
+    playerId: v.id("players"),
+    world: v.string(),
+    currentLevel: v.number(),
+    xpInWorld: v.number(),
+    questionsAnswered: v.number(),
+    correctAnswers: v.number(),
+    bestStreak: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("progress")
+      .withIndex("by_player_world", q => q.eq("playerId", args.playerId).eq("world", args.world))
+      .unique();
+
+    if (existing) {
+      // Merge with existing - keep highest values
+      await ctx.db.patch(existing._id, {
+        currentLevel: Math.max(existing.currentLevel, args.currentLevel),
+        xpInWorld: Math.max(existing.xpInWorld, args.xpInWorld),
+        questionsAnswered: Math.max(existing.questionsAnswered, args.questionsAnswered),
+        correctAnswers: Math.max(existing.correctAnswers, args.correctAnswers),
+        bestStreak: Math.max(existing.bestStreak, args.bestStreak),
+      });
+    } else {
+      await ctx.db.insert("progress", args);
+    }
+    return { success: true };
+  },
+});

@@ -4,22 +4,28 @@ window.SATClient = (function() {
 
   let convexClient = null;
   let convexLoaded = false;
+  let loadPromise = null;
 
   function loadConvex() {
-    return new Promise((resolve) => {
+    if (loadPromise) return loadPromise;
+    loadPromise = new Promise((resolve) => {
       if (window.convex) { convexLoaded = true; resolve(true); return; }
+      console.log('Loading Convex script from CDN...');
       const s = document.createElement('script');
       s.src = 'https://unpkg.com/convex/browser@latest/dist/bundle.js';
       s.onload = () => {
+        console.log('Convex script loaded, initializing client...');
         try {
           convexClient = window.convex.ConvexHttpClient(CONVEX_URL);
           convexLoaded = true;
+          console.log('Convex client initialized successfully');
           resolve(true);
-        } catch(e) { console.warn('Convex init failed:', e); resolve(false); }
+        } catch(e) { console.error('Convex init error:', e); resolve(false); }
       };
-      s.onerror = () => resolve(false);
+      s.onerror = () => { console.error('Failed to load Convex script'); resolve(false); };
       document.head.appendChild(s);
     });
+    return loadPromise;
   }
   loadConvex();
 
@@ -35,6 +41,7 @@ window.SATClient = (function() {
     getConvexUrl() { return CONVEX_URL; },
 
     async getAllPlayers() {
+      await loadConvex();
       if (convexLoaded && convexClient) {
         try {
           return await convexClient.query('auth:getAllPlayers', {});
@@ -45,14 +52,19 @@ window.SATClient = (function() {
     },
 
     async signUp(name, pin) {
+      await loadConvex();
+      console.log('After await, convexLoaded:', convexLoaded, 'client:', !!convexClient);
       if (convexLoaded && convexClient) {
         try {
           const r = await convexClient.mutation("auth:signUp", { name: name.trim(), pin });
+          console.log('Convex signup response:', r);
           if (r.error) return r;
+          // Check for local data to migrate
+          await migrateLocalData(name.trim(), r.playerId);
           const player = { playerId: r.playerId, name: name.trim(), avatar: r.avatar, xp: 0, level: 1, streak: 1 };
           localStorage.setItem('sq_session', JSON.stringify(player));
           return player;
-        } catch(e) { console.warn('Convex signUp failed:', e); }
+        } catch(e) { console.error('Convex signUp error:', e); }
       }
       const players = local._get('players') || {};
       if (players[name.toLowerCase().trim()]) return { error: 'Name taken!' };
@@ -72,6 +84,7 @@ window.SATClient = (function() {
     },
 
     async logIn(name, pin) {
+      await loadConvex();
       if (convexLoaded && convexClient) {
         try {
           const r = await convexClient.mutation("auth:logIn", { name: name.trim(), pin });
@@ -181,5 +194,52 @@ window.SATClient = (function() {
     let h = 0;
     for (let i = 0; i < s.length; i++) { h = ((h << 5) - h) + s.charCodeAt(i); h |= 0; }
     return 'q_' + Math.abs(h);
+  }
+
+  async function migrateLocalData(playerName, newPlayerId) {
+    const normalizedName = playerName.toLowerCase().trim();
+    const localPlayers = local._get('players') || {};
+    const localPlayer = localPlayers[normalizedName];
+    if (!localPlayer) return;
+
+    // Migrate progress
+    const progress = local._get(`progress_${localPlayer.playerId}`);
+    if (progress) {
+      for (const world of ['reading', 'writing', 'math']) {
+        if (progress[world]) {
+          try {
+            await convexClient.mutation("progress:upsertProgress", {
+              playerId: newPlayerId,
+              world,
+              currentLevel: progress[world].level || 1,
+              xpInWorld: progress[world].xp || 0,
+              questionsAnswered: progress[world].answered || 0,
+              correctAnswers: progress[world].correct || 0,
+              bestStreak: progress[world].bestStreak || 0,
+            });
+          } catch(e) { console.warn('Failed to migrate progress:', e); }
+        }
+      }
+    }
+
+    // Migrate answers (last 50)
+    const answers = local._get(`answers_${localPlayer.playerId}`);
+    if (answers && answers.length > 0) {
+      try {
+        await convexClient.mutation("answers:migrateAnswers", {
+          playerId: newPlayerId,
+          answers: answers.slice(0, 50).map(a => ({
+            question: a.question,
+            selectedIndex: a.selectedIndex,
+            correct: a.correct,
+            timeMs: a.time || 0,
+            world: a.world || 'reading',
+            answeredAt: a.time || Date.now(),
+          })),
+        });
+      } catch(e) { console.warn('Failed to migrate answers:', e); }
+    }
+
+    console.log('Migration complete for', playerName);
   }
 })();
