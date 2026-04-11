@@ -2,6 +2,9 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
+const MAX_LEVEL = 15;
+const XP_PER_LEVEL = 400; // Faster level progression
+
 // Get a question for a world/level
 export const getQuestion = query({
   args: {
@@ -10,10 +13,10 @@ export const getQuestion = query({
     excludeIds: v.optional(v.array(v.id("questions"))),
   },
   handler: async (ctx, args) => {
-    const level = Math.min(10, Math.max(1, args.level));
+    const level = Math.min(MAX_LEVEL, Math.max(1, args.level));
     // Try exact level first, then adjacent levels
     for (const l of [level, level - 1, level + 1, level - 2, level + 2]) {
-      if (l < 1 || l > 10) continue;
+      if (l < 1 || l > MAX_LEVEL) continue;
       const questions = await ctx.db
         .query("questions")
         .withIndex("by_world_level", q => q.eq("world", args.world).eq("level", l))
@@ -37,13 +40,20 @@ export const submitAnswer = mutation({
     questionId: v.id("questions"),
     selectedIndex: v.number(),
     timeMs: v.number(),
+    streak: v.optional(v.number()), // Current streak when answering
   },
   handler: async (ctx, args) => {
     const question = await ctx.db.get(args.questionId);
     if (!question) return { error: "Question not found" };
 
     const correct = args.selectedIndex === question.correctIndex;
-    const xpGain = correct ? (question.level * 10) + Math.max(0, 50 - Math.floor(args.timeMs / 1000)) : 2;
+    
+    // XP calculation with streak bonus
+    let baseXp = correct ? (question.level * 15) + Math.max(0, 60 - Math.floor(args.timeMs / 1000)) : 2;
+    
+    // Streak bonus: +5 XP per streak level (10+ streak = +50 XP bonus!)
+    const streakBonus = correct && args.streak ? Math.min(args.streak * 5, 50) : 0;
+    const xpGain = baseXp + streakBonus;
 
     // Save answer
     await ctx.db.insert("answers", {
@@ -56,12 +66,12 @@ export const submitAnswer = mutation({
       answeredAt: Date.now(),
     });
 
-    // Update player XP and level
+    // Update player XP and level (faster progression)
     const player = await ctx.db.get(args.playerId);
     if (player) {
       const newXp = player.xp + xpGain;
-      const newLevel = Math.floor(newXp / 500) + 1;
-      await ctx.db.patch(args.playerId, { xp: newXp, level: newLevel });
+      const newLevel = Math.floor(newXp / XP_PER_LEVEL) + 1;
+      await ctx.db.patch(args.playerId, { xp: newXp, level: Math.min(newLevel, MAX_LEVEL) });
     }
 
     // Update world progress
@@ -74,21 +84,28 @@ export const submitAnswer = mutation({
       const newCorrect = progress.correctAnswers + (correct ? 1 : 0);
       const newAnswered = progress.questionsAnswered + 1;
       const accuracy = newCorrect / newAnswered;
-      const newLevel = accuracy > 0.8 && newAnswered > 5
-        ? Math.min(10, progress.currentLevel + 1)
+      const newLevel = accuracy > 0.75 && newAnswered > 5
+        ? Math.min(MAX_LEVEL, progress.currentLevel + 1)
         : progress.currentLevel;
+      
+      // Update best streak if current is higher
+      const newBestStreak = args.streak 
+        ? Math.max(progress.bestStreak || 0, args.streak) 
+        : progress.bestStreak || 0;
 
       await ctx.db.patch(progress._id, {
         xpInWorld: progress.xpInWorld + xpGain,
         questionsAnswered: newAnswered,
         correctAnswers: newCorrect,
         currentLevel: newLevel,
+        bestStreak: newBestStreak,
       });
     }
 
     return {
       correct,
       xpGain,
+      streakBonus,
       correctIndex: question.correctIndex,
       explanation: question.explanation,
     };
@@ -111,6 +128,7 @@ export const getProgress = query({
         xp: p.xpInWorld,
         answered: p.questionsAnswered,
         correct: p.correctAnswers,
+        bestStreak: p.bestStreak || 0,
         accuracy: p.questionsAnswered > 0 ? Math.round((p.correctAnswers / p.questionsAnswered) * 100) : 0,
       };
     }
@@ -143,6 +161,56 @@ export const getRecentAnswers = query({
       });
     }
     return result;
+  },
+});
+
+// Daily challenge
+export const getDailyChallenge = query({
+  args: {},
+  handler: async (ctx) => {
+    const today = new Date().toISOString().split('T')[0];
+    const challenge = await ctx.db
+      .query("dailyChallenges")
+      .withIndex("by_date", q => q.eq("date", today))
+      .first();
+    
+    if (!challenge) return null;
+    
+    // Get the questions for today
+    const questions = [];
+    for (const qId of challenge.questionIds) {
+      const q = await ctx.db.get(qId);
+      if (q) questions.push({ id: q._id, question: q.question, passage: q.passage, options: q.options, world: q.world, level: q.level });
+    }
+    
+    return { date: challenge.date, world: challenge.world, questions };
+  },
+});
+
+// Record daily challenge completion
+export const completeDailyChallenge = mutation({
+  args: { playerId: v.id("players"), score: v.number(), total: v.number() },
+  handler: async (ctx, args) => {
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Check if already completed today
+    const existing = await ctx.db.query("answers")
+      .filter(q => q.field("playerId").eq(args.playerId))
+      .first();
+    
+    if (existing) return { alreadyCompleted: true, bonus: 0 };
+    
+    // Award bonus XP for completing daily
+    const accuracy = args.score / args.total;
+    const bonusXp = Math.floor(args.total * 10 * accuracy);
+    
+    // Update player XP
+    const player = await ctx.db.get(args.playerId);
+    if (player) {
+      await ctx.db.patch(args.playerId, { xp: player.xp + bonusXp });
+    }
+    
+    return { alreadyCompleted: false, bonus: bonusXp };
   },
 });
 
@@ -187,13 +255,12 @@ export const migrateProgress = mutation({
       .unique();
 
     if (existing) {
-      // Merge with existing - keep highest values
       await ctx.db.patch(existing._id, {
         currentLevel: Math.max(existing.currentLevel, args.currentLevel),
         xpInWorld: Math.max(existing.xpInWorld, args.xpInWorld),
         questionsAnswered: Math.max(existing.questionsAnswered, args.questionsAnswered),
         correctAnswers: Math.max(existing.correctAnswers, args.correctAnswers),
-        bestStreak: Math.max(existing.bestStreak, args.bestStreak),
+        bestStreak: Math.max(existing.bestStreak || 0, args.bestStreak),
       });
     } else {
       await ctx.db.insert("progress", args);

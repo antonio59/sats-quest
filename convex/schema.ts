@@ -8,18 +8,20 @@ export default defineSchema({
     pin: v.string(),           // 6-digit passcode
     avatar: v.string(),
     xp: v.number(),
-    level: v.number(),
+    level: v.number(),        // 1-15
     streak: v.number(),
     lastActiveDate: v.string(), // YYYY-MM-DD
     createdAt: v.number(),
     theme: v.string(),         // unlockable visual theme
+    totalXp: v.optional(v.number()),       // Lifetime XP for leaderboards
+    totalCorrect: v.optional(v.number()),    // Lifetime correct answers
   }).index("by_name", ["name"]),
 
   // Questions bank
   questions: defineTable({
     world: v.string(),         // "reading", "writing", "math"
-    level: v.number(),         // difficulty 1-10
-    type: v.string(),          // "multiple-choice", "grid-in"
+    level: v.number(),         // difficulty 1-15
+    type: v.string(),          // "multiple-choice", "grid-in", "true-false"
     question: v.string(),
     passage: v.optional(v.string()),  // for reading comprehension
     options: v.array(v.string()),
