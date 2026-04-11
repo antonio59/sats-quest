@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Use ConvexClient with new per Convex docs
 - Fix Convex CDN version: 1.33.1 -> 1.3.1
 - Merge pull request #3 from antonio59/feat/profile-pin-login
 
@@ -194,6 +195,7 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
