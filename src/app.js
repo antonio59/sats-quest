@@ -309,8 +309,12 @@
       return;
     }
 
-    // Store question reference
-    currentQuestion._hash = hashStr(currentQuestion.question);
+    // Store question reference (defensive)
+    if (currentQuestion && currentQuestion.question) {
+      currentQuestion._hash = hashStr(currentQuestion.question);
+    } else {
+      currentQuestion._hash = currentQuestion._id || 'q_' + Date.now();
+    }
 
     els.gameWorldIcon.textContent = WORLD_ICONS[currentWorld];
     els.gameLevelLabel.textContent = `Level ${level}`;

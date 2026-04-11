@@ -163,7 +163,8 @@ window.SATClient = (function() {
       if (convexLoaded && convexClient) {
         try {
           const q = await convexClient.query("games:getQuestion", { world, level });
-          if (q) {
+          console.log('Convex getQuestion returned:', q);
+          if (q && q.id) {
             q._id = q.id;
             return q;
           }
