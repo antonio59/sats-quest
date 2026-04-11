@@ -288,20 +288,20 @@
   });
 
   // ===== GAME =====
-  function startWorld(world) {
+  async function startWorld(world) {
     currentWorld = world;
     questionsAnswered = 0;
     sessionCorrect = 0;
     showScreen('game');
-    loadNextQuestion();
+    await loadNextQuestion();
   }
 
-  function loadNextQuestion() {
+  async function loadNextQuestion() {
     const progress = db.getProgress(player.playerId);
     const worldProgress = progress[currentWorld] || { level: 1 };
     const level = worldProgress.level;
 
-    currentQuestion = db.getQuestion(currentWorld, level);
+    currentQuestion = await db.getQuestion(currentWorld, level);
     if (!currentQuestion) {
       els.questionText.textContent = 'No more questions! Check back later.';
       els.questionOptions.innerHTML = '';
