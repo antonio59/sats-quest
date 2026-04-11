@@ -32,6 +32,17 @@ window.SATClient = (function() {
 
   return {
     isConnected() { return convexLoaded; },
+    getConvexUrl() { return CONVEX_URL; },
+
+    async getAllPlayers() {
+      if (convexLoaded && convexClient) {
+        try {
+          return await convexClient.query('auth:getAllPlayers', {});
+        } catch(e) { console.warn('Convex getAllPlayers failed:', e); }
+      }
+      const players = local._get('players') || {};
+      return Object.values(players).map(p => ({ name: p.name, avatar: p.avatar }));
+    },
 
     async signUp(name, pin) {
       if (convexLoaded && convexClient) {
