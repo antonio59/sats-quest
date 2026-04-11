@@ -106,15 +106,16 @@ window.SATClient = (function() {
 
     logout() { localStorage.removeItem('sq_session'); },
 
-    async submitAnswer(playerId, questionId, selectedIndex, timeMs) {
-      // questionId is the index in our local bank for localStorage mode
+    async submitAnswer(playerId, questionId, selectedIndex, timeMs, streak = 0) {
       const q = window.QuestionBank ? findQuestion(questionId) : null;
       const correct = q ? selectedIndex === q.correctIndex : false;
       const xpGain = correct ? (q ? (q.level * 10) + Math.max(0, 30 - Math.floor(timeMs/1000)) : 10) : 2;
 
       if (convexLoaded && convexClient) {
         try {
-          return await convexClient.mutation("games:submitAnswer", { playerId, questionId, selectedIndex, timeMs });
+          if (questionId && questionId.startsWith('0x')) {
+            return await convexClient.mutation("games:submitAnswer", { playerId, questionId, selectedIndex, timeMs, streak });
+          }
         } catch(e) { console.warn('Convex submitAnswer failed:', e); }
       }
 
@@ -158,12 +159,22 @@ window.SATClient = (function() {
       return local._get(`answers_${playerId}`) || [];
     },
 
-    getQuestion(world, level) {
+    async getQuestion(world, level) {
+      if (convexLoaded && convexClient) {
+        try {
+          const q = await convexClient.query("games:getQuestion", { world, level });
+          if (q) {
+            q._id = q.id;
+            return q;
+          }
+        } catch(e) { console.warn('Convex getQuestion failed:', e); }
+      }
       const bank = window.QuestionBank;
       if (!bank || !bank[world]) return null;
       const pool = bank[world].filter(q => Math.abs(q.level - level) <= 2);
-      if (pool.length === 0) return bank[world][Math.floor(Math.random() * bank[world].length)];
-      return pool[Math.floor(Math.random() * pool.length)];
+      const q = pool.length === 0 ? bank[world][Math.floor(Math.random() * bank[world].length)] : pool[Math.floor(Math.random() * pool.length)];
+      if (q) q._id = hashStr(q.question);
+      return q;
     },
 
     getDailyCount(playerId) {

@@ -346,7 +346,8 @@
     const btns = els.questionOptions.querySelectorAll('.option-btn');
     btns.forEach(b => b.disabled = true);
 
-    const result = await db.submitAnswer(player.playerId, currentQuestion._hash, selectedIndex, timeMs);
+    const qId = currentQuestion._id || currentQuestion._hash;
+    const result = await db.submitAnswer(player.playerId, qId, selectedIndex, timeMs, player.streak || 0);
 
     // Highlight correct/wrong
     btns[selectedIndex].classList.add(result.correct ? 'correct' : 'wrong');
