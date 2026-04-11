@@ -17,7 +17,7 @@ window.SATClient = (function() {
       s.onload = () => {
         console.log('Convex script loaded, initializing client...');
         try {
-          convexClient = window.convex.ConvexHttpClient(CONVEX_URL);
+          convexClient = new window.convex.ConvexClient(CONVEX_URL);
           convexLoaded = true;
           console.log('Convex client initialized successfully');
           resolve(true);
