@@ -200,9 +200,11 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 
 ### Features
 
+- 15 levels, faster XP, streak bonuses, 57 questions seeded, daily challenges, best streak tracking
 - Change to 6-digit passcode, redirect to signup if no profiles
 - Profile selection + PIN numpad login (music-request-v2 style)
 
