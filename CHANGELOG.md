@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Add migration for local data, improve convex loading
 - Remove leftover old auth code causing syntax error
 
 ### CI/CD
@@ -190,6 +191,7 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
