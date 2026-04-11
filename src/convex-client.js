@@ -12,7 +12,7 @@ window.SATClient = (function() {
       if (window.convex) { convexLoaded = true; resolve(true); return; }
       console.log('Loading Convex script from CDN...');
       const s = document.createElement('script');
-      s.src = 'https://unpkg.com/convex@1.33.1/dist/bundle.js';
+      s.src = 'https://unpkg.com/convex@1.3.1/dist/browser.bundle.js';
       s.crossOrigin = 'anonymous';
       s.onload = () => {
         console.log('Convex script loaded, initializing client...');
