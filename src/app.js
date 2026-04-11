@@ -391,7 +391,7 @@
       els.nextBtn.onclick = finishSession;
     } else {
       els.nextBtn.textContent = 'Next →';
-      els.nextBtn.onclick = loadNextQuestion;
+      els.nextBtn.onclick = () => loadNextQuestion();
     }
   }
 
