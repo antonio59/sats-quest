@@ -237,29 +237,6 @@
     if (result.error) els.signupError.textContent = result.error;
     else { player = result; showScreen('dashboard'); }
   });
-  });
-
-  els.loginBtn.addEventListener('click', async () => {
-    const name = els.loginName.value.trim();
-    const pin = els.loginPin.value.trim();
-    if (!name || !pin) { els.authError.textContent = 'Fill in both fields!'; return; }
-    els.authError.textContent = 'Logging in...';
-    const result = await db.logIn(name, pin);
-    if (result.error) els.authError.textContent = result.error;
-    else { player = result; showScreen('dashboard'); }
-  });
-
-  els.signupBtn.addEventListener('click', async () => {
-    const name = els.signupName.value.trim();
-    const pin = els.signupPin.value.trim();
-    if (!name || !pin) { els.authError.textContent = 'Fill in both fields!'; return; }
-    if (name.length < 2) { els.authError.textContent = 'Name needs 2+ characters!'; return; }
-    if (!/^\d{8}$/.test(pin)) { els.authError.textContent = 'PIN = 8 digits (DDMMYYYY)'; return; }
-    els.authError.textContent = 'Creating account...';
-    const result = await db.signUp(name, pin);
-    if (result.error) els.authError.textContent = result.error;
-    else { player = result; showScreen('dashboard'); }
-  });
 
   els.logoutBtn.addEventListener('click', () => {
     player = null;
