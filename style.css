@@ -122,34 +122,89 @@ input, button, select { font-family: inherit; }
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   min-height: 100vh; padding: 24px;
 }
-.auth-hero { text-align: center; margin-bottom: 32px; }
-.auth-logo { font-size: 4rem; display: block; margin-bottom: 12px; animation: rocket-float 3s ease-in-out infinite; }
-.auth-hero h1 {
-  font-size: 2rem;
+.auth-title {
+  font-size: 1.8rem; font-weight: 700; margin-bottom: 6px;
   background: linear-gradient(135deg, var(--gold), var(--primary));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-.auth-form {
+.auth-subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 28px; }
+
+/* Profile grid */
+.profile-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px; margin-bottom: 20px; width: 100%;
+}
+.profile-card {
+  background: var(--card); border-radius: var(--radius); padding: 24px 16px;
+  text-align: center; cursor: pointer; border: 2px solid transparent;
+  transition: transform 0.15s, border-color 0.2s;
+}
+.profile-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+.profile-card:active { transform: scale(0.97); }
+.profile-card-emoji { font-size: 3rem; display: block; margin-bottom: 8px; }
+.profile-card-name { font-size: 1.1rem; font-weight: 700; color: var(--text); text-transform: capitalize; }
+.btn-new-player {
+  background: var(--card); border: 2px dashed rgba(255,255,255,0.15); color: var(--text-dim);
+  padding: 14px 28px; border-radius: var(--radius-sm); cursor: pointer; font-size: 1rem;
+  font-weight: 600; width: 100%; max-width: 300px; transition: border-color 0.2s;
+}
+.btn-new-player:hover { border-color: var(--accent); color: var(--text); }
+
+/* PIN entry */
+.auth-pin-card {
   background: var(--card); border-radius: var(--radius); padding: 28px;
   width: 100%; max-width: 360px; box-shadow: var(--shadow);
 }
-.auth-tabs {
-  display: flex; gap: 4px; margin-bottom: 20px; background: var(--bg);
-  border-radius: var(--radius-sm); padding: 4px;
+.auth-pin-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
 }
-.auth-tab {
-  flex: 1; padding: 10px; border: none; background: transparent; color: var(--text-dim);
-  border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-weight: 600;
+.auth-pin-user { display: flex; align-items: center; gap: 10px; }
+.pin-avatar-large { font-size: 2.5rem; }
+.pin-name { font-size: 1.1rem; font-weight: 700; text-transform: capitalize; }
+.auth-pin-body { text-align: center; margin-bottom: 24px; }
+.pin-lock { font-size: 1.8rem; margin-bottom: 8px; }
+.auth-pin-body h2 { font-size: 1.2rem; margin-bottom: 16px; }
+.pin-dots { display: flex; justify-content: center; gap: 10px; margin-bottom: 8px; }
+.pin-dot {
+  width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.1);
+  transition: background 0.3s, transform 0.2s;
 }
-.auth-tab.active { background: var(--card); color: var(--text); }
-.auth-panel { display: none; flex-direction: column; gap: 12px; }
-.auth-panel.active { display: flex; }
-.auth-form input {
+.pin-dot.filled { background: var(--accent); transform: scale(1.15); }
+.pin-numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.pin-num {
+  background: var(--surface); border: none; color: var(--text); padding: 16px;
+  border-radius: var(--radius-sm); font-size: 1.6rem; font-weight: 700;
+  cursor: pointer; transition: background 0.15s, transform 0.1s;
+}
+.pin-num:hover { background: var(--card-hover); }
+.pin-num:active { transform: scale(0.93); }
+.pin-num-back {
+  background: transparent; border: none; color: var(--text-dim); cursor: pointer;
+  font-size: 1.4rem; display: flex; align-items: center; justify-content: center;
+}
+.pin-num-back:hover { color: var(--text); }
+
+/* Signup form */
+.auth-signup-card {
+  background: var(--card); border-radius: var(--radius); padding: 28px;
+  width: 100%; max-width: 360px; box-shadow: var(--shadow);
+}
+.signup-avatars {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 16px;
+}
+.signup-avatar-btn {
+  font-size: 1.6rem; padding: 6px; border-radius: 8px; border: 2px solid transparent;
+  background: transparent; cursor: pointer; transition: all 0.15s; opacity: 0.5;
+}
+.signup-avatar-btn:hover { opacity: 0.8; }
+.signup-avatar-btn.selected { opacity: 1; border-color: var(--accent); background: rgba(168,85,247,0.15); transform: scale(1.1); }
+.signup-input {
   width: 100%; padding: 14px 16px; background: var(--bg); border: 2px solid transparent;
-  border-radius: var(--radius-sm); color: var(--text); font-size: 1rem; outline: none;
+  border-radius: var(--radius-sm); color: var(--text); font-size: 1rem; outline: none; margin-bottom: 10px;
 }
-.auth-form input:focus { border-color: var(--accent); }
-.auth-form input::placeholder { color: var(--text-muted); }
+.signup-input:focus { border-color: var(--accent); }
+.signup-input::placeholder { color: var(--text-muted); }
+
 .auth-hint { color: var(--text-muted); font-size: 0.8rem; text-align: center; }
 .auth-error { color: var(--danger); font-size: 0.9rem; text-align: center; min-height: 1.2em; margin-top: 8px; }
 
@@ -485,8 +540,9 @@ input, button, select { font-family: inherit; }
 @media (max-width: 600px) {
   .landing h1 { font-size: 2.5rem; }
   .landing-features { grid-template-columns: 1fr; }
-  .landing-emoji, .auth-logo { font-size: 4rem; }
-  .auth-form { padding: 20px; }
+  .landing-emoji { font-size: 4rem; }
+  .auth-pin-card, .auth-signup-card { padding: 20px; }
+  .profile-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .dash-header { padding: 10px 14px; }
   .dash-body { padding: 14px; }
   .game-header { padding: 10px 12px; }
@@ -509,7 +565,7 @@ input, button, select { font-family: inherit; }
   .daily-challenge { padding: 14px; }
 }
 @media (max-width: 380px) {
-  .landing-emoji, .auth-logo { font-size: 3rem; }
+  .landing-emoji { font-size: 3rem; }
   .landing h1 { font-size: 2rem; }
   .stats-bar { flex-direction: column; }
   .stat { flex-direction: row; gap: 8px; }

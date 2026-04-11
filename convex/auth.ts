@@ -69,3 +69,11 @@ export const getPlayer = query({
     return await ctx.db.get(args.playerId);
   },
 });
+
+export const getAllPlayers = query({
+  args: {},
+  handler: async (ctx) => {
+    const players = await ctx.db.query("players").collect();
+    return players.map(p => ({ id: p._id, name: p.name, avatar: p.avatar }));
+  },
+});

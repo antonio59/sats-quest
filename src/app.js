@@ -15,17 +15,24 @@
 
   const els = {
     landingStartBtn: document.getElementById('landing-start-btn'),
-    authBack: document.getElementById('auth-back'),
-    loginForm: document.getElementById('login-form'),
-    signupForm: document.getElementById('signup-form'),
-    loginName: document.getElementById('login-name'),
-    loginPin: document.getElementById('login-pin'),
+    authProfiles: document.getElementById('auth-profiles'),
+    authPin: document.getElementById('auth-pin'),
+    authSignup: document.getElementById('auth-signup'),
+    profileGrid: document.getElementById('profile-grid'),
+    newPlayerBtn: document.getElementById('new-player-btn'),
+    pinBack: document.getElementById('pin-back'),
+    pinAvatar: document.getElementById('pin-avatar'),
+    pinName: document.getElementById('pin-name'),
+    pinDots: document.getElementById('pin-dots'),
+    pinError: document.getElementById('pin-error'),
+    pinNumpad: document.getElementById('pin-numpad'),
+    signupBack: document.getElementById('signup-back'),
+    signupAvatars: document.getElementById('signup-avatars'),
     signupName: document.getElementById('signup-name'),
     signupPin: document.getElementById('signup-pin'),
-    loginBtn: document.getElementById('login-btn'),
+    signupPinConfirm: document.getElementById('signup-pin-confirm'),
+    signupError: document.getElementById('signup-error'),
     signupBtn: document.getElementById('signup-btn'),
-    authError: document.getElementById('auth-error'),
-    authTabs: document.querySelectorAll('.auth-tab'),
     dashAvatar: document.getElementById('dash-avatar'),
     dashName: document.getElementById('dash-name'),
     dashLevel: document.getElementById('dash-level'),
@@ -67,6 +74,7 @@
   function showScreen(name) {
     Object.values(screens).forEach(s => s.classList.remove('active'));
     screens[name].classList.add('active');
+    if (name === 'auth') { loadProfiles(); els.authProfiles.style.display = 'flex'; els.authPin.style.display = 'none'; els.authSignup.style.display = 'none'; }
     if (name === 'dashboard') refreshDashboard();
     if (name === 'review') renderReview();
     if (name === 'reports') renderReports();
@@ -74,18 +82,161 @@
 
   // ===== LANDING =====
   els.landingStartBtn.addEventListener('click', () => showScreen('auth'));
-  els.authBack.addEventListener('click', () => showScreen('landing'));
 
   // ===== AUTH =====
-  els.authTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      els.authTabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      const isLogin = tab.dataset.tab === 'login';
-      els.loginForm.classList.toggle('active', isLogin);
-      els.signupForm.classList.toggle('active', !isLogin);
-      els.authError.textContent = '';
+  const PIN_LENGTH = 8;
+  const PROFILE_COLORS = [
+    'linear-gradient(135deg, #fbbf24, #f97316)',
+    'linear-gradient(135deg, #60a5fa, #a855f7)',
+    'linear-gradient(135deg, #4ade80, #10b981)',
+    'linear-gradient(135deg, #f472b6, #ef4444)',
+    'linear-gradient(135deg, #22d3ee, #14b8a6)',
+    'linear-gradient(135deg, #818cf8, #7c3aed)',
+  ];
+  const AVATARS = ['🦊','🐱','🐶','🦁','🐼','🐨','🦄','🐸','🐙','🦋','🐢','🦖','🐧','🦜','🐝','🦉','🐯','🐲','🐵'];
+  let selectedProfile = null;
+  let currentPin = '';
+  let selectedSignupAvatar = '🦊';
+
+  function loadProfiles() {
+    db.getAllPlayers().then(players => {
+      renderProfiles(players || []);
+    }).catch(() => renderProfilesFromLocal());
+  }
+
+  function renderProfilesFromLocal() {
+    const players = JSON.parse(localStorage.getItem('sq_players') || '{}');
+    const list = Object.values(players).map(p => ({ name: p.name, avatar: p.avatar }));
+    renderProfiles(list);
+  }
+
+  function renderProfiles(players) {
+    els.profileGrid.innerHTML = '';
+    players.forEach((p, i) => {
+      const card = document.createElement('div');
+      card.className = 'profile-card';
+      card.style.background = PROFILE_COLORS[i % PROFILE_COLORS.length];
+      card.innerHTML = `<span class="profile-card-emoji">${p.avatar}</span><span class="profile-card-name" style="color:white;">${p.name}</span>`;
+      card.addEventListener('click', () => selectProfile(p));
+      els.profileGrid.appendChild(card);
     });
+  }
+
+  function selectProfile(profile) {
+    selectedProfile = profile;
+    currentPin = '';
+    els.pinAvatar.textContent = profile.avatar;
+    els.pinName.textContent = profile.name;
+    renderPinDots();
+    els.pinError.textContent = '';
+    els.authProfiles.style.display = 'none';
+    els.authPin.style.display = 'flex';
+  }
+
+  function renderPinDots() {
+    els.pinDots.innerHTML = '';
+    for (let i = 0; i < PIN_LENGTH; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'pin-dot' + (i < currentPin.length ? ' filled' : '');
+      els.pinDots.appendChild(dot);
+    }
+  }
+
+  function buildNumpad() {
+    els.pinNumpad.innerHTML = '';
+    for (let n = 1; n <= 9; n++) {
+      const btn = document.createElement('button');
+      btn.className = 'pin-num';
+      btn.textContent = n;
+      btn.addEventListener('click', () => handlePinDigit(n.toString()));
+      els.pinNumpad.appendChild(btn);
+    }
+    const spacer = document.createElement('div');
+    els.pinNumpad.appendChild(spacer);
+    const zero = document.createElement('button');
+    zero.className = 'pin-num';
+    zero.textContent = '0';
+    zero.addEventListener('click', () => handlePinDigit('0'));
+    els.pinNumpad.appendChild(zero);
+    const back = document.createElement('button');
+    back.className = 'pin-num-back';
+    back.textContent = '⌫';
+    back.addEventListener('click', handlePinBackspace);
+    els.pinNumpad.appendChild(back);
+  }
+  buildNumpad();
+
+  async function handlePinDigit(digit) {
+    if (currentPin.length >= PIN_LENGTH || !selectedProfile) return;
+    currentPin += digit;
+    renderPinDots();
+    if (currentPin.length === PIN_LENGTH) {
+      els.pinError.textContent = '';
+      const result = await db.logIn(selectedProfile.name, currentPin);
+      if (result.error) {
+        els.pinError.textContent = result.error;
+        currentPin = '';
+        renderPinDots();
+      } else {
+        player = result;
+        showScreen('dashboard');
+      }
+    }
+  }
+
+  function handlePinBackspace() {
+    currentPin = currentPin.slice(0, -1);
+    renderPinDots();
+    els.pinError.textContent = '';
+  }
+
+  els.pinBack.addEventListener('click', () => {
+    selectedProfile = null;
+    currentPin = '';
+    els.authPin.style.display = 'none';
+    els.authProfiles.style.display = 'flex';
+  });
+
+  els.newPlayerBtn.addEventListener('click', () => {
+    selectedSignupAvatar = '🦊';
+    els.authProfiles.style.display = 'none';
+    els.authSignup.style.display = 'flex';
+    renderSignupAvatars();
+  });
+
+  function renderSignupAvatars() {
+    els.signupAvatars.innerHTML = '';
+    AVATARS.forEach(a => {
+      const btn = document.createElement('button');
+      btn.className = 'signup-avatar-btn' + (a === selectedSignupAvatar ? ' selected' : '');
+      btn.textContent = a;
+      btn.addEventListener('click', () => {
+        selectedSignupAvatar = a;
+        renderSignupAvatars();
+      });
+      els.signupAvatars.appendChild(btn);
+    });
+  }
+
+  els.signupBack.addEventListener('click', () => {
+    els.authSignup.style.display = 'none';
+    els.authProfiles.style.display = 'flex';
+    els.signupError.textContent = '';
+  });
+
+  els.signupBtn.addEventListener('click', async () => {
+    const name = els.signupName.value.trim();
+    const pin = els.signupPin.value.trim();
+    const confirm = els.signupPinConfirm.value.trim();
+    if (!name || !pin) { els.signupError.textContent = 'Fill in all fields!'; return; }
+    if (name.length < 2) { els.signupError.textContent = 'Name needs 2+ characters!'; return; }
+    if (!/^\d{8}$/.test(pin)) { els.signupError.textContent = 'PIN = 8 digits (DDMMYYYY)'; return; }
+    if (pin !== confirm) { els.signupError.textContent = 'PINs don\'t match!'; return; }
+    els.signupError.textContent = 'Creating account...';
+    const result = await db.signUp(name, pin);
+    if (result.error) els.signupError.textContent = result.error;
+    else { player = result; showScreen('dashboard'); }
+  });
   });
 
   els.loginBtn.addEventListener('click', async () => {
