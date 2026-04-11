@@ -11,6 +11,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #3 from antonio59/feat/profile-pin-login
+
+feat: profile selection + PIN numpad login
 - Add CI workflow, dependency review, and Dependabot config
 - Merge pull request #1 from antonio59/dependabot/npm_and_yarn/esbuild-0.27.4
 
@@ -185,5 +188,11 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
+- Update changelog [skip ci]
+
+### Features
+
+- Profile selection + PIN numpad login (music-request-v2 style)
 
 
