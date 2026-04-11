@@ -48,7 +48,7 @@ export const logIn = mutation({
   handler: async (ctx, args) => {
     const player = await ctx.db.query("players").withIndex("by_name", q => q.eq("name", args.name.trim())).unique();
     if (!player) return { error: "No player found!" };
-    if (player.pin !== args.pin) return { error: "Wrong PIN! Hint: it's your birthday (MMDDYYYY)." };
+    if (player.pin !== args.pin) return { error: "Wrong passcode!" };
 
     // Update streak
     const today = new Date().toISOString().split('T')[0];

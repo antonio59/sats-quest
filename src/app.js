@@ -84,7 +84,7 @@
   els.landingStartBtn.addEventListener('click', () => showScreen('auth'));
 
   // ===== AUTH =====
-  const PIN_LENGTH = 8;
+  const PIN_LENGTH = 6;
   const PROFILE_COLORS = [
     'linear-gradient(135deg, #fbbf24, #f97316)',
     'linear-gradient(135deg, #60a5fa, #a855f7)',
@@ -112,6 +112,12 @@
 
   function renderProfiles(players) {
     els.profileGrid.innerHTML = '';
+    if (players.length === 0) {
+      els.authProfiles.style.display = 'none';
+      els.authSignup.style.display = 'flex';
+      renderSignupAvatars();
+      return;
+    }
     players.forEach((p, i) => {
       const card = document.createElement('div');
       card.className = 'profile-card';
@@ -230,7 +236,7 @@
     const confirm = els.signupPinConfirm.value.trim();
     if (!name || !pin) { els.signupError.textContent = 'Fill in all fields!'; return; }
     if (name.length < 2) { els.signupError.textContent = 'Name needs 2+ characters!'; return; }
-    if (!/^\d{8}$/.test(pin)) { els.signupError.textContent = 'PIN = 8 digits (DDMMYYYY)'; return; }
+    if (!/^\d{6}$/.test(pin)) { els.signupError.textContent = 'Passcode must be 6 digits'; return; }
     if (pin !== confirm) { els.signupError.textContent = 'PINs don\'t match!'; return; }
     els.signupError.textContent = 'Creating account...';
     const result = await db.signUp(name, pin);

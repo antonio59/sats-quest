@@ -5,7 +5,7 @@ export default defineSchema({
   // Players
   players: defineTable({
     name: v.string(),
-    pin: v.string(),           // MMDDYYYY format
+    pin: v.string(),           // 6-digit passcode
     avatar: v.string(),
     xp: v.number(),
     level: v.number(),
