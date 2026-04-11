@@ -12,6 +12,7 @@ jobs:
         with: { bun-version: latest }
       - run: bun install
       - name: Deploy Convex
-        run: bunx convex deploy
+        run: |
+          CONVEX_DEPLOYMENT=prod:combative-viper-883 bunx convex deploy
         env:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
