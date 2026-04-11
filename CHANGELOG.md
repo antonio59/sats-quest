@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Await async getQuestion
 - Debug getQuestion, fix hashStr crash
 - Use Convex IDs for questions, pass streak to submitAnswer
 - Use ConvexClient with new per Convex docs
@@ -197,6 +198,7 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
