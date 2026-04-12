@@ -1093,5 +1093,569 @@ window.MathsQuestions = [
     correctIndex: 2,
     explanation: "Side length = √144 = 12 cm. Perimeter = 4 × 12 = 48 cm.",
     tags: ["geometry", "area", "perimeter", "square"]
+  },
+
+  // ============================================
+  // EXPANDED CONTENT — NEW QUESTIONS
+  // ============================================
+
+  // --- Level 1 (New) ---
+  {
+    world: "math",
+    level: 1,
+    type: "multiple-choice",
+    question: "What is the value of the digit 7 in the number 4,725?",
+    options: ["7", "70", "700", "7,000"],
+    correctIndex: 2,
+    explanation: "Great job! In the number 4,725, the 7 is in the hundreds column, so its value is 700.",
+    tags: ["number", "place value"]
+  },
+  {
+    world: "math",
+    level: 1,
+    type: "multiple-choice",
+    question: "Calculate: 345 + 123",
+    options: ["458", "468", "478", "488"],
+    correctIndex: 1,
+    explanation: "Well done! 300 + 100 = 400, 40 + 20 = 60, and 5 + 3 = 8. So, 345 + 123 = 468.",
+    tags: ["addition", "four operations"]
+  },
+  {
+    world: "math",
+    level: 1,
+    type: "multiple-choice",
+    question: "Calculate: 56 - 24",
+    options: ["22", "32", "42", "52"],
+    correctIndex: 1,
+    explanation: "Spot on! 50 - 20 = 30, and 6 - 4 = 2. So, 56 - 24 = 32.",
+    tags: ["subtraction", "four operations"]
+  },
+  {
+    world: "math",
+    level: 1,
+    type: "multiple-choice",
+    question: "What is 6 multiplied by 8?",
+    options: ["42", "46", "48", "54"],
+    correctIndex: 2,
+    explanation: "Excellent! 6 x 8 = 48. Knowing your times tables is super helpful!",
+    tags: ["multiplication", "four operations"]
+  },
+  {
+    world: "math",
+    level: 1,
+    type: "multiple-choice",
+    question: "Divide 45 by 5.",
+    options: ["7", "8", "9", "10"],
+    correctIndex: 2,
+    explanation: "Brilliant! 45 ÷ 5 = 9, because 9 x 5 = 45.",
+    tags: ["division", "four operations"]
+  },
+  {
+    world: "math",
+    level: 1,
+    type: "multiple-choice",
+    question: "Which fraction is equivalent to 1/2?",
+    options: ["1/4", "2/4", "3/4", "2/3"],
+    correctIndex: 1,
+    explanation: "Perfect! If you multiply both the top (numerator) and bottom (denominator) of 1/2 by 2, you get 2/4.",
+    tags: ["fractions", "equivalent"]
+  },
+  {
+    world: "math",
+    level: 1,
+    type: "multiple-choice",
+    question: "How many minutes are in 2 hours?",
+    options: ["60", "90", "120", "150"],
+    correctIndex: 2,
+    explanation: "Awesome! There are 60 minutes in 1 hour, so 2 hours is 60 x 2 = 120 minutes.",
+    tags: ["measurement", "time"]
+  },
+  {
+    world: "math",
+    level: 1,
+    type: "multiple-choice",
+    question: "What is the perimeter of a square with sides of 5cm?",
+    options: ["10cm", "15cm", "20cm", "25cm"],
+    correctIndex: 2,
+    explanation: "Great work! A square has 4 equal sides. 5cm + 5cm + 5cm + 5cm = 20cm (or 5 x 4 = 20).",
+    tags: ["measurement", "perimeter", "geometry"]
+  },
+  {
+    world: "math",
+    level: 1,
+    type: "true-false",
+    question: "A triangle has 4 sides.",
+    options: ["True", "False"],
+    correctIndex: 1,
+    explanation: "Correct! A triangle has 3 sides. A shape with 4 sides is called a quadrilateral.",
+    tags: ["geometry", "2D shapes"]
+  },
+  {
+    world: "math",
+    level: 1,
+    type: "true-false",
+    question: "Half of 100 is 50.",
+    options: ["True", "False"],
+    correctIndex: 0,
+    explanation: "Spot on! 100 ÷ 2 = 50.",
+    tags: ["fractions", "four operations"]
+  },
+  {
+    world: "math",
+    level: 1,
+    type: "text-input",
+    question: "Write the number 'two hundred and five' in digits.",
+    options: ["205"],
+    correctIndex: 0,
+    explanation: "Fantastic! 'Two hundred and five' is written as 205.",
+    tags: ["number", "place value"]
+  },
+
+  // --- Level 2 (New) ---
+  {
+    world: "math",
+    level: 2,
+    type: "multiple-choice",
+    question: "Round 3,456 to the nearest 100.",
+    options: ["3,400", "3,450", "3,500", "4,000"],
+    correctIndex: 2,
+    explanation: "Well done! The tens digit is 5, so we round up. 3,456 rounded to the nearest 100 is 3,500.",
+    tags: ["number", "rounding"]
+  },
+  {
+    world: "math",
+    level: 2,
+    type: "multiple-choice",
+    question: "Calculate: 1,234 + 5,678",
+    options: ["6,812", "6,912", "6,802", "6,902"],
+    correctIndex: 1,
+    explanation: "Excellent! Using column addition: 4+8=12, 30+70+10=110, 200+600+100=900, 1000+5000=6000. Total: 6,912.",
+    tags: ["addition", "four operations"]
+  },
+  {
+    world: "math",
+    level: 2,
+    type: "multiple-choice",
+    question: "What is 45 x 6?",
+    options: ["240", "260", "270", "280"],
+    correctIndex: 2,
+    explanation: "Great job! 40 x 6 = 240, and 5 x 6 = 30. 240 + 30 = 270.",
+    tags: ["multiplication", "four operations"]
+  },
+  {
+    world: "math",
+    level: 2,
+    type: "multiple-choice",
+    question: "Find 1/4 of 36.",
+    options: ["6", "8", "9", "12"],
+    correctIndex: 2,
+    explanation: "Brilliant! To find 1/4, divide by 4. 36 ÷ 4 = 9.",
+    tags: ["fractions", "division"]
+  },
+  {
+    world: "math",
+    level: 2,
+    type: "multiple-choice",
+    question: "Write 0.5 as a fraction.",
+    options: ["1/5", "1/4", "1/3", "1/2"],
+    correctIndex: 3,
+    explanation: "Perfect! 0.5 is the same as 5/10, which simplifies to 1/2.",
+    tags: ["decimals", "fractions"]
+  },
+  {
+    world: "math",
+    level: 2,
+    type: "multiple-choice",
+    question: "How many grams are in 2.5 kilograms?",
+    options: ["250g", "2,500g", "25,000g", "25g"],
+    correctIndex: 1,
+    explanation: "Awesome! There are 1,000 grams in 1 kilogram. 2.5 x 1,000 = 2,500g.",
+    tags: ["measurement", "unit conversion"]
+  },
+  {
+    world: "math",
+    level: 2,
+    type: "multiple-choice",
+    question: "What is the area of a rectangle with length 8cm and width 4cm?",
+    options: ["12cm\u00b2", "24cm\u00b2", "32cm\u00b2", "64cm\u00b2"],
+    correctIndex: 2,
+    explanation: "Spot on! Area = length x width. 8cm x 4cm = 32cm².",
+    tags: ["measurement", "area", "geometry"]
+  },
+  {
+    world: "math",
+    level: 2,
+    type: "multiple-choice",
+    question: "Which of these is a 3D shape?",
+    options: ["Hexagon", "Cylinder", "Trapezium", "Rhombus"],
+    correctIndex: 1,
+    explanation: "Correct! A cylinder is a 3D shape. The others are 2D shapes.",
+    tags: ["geometry", "3D shapes"]
+  },
+  {
+    world: "math",
+    level: 2,
+    type: "true-false",
+    question: "An acute angle is greater than 90 degrees.",
+    options: ["True", "False"],
+    correctIndex: 1,
+    explanation: "Well done! An acute angle is LESS than 90 degrees. An obtuse angle is greater than 90 degrees.",
+    tags: ["geometry", "angles"]
+  },
+  {
+    world: "math",
+    level: 2,
+    type: "text-input",
+    question: "Calculate: 120 ÷ 10",
+    options: ["12"],
+    correctIndex: 0,
+    explanation: "Fantastic! When dividing by 10, the digits move one place to the right. 120 ÷ 10 = 12.",
+    tags: ["division", "four operations"]
+  },
+  {
+    world: "math",
+    level: 2,
+    type: "text-input",
+    question: "What is 10% of 50?",
+    options: ["5"],
+    correctIndex: 0,
+    explanation: "Great work! To find 10%, divide by 10. 50 ÷ 10 = 5.",
+    tags: ["percentages"]
+  },
+
+  // --- Level 3 (New) ---
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    question: "What is the next number in this sequence: 3, 7, 11, 15, ...?",
+    options: ["17", "18", "19", "20"],
+    correctIndex: 2,
+    explanation: "Excellent! The sequence goes up by 4 each time. 15 + 4 = 19.",
+    tags: ["algebra", "sequences"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    question: "Calculate: 3/4 + 1/4",
+    options: ["4/8", "1", "3/8", "1 1/4"],
+    correctIndex: 1,
+    explanation: "Brilliant! 3/4 + 1/4 = 4/4, which is equal to 1 whole.",
+    tags: ["fractions", "add/subtract"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    question: "What is 25% as a fraction in its simplest form?",
+    options: ["1/2", "1/4", "1/5", "25/100"],
+    correctIndex: 1,
+    explanation: "Perfect! 25% is 25/100. Dividing top and bottom by 25 gives 1/4.",
+    tags: ["percentages", "fractions", "converting"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    question: "A recipe for 4 people needs 200g of flour. How much flour is needed for 8 people?",
+    options: ["300g", "400g", "500g", "600g"],
+    correctIndex: 1,
+    explanation: "Awesome! 8 people is double 4 people, so you need double the flour. 200g x 2 = 400g.",
+    tags: ["ratio and proportion"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    question: "Calculate: 4.5 + 2.7",
+    options: ["6.2", "7.2", "6.12", "7.12"],
+    correctIndex: 1,
+    explanation: "Spot on! 5 tenths + 7 tenths = 12 tenths (or 1.2). 4 + 2 + 1.2 = 7.2.",
+    tags: ["decimals", "addition"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    question: "What is the mean of these numbers: 4, 6, 8, 10?",
+    options: ["6", "7", "8", "28"],
+    correctIndex: 1,
+    explanation: "Great job! Add the numbers: 4+6+8+10 = 28. Then divide by how many numbers there are: 28 ÷ 4 = 7.",
+    tags: ["statistics", "mean"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    question: "How many degrees are in a right angle?",
+    options: ["45\u00b0", "90\u00b0", "180\u00b0", "360\u00b0"],
+    correctIndex: 1,
+    explanation: "Correct! A right angle is exactly 90 degrees.",
+    tags: ["geometry", "angles"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    question: "If x = 5, what is the value of 3x + 2?",
+    options: ["10", "15", "17", "25"],
+    correctIndex: 2,
+    explanation: "Well done! 3x means 3 times x. So, 3 x 5 = 15. Then add 2: 15 + 2 = 17.",
+    tags: ["algebra", "substitution"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "true-false",
+    question: "0.75 is equivalent to 3/4.",
+    options: ["True", "False"],
+    correctIndex: 0,
+    explanation: "Excellent! 3/4 is the same as 75/100, which is 0.75 as a decimal.",
+    tags: ["decimals", "fractions", "converting"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "true-false",
+    question: "The perimeter of a shape is the space inside it.",
+    options: ["True", "False"],
+    correctIndex: 1,
+    explanation: "Brilliant! The perimeter is the distance AROUND the outside of a shape. The space inside is the area.",
+    tags: ["measurement", "perimeter", "area"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "text-input",
+    question: "Calculate: 8 x 7",
+    options: ["56"],
+    correctIndex: 0,
+    explanation: "Perfect! 8 x 7 = 56.",
+    tags: ["multiplication", "four operations"]
+  },
+
+  // --- Level 4 (New) ---
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "Calculate: 3/5 + 1/10",
+    options: ["4/15", "7/10", "4/10", "7/15"],
+    correctIndex: 1,
+    explanation: "Awesome! First, make the denominators the same. 3/5 = 6/10. Then add: 6/10 + 1/10 = 7/10.",
+    tags: ["fractions", "add/subtract"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "What is 15% of 200?",
+    options: ["15", "20", "30", "45"],
+    correctIndex: 2,
+    explanation: "Spot on! 10% of 200 is 20. 5% is half of that, which is 10. So 15% is 20 + 10 = 30.",
+    tags: ["percentages", "finding"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "Solve for y: 2y - 4 = 10",
+    options: ["3", "5", "7", "14"],
+    correctIndex: 2,
+    explanation: "Great work! First, add 4 to both sides: 2y = 14. Then divide by 2: y = 7.",
+    tags: ["algebra", "simple equations"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "A train leaves at 14:35 and arrives at 16:15. How long is the journey?",
+    options: ["1 hour 20 mins", "1 hour 40 mins", "2 hours 20 mins", "2 hours 40 mins"],
+    correctIndex: 1,
+    explanation: "Correct! From 14:35 to 15:35 is 1 hour. From 15:35 to 16:00 is 25 mins. From 16:00 to 16:15 is 15 mins. Total: 1 hour + 25 mins + 15 mins = 1 hour 40 mins.",
+    tags: ["measurement", "time"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "What is the volume of a cuboid with length 5cm, width 3cm, and height 2cm?",
+    options: ["10cm\u00b3", "15cm\u00b3", "25cm\u00b3", "30cm\u00b3"],
+    correctIndex: 3,
+    explanation: "Well done! Volume = length x width x height. 5 x 3 x 2 = 30cm³.",
+    tags: ["measurement", "volume", "geometry"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "Calculate: 234 x 15",
+    options: ["3,410", "3,510", "3,610", "3,710"],
+    correctIndex: 1,
+    explanation: "Excellent! 234 x 10 = 2,340. 234 x 5 = 1,170. 2,340 + 1,170 = 3,510.",
+    tags: ["multiplication", "four operations", "long methods"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "Angles in a triangle add up to...",
+    options: ["90\u00b0", "180\u00b0", "270\u00b0", "360\u00b0"],
+    correctIndex: 1,
+    explanation: "Brilliant! The interior angles of any triangle always add up to 180 degrees.",
+    tags: ["geometry", "angles"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "What is the nth term of this sequence: 5, 8, 11, 14, ...?",
+    options: ["3n + 2", "3n + 5", "n + 4", "5n"],
+    correctIndex: 0,
+    explanation: "Perfect! The sequence goes up by 3, so it starts with 3n. The first term (n=1) is 5, and 3(1) + 2 = 5. So the nth term is 3n + 2.",
+    tags: ["algebra", "nth term", "sequences"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "true-false",
+    question: "A prime number has exactly two factors: 1 and itself.",
+    options: ["True", "False"],
+    correctIndex: 0,
+    explanation: "Awesome! That is the exact definition of a prime number. For example, 7 is prime because its only factors are 1 and 7.",
+    tags: ["number", "properties"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "text-input",
+    question: "Calculate: 1 - 3/8",
+    options: ["5/8"],
+    correctIndex: 0,
+    explanation: "Spot on! 1 whole is the same as 8/8. 8/8 - 3/8 = 5/8.",
+    tags: ["fractions", "add/subtract"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "text-input",
+    question: "What is 0.25 as a percentage?",
+    options: ["25%", "25"],
+    correctIndex: 0,
+    explanation: "Great job! To convert a decimal to a percentage, multiply by 100. 0.25 x 100 = 25%.",
+    tags: ["percentages", "decimals", "converting"]
+  },
+
+  // --- Level 5 (New) ---
+  {
+    world: "math",
+    level: 5,
+    type: "multiple-choice",
+    question: "Calculate: 2 1/4 + 1 2/3",
+    options: ["3 3/7", "3 11/12", "4 1/12", "3 5/12"],
+    correctIndex: 1,
+    explanation: "Correct! Add the whole numbers: 2+1=3. For the fractions, find a common denominator (12). 1/4 = 3/12 and 2/3 = 8/12. 3/12 + 8/12 = 11/12. Total: 3 11/12.",
+    tags: ["fractions", "mixed numbers", "add/subtract"]
+  },
+  {
+    world: "math",
+    level: 5,
+    type: "multiple-choice",
+    question: "A shop has a 20% off sale. A coat originally costs £45. What is the sale price?",
+    options: ["\u00a39", "\u00a335", "\u00a336", "\u00a340"],
+    correctIndex: 2,
+    explanation: "Well done! 10% of £45 is £4.50. So 20% is £9. Subtract the discount from the original price: £45 - £9 = £36.",
+    tags: ["percentages", "decrease", "money"]
+  },
+  {
+    world: "math",
+    level: 5,
+    type: "multiple-choice",
+    question: "Calculate: 3/4 ÷ 2",
+    options: ["3/8", "6/4", "1 1/2", "3/2"],
+    correctIndex: 0,
+    explanation: "Excellent! Dividing a fraction by a whole number is the same as multiplying the denominator by that number. 3 / (4x2) = 3/8.",
+    tags: ["fractions", "division"]
+  },
+  {
+    world: "math",
+    level: 5,
+    type: "multiple-choice",
+    question: "In a class, the ratio of boys to girls is 2:3. If there are 30 children in total, how many girls are there?",
+    options: ["12", "15", "18", "20"],
+    correctIndex: 2,
+    explanation: "Brilliant! Total parts = 2 + 3 = 5. One part = 30 ÷ 5 = 6. Number of girls = 3 parts = 3 x 6 = 18.",
+    tags: ["ratio and proportion"]
+  },
+  {
+    world: "math",
+    level: 5,
+    type: "multiple-choice",
+    question: "Calculate: 4,320 ÷ 15",
+    options: ["286", "288", "292", "298"],
+    correctIndex: 1,
+    explanation: "Perfect! Using long division: 15 goes into 43 twice (30), remainder 13. Bring down 2 to make 132. 15 goes into 132 eight times (120), remainder 12. Bring down 0 to make 120. 15 goes into 120 eight times. Answer: 288.",
+    tags: ["division", "four operations", "long methods"]
+  },
+  {
+    world: "math",
+    level: 5,
+    type: "multiple-choice",
+    question: "What are the coordinates of the point (3, 4) after a translation of 2 units left and 5 units up?",
+    options: ["(1, 9)", "(5, 9)", "(1, -1)", "(5, -1)"],
+    correctIndex: 0,
+    explanation: "Awesome! 2 units left means subtract 2 from the x-coordinate: 3 - 2 = 1. 5 units up means add 5 to the y-coordinate: 4 + 5 = 9. New coordinates: (1, 9).",
+    tags: ["geometry", "coordinates", "translation"]
+  },
+  {
+    world: "math",
+    level: 5,
+    type: "multiple-choice",
+    question: "The mean of 5 numbers is 12. Four of the numbers are 10, 14, 8, and 15. What is the fifth number?",
+    options: ["11", "12", "13", "14"],
+    correctIndex: 2,
+    explanation: "Spot on! If the mean of 5 numbers is 12, their total sum must be 5 x 12 = 60. The sum of the four known numbers is 10+14+8+15 = 47. The fifth number is 60 - 47 = 13.",
+    tags: ["statistics", "mean"]
+  },
+  {
+    world: "math",
+    level: 5,
+    type: "multiple-choice",
+    question: "Solve for x: 3x + 5 = x + 17",
+    options: ["4", "6", "8", "12"],
+    correctIndex: 1,
+    explanation: "Great work! Subtract x from both sides: 2x + 5 = 17. Subtract 5 from both sides: 2x = 12. Divide by 2: x = 6.",
+    tags: ["algebra", "simple equations"]
+  },
+  {
+    world: "math",
+    level: 5,
+    type: "true-false",
+    question: "The area of a triangle is calculated by multiplying the base by the height.",
+    options: ["True", "False"],
+    correctIndex: 1,
+    explanation: "Correct! The area of a triangle is HALF the base times the height (1/2 x b x h).",
+    tags: ["measurement", "area", "geometry"]
+  },
+  {
+    world: "math",
+    level: 5,
+    type: "text-input",
+    question: "Calculate: 5/6 x 3/4",
+    options: ["15/24", "5/8"],
+    correctIndex: 0,
+    explanation: "Well done! Multiply the numerators: 5 x 3 = 15. Multiply the denominators: 6 x 4 = 24. The answer is 15/24 (which simplifies to 5/8).",
+    tags: ["fractions", "multiply"]
+  },
+  {
+    world: "math",
+    level: 5,
+    type: "text-input",
+    question: "What is 3/8 as a decimal?",
+    options: ["0.375"],
+    correctIndex: 0,
+    explanation: "Excellent! 1/8 is 0.125, so 3/8 is 3 x 0.125 = 0.375. You can also calculate 3 ÷ 8.",
+    tags: ["decimals", "fractions", "converting"]
   }
 ];

@@ -108,7 +108,15 @@ window.SATClient = (function() {
 
     async submitAnswer(playerId, questionId, selectedIndex, timeMs, streak = 0) {
       const q = window.QuestionBank ? findQuestion(questionId) : null;
-      const correct = q ? selectedIndex === q.correctIndex : false;
+      let correct = false;
+      if (q) {
+        if (Array.isArray(q.correctIndex)) {
+          // multi-select: selectedIndex might be -1 (wrong) or 0 (correct)
+          correct = selectedIndex >= 0;
+        } else {
+          correct = selectedIndex === q.correctIndex;
+        }
+      }
       const xpGain = correct ? (q ? (q.level * 10) + Math.max(0, 30 - Math.floor(timeMs/1000)) : 10) : 2;
 
       if (convexLoaded && convexClient) {
@@ -129,14 +137,14 @@ window.SATClient = (function() {
       // Level up based on accuracy
       const acc = progress[world].correct / progress[world].answered;
       if (acc > 0.8 && progress[world].answered > 4) {
-        progress[world].level = Math.min(10, progress[world].level + 1);
+        progress[world].level = Math.min(5, progress[world].level + 1);
       }
       local._set(`progress_${playerId}`, progress);
 
       // Update player XP
       const session = JSON.parse(localStorage.getItem('sq_session') || '{}');
       session.xp = (session.xp || 0) + xpGain;
-      session.level = Math.floor(session.xp / 500) + 1;
+      session.level = Math.min(5, Math.floor(session.xp / 400) + 1);
       localStorage.setItem('sq_session', JSON.stringify(session));
 
       // Save answer for review

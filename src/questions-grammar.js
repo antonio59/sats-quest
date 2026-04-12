@@ -1113,5 +1113,669 @@ window.GrammarQuestions = [
     correctIndex: 2,
     explanation: "'Supersede' is spelled S-U-P-E-R-S-E-D-E. It's one of the few words where 'sede' is used instead of 'cede'.",
     tags: ["spelling", "commonly-misspelled"]
+  },
+
+  // ============================================
+  // EXPANDED CONTENT — NEW QUESTIONS
+  // ============================================
+
+  // --- Level 1 (New) ---
+  {
+    world: "writing",
+    level: 1,
+    type: "multiple-choice",
+    question: "Which of these is a verb?",
+    options: ["A) jump", "B) red", "C) book", "D) slowly"],
+    correctIndex: 0,
+    explanation: "That's right! A verb is an action or doing word. 'Jump' is something you can do.",
+    tags: ["grammar", "word-classes", "verbs"]
+  },
+  {
+    world: "writing",
+    level: 1,
+    type: "true-false",
+    question: "The word 'cat' is a noun.",
+    options: ["True", "False"],
+    correctIndex: 0,
+    explanation: "That's right! A noun is a person, place, or thing. A 'cat' is a thing (an animal). Simple as that!",
+    tags: ["grammar", "word-classes", "nouns"]
+  },
+  {
+    world: "writing",
+    level: 1,
+    type: "multiple-choice",
+    question: "Which punctuation mark should be at the end of this sentence: 'What is your name'",
+    options: ["A) .", "B) ?", "C) !", "D) ,"],
+    correctIndex: 1,
+    explanation: "That's right! When you ask a question, you need to put a question mark at the end.",
+    tags: ["punctuation", "question-marks"]
+  },
+
+  // --- Level 2 (New) ---
+  {
+    world: "writing",
+    level: 2,
+    type: "multiple-choice",
+    question: "Which of these is a noun?",
+    options: ["A) run", "B) happy", "C) ball", "D) quickly"],
+    correctIndex: 2,
+    explanation: "That's correct! A noun is a person, place, or thing. A 'ball' is a thing. 'Run' is a verb, 'happy' is an adjective, and 'quickly' is an adverb.",
+    tags: ["grammar", "word-classes", "nouns"]
+  },
+  {
+    world: "writing",
+    level: 2,
+    type: "multiple-choice",
+    question: "Which sentence is in the past tense?",
+    options: ["A) I am playing football.", "B) I played football yesterday.", "C) I will play football tomorrow.", "D) I play football every day."],
+    correctIndex: 1,
+    explanation: "Correct! The past tense tells us about something that has already happened. The '-ed' at the end of 'played' shows that it happened in the past.",
+    tags: ["grammar", "verb-tenses", "past-tense"]
+  },
+  {
+    world: "writing",
+    level: 2,
+    type: "true-false",
+    question: "The word 'redo' means to do something again.",
+    options: ["True", "False"],
+    correctIndex: 0,
+    explanation: "That's correct! The prefix 're-' means 'again', so 'redo' means to do something again. Well done!",
+    tags: ["spelling", "prefixes"]
+  },
+  {
+    world: "writing",
+    level: 2,
+    type: "multiple-choice",
+    question: "Which word is a pronoun that could replace 'the boy'?",
+    options: ["A) He", "B) She", "C) It", "D) They"],
+    correctIndex: 0,
+    explanation: "Exactly! 'He' is the pronoun used to refer to a male person, so it's the perfect replacement for 'the boy'.",
+    tags: ["grammar", "word-classes", "pronouns"]
+  },
+  {
+    world: "writing",
+    level: 2,
+    type: "multiple-choice",
+    question: "Which word is the adjective in the sentence: 'The big dog barked'?",
+    options: ["A) The", "B) big", "C) dog", "D) barked"],
+    correctIndex: 1,
+    explanation: "Yes! 'Big' is the adjective because it's describing the noun, 'dog'. It tells us what the dog is like.",
+    tags: ["grammar", "word-classes", "adjectives"]
+  },
+
+  // --- Level 3 (New) ---
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Where should a comma be added in this sentence? 'I need to buy apples oranges and bananas.'",
+    options: ["A) After 'apples'", "B) After 'oranges'", "C) After 'buy'", "D) After 'and'"],
+    correctIndex: 0,
+    explanation: "Perfect! When you have a list of three or more things, you need to put a comma after each item except the last one. So it should be 'apples, oranges and bananas'. Keep up the great work!",
+    tags: ["punctuation", "commas", "lists"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "true-false",
+    question: "The word 'unhappy' has a prefix.",
+    options: ["True", "False"],
+    correctIndex: 0,
+    explanation: "You're right! The prefix 'un-' has been added to the word 'happy' to change its meaning to the opposite.",
+    tags: ["spelling", "prefixes"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which word is a preposition in this sentence: 'The cat is sleeping on the mat.'",
+    options: ["A) sleeping", "B) on", "C) the", "D) mat"],
+    correctIndex: 1,
+    explanation: "That's it! A preposition is a word that shows the relationship between a noun or pronoun and another word in the sentence. 'On' tells us where the cat is in relation to the mat.",
+    tags: ["grammar", "word-classes", "prepositions"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which of these is an adjective?",
+    options: ["A) slowly", "B) house", "C) green", "D) eat"],
+    correctIndex: 2,
+    explanation: "That's correct! An adjective is a word that describes a noun. 'Green' can describe a noun, for example, 'a green car'.",
+    tags: ["grammar", "word-classes", "adjectives"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which word is an adverb in this sentence: 'The boy ran quickly to school.'",
+    options: ["A) boy", "B) ran", "C) quickly", "D) school"],
+    correctIndex: 2,
+    explanation: "That's it! An adverb is a word that describes a verb, an adjective, or another adverb. 'Quickly' tells us how the boy ran.",
+    tags: ["grammar", "word-classes", "adverbs"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which word has the suffix '-able' or '-ible' spelled correctly?",
+    options: ["A) visable", "B) comfortable", "C) responseable", "D) adoreable"],
+    correctIndex: 1,
+    explanation: "You've got it! 'Comfortable' is spelled correctly. It can be tricky to know whether to use '-able' or '-ible', so well done for spotting the correct one!",
+    tags: ["spelling", "suffixes"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which sentence is in the future tense?",
+    options: ["A) I am reading a book.", "B) I read a book yesterday.", "C) I will read a book tomorrow.", "D) I have read that book."],
+    correctIndex: 2,
+    explanation: "That's right! The future tense tells us about something that is going to happen. The word 'will' shows that this action will happen in the future.",
+    tags: ["grammar", "verb-tenses", "future-tense"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which of these words is a determiner?",
+    options: ["A) an", "B) run", "C) under", "D) happily"],
+    correctIndex: 0,
+    explanation: "That's correct! 'An' is a determiner (a type of article) that we use before a noun that starts with a vowel sound, like 'an apple'.",
+    tags: ["grammar", "word-classes", "determiners"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "text-input",
+    question: "Correct the spelling of the underlined word: My favourite subject is sciense.",
+    options: ["science"],
+    correctIndex: 0,
+    explanation: "Great spelling! 'Science' is one of those words you just have to remember. The 'c' is silent!",
+    tags: ["spelling", "commonly-misspelled-words", "silent-letters"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which sentence is in the present tense?",
+    options: ["A) She walked to school.", "B) She is walking to school.", "C) She will walk to school.", "D) She had walked to school."],
+    correctIndex: 1,
+    explanation: "That's the one! 'Is walking' is the present progressive tense, which describes an action happening right now. It's a form of the present tense.",
+    tags: ["grammar", "verb-tenses", "present-tense"]
+  },
+
+  // --- Level 4 (New) ---
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which sentence uses the subjunctive mood correctly?",
+    options: ["A) If I was you, I would practice more.", "B) I wish I was a bit taller.", "C) If I were the captain, I would choose a different strategy.", "D) He behaves as if he was the king."],
+    correctIndex: 2,
+    explanation: "Well done! The subjunctive mood is used for hypothetical situations. We use 'were' instead of 'was' after 'if' or 'I wish'. For example, 'If I were a millionaire...'",
+    tags: ["grammar", "subjunctive-mood", "verb-moods"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which sentence uses a fronted adverbial correctly?",
+    options: ["A) Suddenly, the lights went out.", "B) The lights, suddenly went out.", "C) The lights went out suddenly.", "D) Went out the lights suddenly."],
+    correctIndex: 0,
+    explanation: "Fantastic! A fronted adverbial is a word or phrase at the beginning of a sentence to describe the action that follows. 'Suddenly,' is the fronted adverbial here, and it needs a comma after it.",
+    tags: ["grammar", "fronted-adverbials", "punctuation", "commas"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "true-false",
+    question: "Is the apostrophe used correctly in this sentence? The childrens' toys were scattered all over the floor.",
+    options: ["True", "False"],
+    correctIndex: 1,
+    explanation: "That's right, it's false! 'Children' is already a plural noun, so we just add an apostrophe and 's' to show possession: 'the children's toys'. You have a keen eye for punctuation!",
+    tags: ["punctuation", "apostrophes", "possession"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Identify the determiner in the following sentence: 'She bought that book yesterday.'",
+    options: ["A) She", "B) bought", "C) that", "D) book"],
+    correctIndex: 2,
+    explanation: "You've spotted it! 'That' is a determiner, which is a word that comes before a noun to show which person or thing we are talking about. Other examples are 'a', 'the', 'these', and 'some'.",
+    tags: ["grammar", "word-classes", "determiners"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which sentence uses a colon correctly?",
+    options: ["A) I need to buy: milk, bread, and eggs.", "B) She loves to play: tennis, football, and netball.", "C) You have two choices: finish your homework now or do it later.", "D) He visited: Paris, Rome, and Madrid."],
+    correctIndex: 2,
+    explanation: "Excellent! A colon is used to introduce a list or an explanation. In this case, it introduces the two choices. Well done!",
+    tags: ["punctuation", "colons"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "text-input",
+    question: "Correct the spelling of the underlined word: The magician performed an amazing ilusion.",
+    options: ["illusion"],
+    correctIndex: 0,
+    explanation: "Fantastic spelling! An 'illusion' is something that deceives the eye or mind. You've mastered this tricky word!",
+    tags: ["spelling", "commonly-misspelled-words"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "true-false",
+    question: "The following sentence is in the future progressive tense: 'I will be travelling to Spain next week.'",
+    options: ["True", "False"],
+    correctIndex: 0,
+    explanation: "Absolutely! The future progressive tense is used to describe an action that will be in progress at a specific time in the future. It's formed with 'will be' + the present participle (-ing verb).",
+    tags: ["grammar", "verb-tenses", "future-progressive"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which sentence uses brackets correctly?",
+    options: ["A) The (dog) was barking loudly.", "B) He finally answered (after taking five minutes to think) that he didn't know.", "C) I went to the shop (to buy some milk).", "D) She is (very) excited about the party."],
+    correctIndex: 1,
+    explanation: "Spot on! Brackets are used to add extra information or a comment that is separate from the main sentence. The information inside the brackets can be removed without changing the meaning of the sentence.",
+    tags: ["punctuation", "brackets"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which of these is a conjunction?",
+    options: ["A) because", "B) beautiful", "C) quickly", "D) under"],
+    correctIndex: 0,
+    explanation: "That's right! A conjunction is a word that joins words, phrases, or clauses. 'Because' is a subordinating conjunction, used to give a reason.",
+    tags: ["grammar", "word-classes", "conjunctions"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which sentence is in the past progressive tense?",
+    options: ["A) I was watching TV when you called.", "B) I watched TV last night.", "C) I will be watching TV later.", "D) I have watched that film before."],
+    correctIndex: 0,
+    explanation: "Excellent! The past progressive tense is used to describe an action that was in progress at a specific time in the past. It's formed with 'was' or 'were' + the present participle (-ing verb).",
+    tags: ["grammar", "verb-tenses", "past-progressive"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "text-input",
+    question: "Correct the spelling of the underlined word: It is neccessary to warm up before you exercise.",
+    options: ["necessary"],
+    correctIndex: 0,
+    explanation: "Brilliant! The word 'necessary' has one 'c' and a double 's'. You're a spelling whiz!",
+    tags: ["spelling", "commonly-misspelled-words", "double-consonants"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which of these is a pronoun?",
+    options: ["A) Sarah", "B) run", "C) it", "D) happy"],
+    correctIndex: 2,
+    explanation: "You've got it! A pronoun is a word that takes the place of a noun. 'It' can replace a noun like 'the book' or 'the dog'.",
+    tags: ["grammar", "word-classes", "pronouns"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which suffix can be added to the word 'danger' to make a new word?",
+    options: ["A) -ous", "B) -able", "C) -tion", "D) -ment"],
+    correctIndex: 0,
+    explanation: "Correct! Adding the suffix '-ous' to 'danger' creates the adjective 'dangerous', which means full of danger. Great job!",
+    tags: ["spelling", "suffixes"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "true-false",
+    question: "An apostrophe can be used to show that letters are missing from a word.",
+    options: ["True", "False"],
+    correctIndex: 0,
+    explanation: "You're absolutely right! This is called a contraction. For example, 'don't' is a contraction of 'do not', and the apostrophe shows where the 'o' is missing.",
+    tags: ["punctuation", "apostrophes", "contractions"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which sentence uses the past perfect tense correctly?",
+    options: ["A) I had eaten my breakfast before I went to school.", "B) I ate my breakfast this morning.", "C) I was eating my breakfast when the phone rang.", "D) I have eaten my breakfast."],
+    correctIndex: 0,
+    explanation: "Perfect! The past perfect tense is used to talk about an action that was completed before another action in the past. It's formed with 'had' + the past participle. You're a grammar expert!",
+    tags: ["grammar", "verb-tenses", "perfect-tense"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "text-input",
+    question: "Correct the spelling of the underlined word: He felt a great sense of acheivement.",
+    options: ["achievement"],
+    correctIndex: 0,
+    explanation: "Fantastic spelling! Remember the rule 'i before e except after c'. 'Achievement' is a great example of this rule. You're a spelling star!",
+    tags: ["spelling", "commonly-misspelled-words"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which homophone correctly completes the sentence: 'The dog wagged ___ tail.'?",
+    options: ["A) it's", "B) its", "C) its'", "D) it is"],
+    correctIndex: 1,
+    explanation: "Perfect! 'Its' is a possessive pronoun that shows that the tail belongs to the dog. 'It's' is a contraction of 'it is'. This is a very common mistake, so well done for getting it right!",
+    tags: ["spelling", "homophones", "apostrophes"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which sentence is in the active voice?",
+    options: ["A) The window was broken by the ball.", "B) The ball broke the window.", "C) The broken window was reported.", "D) A report was made about the broken window."],
+    correctIndex: 1,
+    explanation: "You've got it! In the active voice, the subject of the sentence performs the action. Here, 'the ball' is the subject and it is doing the action ('broke').",
+    tags: ["grammar", "active-voice", "passive-voice"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which sentence uses an apostrophe for possession correctly?",
+    options: ["A) The dogs' bone was buried in the garden.", "B) The dog's bone was buried in the garden.", "C) The dogs bone was buried in the garden.", "D) The dog's bones' were buried in the garden."],
+    correctIndex: 1,
+    explanation: "Spot on! For a single dog, we show possession by adding an apostrophe and then 's'. If there were multiple dogs, it would be 'the dogs' bone'.",
+    tags: ["punctuation", "apostrophes", "possession"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "true-false",
+    question: "The word 'beautiful' contains a prefix.",
+    options: ["True", "False"],
+    correctIndex: 1,
+    explanation: "That's right, it's false. 'Beautiful' contains the base word 'beauty' and the suffix '-ful', which means 'full of'. It does not have a prefix at the start.",
+    tags: ["spelling", "suffixes", "prefixes"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which sentence is punctuated correctly?",
+    options: ["A) 'What time is it,' she asked?", "B) 'What time is it?' she asked.", "C) 'What time is it?,' she asked.", "D) 'What time is it', she asked?"],
+    correctIndex: 1,
+    explanation: "Perfect punctuation! The question mark goes inside the speech marks because it's part of the question being asked. The sentence then ends with a full stop.",
+    tags: ["punctuation", "speech-marks", "quotes"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which of these words with the suffix '-tion', '-sion', or '-cian' is spelled correctly?",
+    options: ["A) Musitian", "B) Televishion", "C) Action", "D) Permision"],
+    correctIndex: 2,
+    explanation: "Correct! 'Action' is spelled perfectly. The other words should be 'musician', 'television', and 'permission'. You have a great eye for spelling!",
+    tags: ["spelling", "suffix"]
+  },
+
+  // --- Level 5 (New) ---
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which of these words with the suffix '-tion', '-sion', or '-cian' is spelled incorrectly?",
+    options: ["A) Invasion", "B) Politician", "C) Occassion", "D) Celebration"],
+    correctIndex: 2,
+    explanation: "This is a very common mistake! The correct spelling is 'occasion', with one 's' and a double 'c'. You have a great eye for detail!",
+    tags: ["spelling", "suffix", "commonly-misspelled-words"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which sentence contains a relative clause that adds extra, non-essential information?",
+    options: ["A) The boy who won the race is my brother.", "B) My bike, which is red, was a birthday present.", "C) The house that is on the corner is very old.", "D) I don't like books that have sad endings."],
+    correctIndex: 1,
+    explanation: "Excellent! The clause 'which is red' is a non-defining relative clause. It gives us extra information, but the sentence still makes sense without it. We use commas to separate it from the main sentence.",
+    tags: ["grammar", "relative-clauses", "punctuation", "commas"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which sentence is written in the passive voice?",
+    options: ["A) The dog chased the ball.", "B) The ball was chased by the dog.", "C) The girl threw the frisbee.", "D) The frisbee was thrown by the girl."],
+    correctIndex: 1,
+    explanation: "You've got it! In the passive voice, the object of the action becomes the subject. Here, 'the ball' is the subject, and the action ('was chased') is done to it. The active version is 'The dog chased the ball.'",
+    tags: ["grammar", "active-voice", "passive-voice"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "text-input",
+    question: "Correct the spelling of the underlined word in this sentence: The librerian helped me find the book I needed.",
+    options: ["librarian"],
+    correctIndex: 0,
+    explanation: "Brilliant spelling! A person who works in a library is a 'librarian'. It's one of those tricky words to remember.",
+    tags: ["spelling", "commonly-misspelled-words"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which sentence is in the present perfect tense?",
+    options: ["A) I have finished my homework.", "B) I finished my homework earlier.", "C) I will finish my homework soon.", "D) I am finishing my homework."],
+    correctIndex: 0,
+    explanation: "Exactly! The present perfect tense is used to talk about actions that happened at an unspecified time in the past and are still relevant now. It's formed with 'have' or 'has' + the past participle. Great job!",
+    tags: ["grammar", "verb-tenses", "perfect-tense"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which sentence uses a semicolon correctly?",
+    options: ["A) I like to read; and I also like to write.", "B) The sun was shining; the birds were singing.", "C) I have a cat; a dog; and a hamster.", "D) She is very tired; so she is going to bed early."],
+    correctIndex: 1,
+    explanation: "Great job! A semicolon can be used to join two closely related independent clauses. Both 'The sun was shining' and 'the birds were singing' are complete sentences, and the semicolon connects them beautifully.",
+    tags: ["punctuation", "semicolons"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which sentence uses a dash correctly?",
+    options: ["A) I went to the park - it was a beautiful day.", "B) My favourite colour is blue - or maybe green.", "C) She is a great friend - always there for me.", "D) All of the above."],
+    correctIndex: 3,
+    explanation: "You've got it! Dashes can be used to add extra information, to show a change of thought, or to create emphasis. All of these sentences use the dash correctly. Super work!",
+    tags: ["punctuation", "dashes"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which of these words contains a silent letter?",
+    options: ["A) talk", "B) read", "C) write", "D) sing"],
+    correctIndex: 2,
+    explanation: "You're a spelling superstar! The 'w' in 'write' is silent. We don't pronounce it, but it's a very important part of the word.",
+    tags: ["spelling", "silent-letters"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "text-input",
+    question: "What is the correct spelling for the missing word? The doctor gave me a ______ for my cough.",
+    options: ["prescription"],
+    correctIndex: 0,
+    explanation: "Perfect spelling! A 'prescription' is a note from a doctor that allows you to get medicine. You're a spelling champion!",
+    tags: ["spelling", "commonly-misspelled-words"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "true-false",
+    question: "The word 'their' is a homophone of 'there' and 'they're'.",
+    options: ["True", "False"],
+    correctIndex: 0,
+    explanation: "You've nailed it! Homophones are words that sound the same but have different meanings and spellings. 'Their' shows possession, 'there' indicates a place, and 'they're' is a contraction of 'they are'.",
+    tags: ["spelling", "homophones"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which word with a prefix is spelled incorrectly?",
+    options: ["A) mispell", "B) disappear", "C) rewrite", "D) prehistoric"],
+    correctIndex: 0,
+    explanation: "You've spotted the mistake! The correct spelling is 'misspell', with a double 's'. It's a tricky one, but you've got it!",
+    tags: ["spelling", "prefixes", "commonly-misspelled-words"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which sentence uses an ellipsis correctly?",
+    options: ["A) I don't know... what to say.", "B) The story begins, 'Once upon a time...'", "C) He said, 'I think I can...' and then he fell asleep.", "D) All of the above."],
+    correctIndex: 3,
+    explanation: "Fantastic! An ellipsis (...) can be used to show hesitation, a pause, or that some words have been left out. All of these sentences use the ellipsis correctly. You're a punctuation pro!",
+    tags: ["punctuation", "ellipsis"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "true-false",
+    question: "The sentence 'The cake was eaten' is in the active voice.",
+    options: ["True", "False"],
+    correctIndex: 1,
+    explanation: "That's right, it's false! This sentence is in the passive voice because the subject ('the cake') is having the action done to it. The active version would be 'Someone ate the cake.'",
+    tags: ["grammar", "active-voice", "passive-voice"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which sentence contains a fronted adverbial?",
+    options: ["A) He walked home slowly.", "B) After the storm, a rainbow appeared in the sky.", "C) She sang a beautiful song.", "D) The cat slept peacefully."],
+    correctIndex: 1,
+    explanation: "Excellent! 'After the storm' is a fronted adverbial phrase that tells us when the rainbow appeared. It's placed at the front of the sentence for emphasis and is followed by a comma.",
+    tags: ["grammar", "fronted-adverbials", "punctuation", "commas"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "text-input",
+    question: "Correct the spelling of the underlined word: She was very greatful for the gift.",
+    options: ["grateful"],
+    correctIndex: 0,
+    explanation: "Wonderful spelling! The word 'grateful' means feeling or showing thanks. It's a common mistake, but you've spelled it perfectly!",
+    tags: ["spelling", "commonly-misspelled-words"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which sentence contains a non-defining relative clause?",
+    options: ["A) The man who lives next door is a doctor.", "B) My sister, who loves to draw, is very creative.", "C) This is the book that I was telling you about.", "D) I saw the film that won an award."],
+    correctIndex: 1,
+    explanation: "Excellent work! 'who loves to draw' is a non-defining relative clause. It adds extra information about your sister, but the sentence would still make sense without it. Notice how it's separated by commas.",
+    tags: ["grammar", "relative-clauses", "punctuation", "commas"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which sentence is an example of the subjunctive mood?",
+    options: ["A) I wish I was on holiday.", "B) If he were more careful, he wouldn't make so many mistakes.", "C) I suggest that he is a good candidate.", "D) She was happy to be there."],
+    correctIndex: 1,
+    explanation: "You've mastered the subjunctive mood! We use 'were' instead of 'was' to talk about hypothetical or unreal situations. Great job!",
+    tags: ["grammar", "subjunctive-mood", "verb-moods"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "true-false",
+    question: "A semicolon can be used to introduce a list.",
+    options: ["True", "False"],
+    correctIndex: 1,
+    explanation: "That's correct, it's false. A colon (:) is used to introduce a list, while a semicolon (;) is used to join two closely related independent clauses. You have a great understanding of punctuation!",
+    tags: ["punctuation", "semicolons", "colons"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "text-input",
+    question: "Correct the spelling of the underlined word: The government made a new anouncement.",
+    options: ["announcement"],
+    correctIndex: 0,
+    explanation: "Excellent spelling! The word 'announcement' has a double 'n' in the middle. You've spelled it perfectly!",
+    tags: ["spelling", "commonly-misspelled-words", "double-consonants"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which sentence correctly uses a relative pronoun to combine two sentences: 'I have a friend. She is a doctor.'?",
+    options: ["A) I have a friend, she is a doctor.", "B) I have a friend who is a doctor.", "C) I have a friend and is a doctor.", "D) I have a friend, a doctor."],
+    correctIndex: 1,
+    explanation: "Brilliant! The relative pronoun 'who' correctly joins the two sentences to create a more complex and interesting sentence. 'Who' refers back to the friend.",
+    tags: ["grammar", "relative-clauses", "pronouns"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which of the following is NOT a function of a dash?",
+    options: ["A) To show possession.", "B) To add extra information.", "C) To show a pause or interruption.", "D) To create emphasis."],
+    correctIndex: 0,
+    explanation: "You are absolutely correct! A dash has many uses, but showing possession is the job of an apostrophe. You know your punctuation inside and out!",
+    tags: ["punctuation", "dashes", "apostrophes"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which sentence uses the word 'practice' correctly?",
+    options: ["A) I need to practice my spelling.", "B) The doctor's practice is on the high street.", "C) Are you going to football practice tonight?", "D) All of the above."],
+    correctIndex: 3,
+    explanation: "This is a tricky one, but you've got it! In British English, 'practice' is the noun (a thing, like a doctor's practice or football practice) and 'practise' is the verb (the action). However, 'practice' is often used for both in modern usage, and all these sentences are considered correct. Amazing work!",
+    tags: ["spelling", "homophones", "commonly-misspelled-words"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Identify the word class of 'although' in the sentence: 'Although it was raining, we went to the park.'",
+    options: ["A) Preposition", "B) Adverb", "C) Conjunction", "D) Verb"],
+    correctIndex: 2,
+    explanation: "You are a true grammar expert! 'Although' is a subordinating conjunction. It's used to connect a main clause ('we went to the park') with a subordinate clause ('Although it was raining') that depends on the main clause for its full meaning.",
+    tags: ["grammar", "word-classes", "conjunctions"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "text-input",
+    question: "There is a spelling mistake in the following sentence. Correct the misspelled word: 'He was determined to succede.'",
+    options: ["succeed"],
+    correctIndex: 0,
+    explanation: "You've done it! 'Succeed' is a very tricky word to spell with its double 'c' and double 'e'. You've spelled it perfectly. Well done!",
+    tags: ["spelling", "commonly-misspelled-words", "double-consonants"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "true-false",
+    question: "A fronted adverbial must always be a single word.",
+    options: ["True", "False"],
+    correctIndex: 1,
+    explanation: "That's false, and you've correctly identified it! A fronted adverbial can be a single word (e.g., 'Suddenly,') or a phrase (e.g., 'In the dead of night,'). You really know your grammar!",
+    tags: ["grammar", "fronted-adverbials"]
   }
 ];

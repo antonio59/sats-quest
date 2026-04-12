@@ -2,7 +2,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
-const MAX_LEVEL = 15;
+const MAX_LEVEL = 5;
 const XP_PER_LEVEL = 400; // Faster level progression
 
 // Get a question for a world/level

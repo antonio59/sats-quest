@@ -7,14 +7,14 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
 
   <!-- Open Graph / Link Preview -->
-  <meta name="description" content="SATs prep that feels like a game — 264 questions across Reading, Grammar & Maths. 15 minutes a day. Zero boredom.">
+  <meta name="description" content="SATs prep that feels like a game — 700+ questions across Reading, Grammar &amp; Maths. 15 minutes a day. Zero boredom.">
   <meta property="og:title" content="SATs Quest 🚀">
-  <meta property="og:description" content="Gamified KS2 SATs revision — Reading, Grammar & Maths. 264 questions, exam mode, daily challenges!">
+  <meta property="og:description" content="Gamified KS2 SATs revision — Reading, Grammar &amp; Maths. 700+ questions, exam mode, daily challenges!">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://sats-quest.antoniosmith.xyz/">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="SATs Quest 🚀">
-  <meta name="twitter:description" content="Gamified KS2 SATs revision — Reading, Grammar & Maths. 264 questions, exam mode, daily challenges!">
+  <meta name="twitter:description" content="Gamified KS2 SATs revision — Reading, Grammar &amp; Maths. 700+ questions, exam mode, daily challenges!">
   <meta name="theme-color" content="#0f0e17">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -35,7 +35,7 @@
           <div class="feature-card">
             <span class="feature-emoji">📚</span>
             <h3>3 Worlds</h3>
-            <p>Reading, Grammar Reading, Writing & Math — each with 10 levels to conquer Maths — each with 5 levels to conquer</p>
+            <p>Reading, Grammar &amp; Maths — each with 5 levels to conquer</p>
           </div>
           <div class="feature-card">
             <span class="feature-emoji">⚡</span>
@@ -229,6 +229,13 @@
           </div>
         </div>
 
+        <div class="badges-section">
+          <h2 class="section-title">🏅 Badges & Achievements</h2>
+          <div class="badges-grid" id="badges-grid">
+            <!-- Badges rendered by JS -->
+          </div>
+        </div>
+
         <div class="daily-challenge" id="daily-challenge">
           <h3>🎯 Daily Challenge</h3>
           <p>Complete 5 questions today to keep your streak!</p>
@@ -411,6 +418,7 @@
   <script src="src/questions-reading.js"></script>
   <script src="src/questions-grammar.js"></script>
   <script src="src/questions-maths.js"></script>
+  <script src="src/question-generator.js"></script>
   <script>
     // Merge separate question banks into one
     if (!window.QuestionBank) window.QuestionBank = { reading: [], writing: [], math: [] };

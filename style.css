@@ -571,3 +571,145 @@ input, button, select { font-family: inherit; }
   .stat { flex-direction: row; gap: 8px; }
   .exam-cards-grid { grid-template-columns: 1fr; }
 }
+
+/* ===== NEW QUESTION TYPES ===== */
+.text-input-wrapper { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.text-answer-input {
+  background: var(--card); border: 2px solid var(--text-muted); border-radius: var(--radius-sm);
+  padding: 16px 18px; font-size: 1.1rem; color: var(--text); width: 100%; max-width: 400px;
+  text-align: center; outline: none; transition: border-color 0.2s;
+}
+.text-answer-input:focus { border-color: var(--accent); }
+.text-answer-input:disabled { opacity: 0.7; }
+.tf-btn { min-width: 140px; text-align: center; font-size: 1.1rem; font-weight: 600; }
+.multi-select-btn.selected { border-color: var(--accent); background: rgba(168,85,247,0.15); }
+.multi-submit-btn { margin-top: 12px; }
+
+/* ===== ACHIEVEMENTS / BADGES ===== */
+.badges-section { margin-top: 20px; }
+.badges-grid {
+  display: flex; flex-wrap: wrap; gap: 10px; padding: 10px 0;
+}
+.badge-item {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--card); border-radius: var(--radius-sm); padding: 12px 10px;
+  min-width: 80px; text-align: center; border: 2px solid transparent;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.badge-item.earned { border-color: var(--gold); }
+.badge-item.locked { opacity: 0.4; filter: grayscale(1); }
+.badge-emoji { font-size: 2rem; margin-bottom: 4px; }
+.badge-name { font-size: 0.7rem; color: var(--text-dim); line-height: 1.2; }
+.badge-toast {
+  position: fixed; top: 20%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
+  background: linear-gradient(135deg, var(--gold), #f97316);
+  color: #000; padding: 20px 30px; border-radius: var(--radius);
+  font-size: 1.3rem; font-weight: 700; text-align: center;
+  z-index: 2000; animation: badge-pop 2.5s ease-out forwards;
+  box-shadow: 0 0 40px rgba(251,191,36,0.5);
+}
+@keyframes badge-pop {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  15% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+  30% { transform: translate(-50%, -50%) scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -80%) scale(0.9); }
+}
+
+/* ===== WORD SCRAMBLE ===== */
+.scramble-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+.scramble-letters {
+  font-size: 2.5rem; font-weight: 800; letter-spacing: 8px; color: var(--gold);
+  margin: 20px 0; text-transform: uppercase;
+}
+.scramble-hint { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 16px; font-style: italic; }
+.scramble-input {
+  background: var(--card); border: 2px solid var(--text-muted); border-radius: var(--radius-sm);
+  padding: 14px 18px; font-size: 1.3rem; color: var(--text); width: 100%; max-width: 300px;
+  text-align: center; text-transform: uppercase; letter-spacing: 4px; outline: none;
+}
+.scramble-input:focus { border-color: var(--gold); }
+.scramble-score { font-size: 1.2rem; margin-top: 16px; }
+.scramble-feedback { font-size: 1.1rem; margin-top: 8px; min-height: 30px; font-weight: 600; }
+.scramble-feedback.correct-fb { color: var(--success); }
+.scramble-feedback.wrong-fb { color: var(--danger); }
+
+/* ===== BOSS BATTLE ===== */
+.boss-area { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+.boss-header { text-align: center; margin-bottom: 20px; }
+.boss-emoji { font-size: 4rem; display: block; margin-bottom: 8px; animation: boss-pulse 1.5s ease-in-out infinite; }
+@keyframes boss-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+.boss-hp-bar {
+  width: 200px; height: 12px; background: var(--card); border-radius: 6px; overflow: hidden;
+  margin: 0 auto 16px;
+}
+.boss-hp-fill { height: 100%; background: var(--danger); transition: width 0.5s ease; border-radius: 6px; }
+.boss-question { font-size: 1.1rem; margin-bottom: 16px; text-align: center; max-width: 500px; }
+.boss-xp-label { font-size: 1rem; color: var(--gold); font-weight: 600; margin-top: 8px; }
+
+/* ===== BADGES & ACHIEVEMENTS ===== */
+.badges-section { margin-top: 24px; }
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  border-radius: 12px;
+  background: var(--card);
+  border: 2px solid var(--border, rgba(255,255,255,0.06));
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.badge-item.earned {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(245,158,11,0.05));
+  box-shadow: 0 0 12px rgba(251,191,36,0.2);
+}
+.badge-item.earned:hover { transform: scale(1.08); }
+.badge-item.locked { opacity: 0.45; filter: grayscale(0.7); }
+.badge-emoji { font-size: 2rem; margin-bottom: 4px; }
+.badge-name { font-size: 0.7rem; font-weight: 600; color: var(--text); line-height: 1.2; }
+.badge-item.locked .badge-emoji { font-size: 1.6rem; }
+
+.badge-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #1a1a2e;
+  padding: 24px 32px;
+  border-radius: 16px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+  z-index: 10000;
+  box-shadow: 0 8px 32px rgba(251,191,36,0.4);
+  animation: badgePop 2.8s ease forwards;
+}
+@keyframes badgePop {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  15% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+  25% { transform: translate(-50%, -50%) scale(1); }
+  75% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+}
+
+.feedback-explanation {
+  font-style: italic;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  background: var(--card);
+  border-radius: 8px;
+  margin-top: 12px;
+}

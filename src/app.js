@@ -69,13 +69,15 @@
   let questionStartTime = 0;
 
   const WORLD_ICONS = { reading: '📖', writing: '✍️', math: '🔢' };
-  const WORLD_NAMES = { reading: 'Reading', writing: 'Writing', math: 'Math' };
+  const WORLD_NAMES = { reading: 'Reading', writing: 'Grammar', math: 'Maths' };
+  const XP_PER_LEVEL = 400;
+  const MAX_LEVEL = 5;
 
   function showScreen(name) {
     Object.values(screens).forEach(s => s.classList.remove('active'));
     screens[name].classList.add('active');
     if (name === 'auth') { loadProfiles(); els.authProfiles.style.display = 'flex'; els.authPin.style.display = 'none'; els.authSignup.style.display = 'none'; }
-    if (name === 'dashboard') refreshDashboard();
+    if (name === 'dashboard') { refreshDashboard(); checkAchievements(); renderBadges(); }
     if (name === 'review') renderReview();
     if (name === 'reports') renderReports();
   }
@@ -270,7 +272,7 @@
       totalCorrect += p.correct;
       const bar = document.getElementById(`${world}-bar`);
       const label = document.getElementById(`${world}-level`);
-      if (bar) bar.style.width = (p.level / 10 * 100) + '%';
+      if (bar) bar.style.width = (p.level / MAX_LEVEL * 100) + '%';
       if (label) label.textContent = `Level ${p.level}`;
     }
     els.statAccuracy.textContent = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) + '%' : '—';
@@ -302,6 +304,10 @@
     const level = worldProgress.level;
 
     currentQuestion = await db.getQuestion(currentWorld, level);
+    // Fallback to dynamic generator for maths if static bank is exhausted
+    if (!currentQuestion && currentWorld === 'math' && window.QuestionGenerator) {
+      currentQuestion = window.QuestionGenerator.generate(level);
+    }
     if (!currentQuestion) {
       els.questionText.textContent = 'No more questions! Check back later.';
       els.questionOptions.innerHTML = '';
@@ -333,13 +339,86 @@
     els.questionOptions.innerHTML = '';
     els.questionFeedback.classList.add('hidden');
 
-    currentQuestion.options.forEach((opt, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'option-btn';
-      btn.textContent = opt;
-      btn.addEventListener('click', () => handleAnswer(i));
-      els.questionOptions.appendChild(btn);
-    });
+    const qType = currentQuestion.type || 'multiple-choice';
+
+    if (qType === 'text-input') {
+      // Free-text answer input
+      const wrapper = document.createElement('div');
+      wrapper.className = 'text-input-wrapper';
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'text-answer-input';
+      input.placeholder = 'Type your answer here...';
+      input.autocomplete = 'off';
+      const submitBtn = document.createElement('button');
+      submitBtn.className = 'btn';
+      submitBtn.textContent = 'Submit ✔';
+      submitBtn.addEventListener('click', () => {
+        const userAnswer = input.value.trim();
+        if (!userAnswer) return;
+        submitBtn.disabled = true;
+        input.disabled = true;
+        // Check against accepted answers (correctIndex stores index, options[0] is the canonical answer)
+        const accepted = (currentQuestion.options || []).map(a => a.toLowerCase().replace(/[^a-z0-9]/g, ''));
+        const normalised = userAnswer.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const isCorrect = accepted.includes(normalised);
+        handleAnswerResult(isCorrect ? currentQuestion.correctIndex : -1, isCorrect);
+      });
+      input.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitBtn.click(); });
+      wrapper.appendChild(input);
+      wrapper.appendChild(submitBtn);
+      els.questionOptions.appendChild(wrapper);
+    } else if (qType === 'true-false') {
+      // Two-button true/false
+      ['True', 'False'].forEach((label, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn tf-btn';
+        btn.textContent = label;
+        btn.addEventListener('click', () => handleAnswer(i));
+        els.questionOptions.appendChild(btn);
+      });
+    } else if (qType === 'multi-select') {
+      // Checkboxes — user selects multiple, then submits
+      const selectedSet = new Set();
+      currentQuestion.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn multi-select-btn';
+        btn.textContent = opt;
+        btn.addEventListener('click', () => {
+          if (selectedSet.has(i)) { selectedSet.delete(i); btn.classList.remove('selected'); }
+          else { selectedSet.add(i); btn.classList.add('selected'); }
+        });
+        els.questionOptions.appendChild(btn);
+      });
+      const submitBtn = document.createElement('button');
+      submitBtn.className = 'btn multi-submit-btn';
+      submitBtn.textContent = 'Submit ✔';
+      submitBtn.addEventListener('click', () => {
+        if (selectedSet.size === 0) return;
+        submitBtn.disabled = true;
+        // correctIndex is an array for multi-select, e.g. [0, 2]
+        const correctSet = new Set(Array.isArray(currentQuestion.correctIndex) ? currentQuestion.correctIndex : [currentQuestion.correctIndex]);
+        const isCorrect = selectedSet.size === correctSet.size && [...selectedSet].every(i => correctSet.has(i));
+        // Highlight correct/wrong
+        const btns = els.questionOptions.querySelectorAll('.multi-select-btn');
+        btns.forEach((b, idx) => {
+          b.disabled = true;
+          if (correctSet.has(idx)) b.classList.add('correct');
+          if (selectedSet.has(idx) && !correctSet.has(idx)) b.classList.add('wrong');
+        });
+        handleAnswerResult(isCorrect ? 0 : -1, isCorrect);
+      });
+      els.questionOptions.appendChild(submitBtn);
+    } else {
+      // Default: multiple-choice
+      currentQuestion.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt;
+        btn.addEventListener('click', () => handleAnswer(i));
+        els.questionOptions.appendChild(btn);
+      });
+    }
 
     questionStartTime = Date.now();
     els.gameMessage.textContent = `${WORLD_NAMES[currentWorld]} · ${currentQuestion.tags?.join(', ') || ''}`;
@@ -353,10 +432,32 @@
     const qId = currentQuestion._id || currentQuestion._hash;
     const result = await db.submitAnswer(player.playerId, qId, selectedIndex, timeMs, player.streak || 0);
 
-    // Highlight correct/wrong
-    btns[selectedIndex].classList.add(result.correct ? 'correct' : 'wrong');
-    if (!result.correct) btns[result.correctIndex].classList.add('correct');
+    // Highlight correct/wrong for standard MC and true-false
+    if (btns[selectedIndex]) btns[selectedIndex].classList.add(result.correct ? 'correct' : 'wrong');
+    if (!result.correct && btns[result.correctIndex]) btns[result.correctIndex].classList.add('correct');
 
+    handleAnswerCommon(result);
+  }
+
+  // Shared post-answer logic for all question types
+  function handleAnswerResult(selectedIndex, isCorrect) {
+    const timeMs = Date.now() - questionStartTime;
+    const qId = currentQuestion._id || currentQuestion._hash;
+    // Build a result object locally for non-standard types
+    const xpGain = isCorrect ? ((currentQuestion.level || 1) * 15) + Math.max(0, 60 - Math.floor(timeMs / 1000)) : 2;
+    const result = {
+      correct: isCorrect,
+      xpGain,
+      streakBonus: 0,
+      correctIndex: Array.isArray(currentQuestion.correctIndex) ? currentQuestion.correctIndex[0] : currentQuestion.correctIndex,
+      explanation: currentQuestion.explanation,
+    };
+    // Still record the answer
+    db.submitAnswer(player.playerId, qId, selectedIndex, timeMs, player.streak || 0);
+    handleAnswerCommon(result);
+  }
+
+  function handleAnswerCommon(result) {
     questionsAnswered++;
 
     // XP popup
@@ -370,12 +471,15 @@
 
       // Update session XP
       player.xp = (player.xp || 0) + result.xpGain;
-      player.level = Math.floor(player.xp / 500) + 1;
+      player.level = Math.min(MAX_LEVEL, Math.floor(player.xp / XP_PER_LEVEL) + 1);
       localStorage.setItem('sq_session', JSON.stringify(player));
     }
 
     // Daily challenge
     db.incrementDaily(player.playerId);
+
+    // Check achievements
+    checkAchievements();
 
     // Show feedback
     els.feedbackIcon.textContent = result.correct ? '🎯' : '💪';
@@ -397,6 +501,9 @@
 
   function finishSession() {
     const accuracy = questionsAnswered > 0 ? Math.round((sessionCorrect / questionsAnswered) * 100) : 0;
+    if (questionsAnswered >= 10 && sessionCorrect >= 10) {
+      localStorage.setItem('sq_badge_perfect-session', 'true');
+    }
     showScreen('dashboard');
 
     // Show a quick summary
@@ -540,20 +647,55 @@
     // Question
     document.getElementById('exam-question-text').textContent = q.question;
 
-    // Options
+    // Options — handle different question types
     const optionsEl = document.getElementById('exam-options');
     optionsEl.innerHTML = '';
-    q.options.forEach((opt, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'option-btn';
-      btn.textContent = opt;
-      if (examState.answers[examState.current] === i) btn.style.borderColor = 'var(--accent)';
-      btn.addEventListener('click', () => {
-        examState.answers[examState.current] = i;
-        showExamQuestion(); // refresh
+    const qType = q.type || 'multiple-choice';
+
+    if (qType === 'text-input') {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'text-input-answer';
+      input.placeholder = 'Type your answer...';
+      input.value = typeof examState.answers[examState.current] === 'string' ? examState.answers[examState.current] : '';
+      input.addEventListener('input', () => {
+        examState.answers[examState.current] = input.value.trim();
       });
-      optionsEl.appendChild(btn);
-    });
+      optionsEl.appendChild(input);
+    } else if (qType === 'multi-select') {
+      const currentSel = Array.isArray(examState.answers[examState.current]) ? examState.answers[examState.current] : [];
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn multi-select-btn';
+        btn.textContent = opt;
+        if (currentSel.includes(i)) btn.classList.add('selected');
+        btn.addEventListener('click', () => {
+          let sel = Array.isArray(examState.answers[examState.current]) ? [...examState.answers[examState.current]] : [];
+          if (sel.includes(i)) sel = sel.filter(x => x !== i);
+          else sel.push(i);
+          examState.answers[examState.current] = sel;
+          showExamQuestion();
+        });
+        optionsEl.appendChild(btn);
+      });
+      const hint = document.createElement('p');
+      hint.className = 'multi-select-hint';
+      hint.textContent = 'Select all that apply';
+      optionsEl.appendChild(hint);
+    } else {
+      // multiple-choice and true-false
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt;
+        if (examState.answers[examState.current] === i) btn.style.borderColor = 'var(--accent)';
+        btn.addEventListener('click', () => {
+          examState.answers[examState.current] = i;
+          showExamQuestion();
+        });
+        optionsEl.appendChild(btn);
+      });
+    }
 
     // Nav dots
     const dotsEl = document.getElementById('exam-nav-dots');
@@ -561,7 +703,9 @@
     examState.questions.forEach((_, i) => {
       const dot = document.createElement('span');
       dot.className = 'exam-dot';
-      if (examState.answers[i] >= 0) dot.classList.add('answered');
+      const ans = examState.answers[i];
+      const isAnswered = Array.isArray(ans) ? ans.length > 0 : (typeof ans === 'string' ? ans.length > 0 : ans >= 0);
+      if (isAnswered) dot.classList.add('answered');
       if (i === examState.current) dot.classList.add('current');
       dot.addEventListener('click', () => { examState.current = i; showExamQuestion(); });
       dotsEl.appendChild(dot);
@@ -604,10 +748,23 @@
     clearInterval(examState.timerInterval);
     document.getElementById('exam-active-screen').classList.remove('active');
 
-    // Score
+    // Score — handle different question types
     let correct = 0;
     examState.questions.forEach((q, i) => {
-      if (examState.answers[i] === q.correctIndex) correct++;
+      const answer = examState.answers[i];
+      const qType = q.type || 'multiple-choice';
+      if (qType === 'text-input') {
+        // Accept any option as correct (options array holds acceptable answers)
+        const userAns = (typeof answer === 'string' ? answer : '').toLowerCase().trim();
+        const isCorrect = q.options.some(opt => opt.toLowerCase().trim() === userAns);
+        if (isCorrect) correct++;
+      } else if (qType === 'multi-select' && Array.isArray(q.correctIndex)) {
+        const sel = Array.isArray(answer) ? [...answer].sort() : [];
+        const expected = [...q.correctIndex].sort();
+        if (JSON.stringify(sel) === JSON.stringify(expected)) correct++;
+      } else {
+        if (answer === q.correctIndex) correct++;
+      }
     });
     const total = examState.questions.length;
     const percent = Math.round((correct / total) * 100);
@@ -616,7 +773,7 @@
     // Award XP
     const xpEarned = correct * 15;
     player.xp = (player.xp || 0) + xpEarned;
-    player.level = Math.floor(player.xp / 500) + 1;
+    player.level = Math.min(MAX_LEVEL, Math.floor(player.xp / XP_PER_LEVEL) + 1);
     localStorage.setItem('sq_session', JSON.stringify(player));
 
     // Results screen
@@ -637,7 +794,18 @@
     // Breakdown
     const breakdown = document.getElementById('exam-results-breakdown');
     breakdown.innerHTML = examState.questions.map((q, i) => {
-      const wasCorrect = examState.answers[i] === q.correctIndex;
+      const answer = examState.answers[i];
+      const qType = q.type || 'multiple-choice';
+      let wasCorrect = false;
+      if (qType === 'text-input') {
+        const userAns = (typeof answer === 'string' ? answer : '').toLowerCase().trim();
+        wasCorrect = q.options.some(opt => opt.toLowerCase().trim() === userAns);
+      } else if (qType === 'multi-select' && Array.isArray(q.correctIndex)) {
+        const sel = Array.isArray(answer) ? [...answer].sort() : [];
+        wasCorrect = JSON.stringify(sel) === JSON.stringify([...q.correctIndex].sort());
+      } else {
+        wasCorrect = answer === q.correctIndex;
+      }
       const worldIcon = q.world === 'reading' ? '📖' : q.world === 'writing' ? '✍️' : '🔢';
       return `<div class="exam-result-row">
         <span class="exam-result-icon">${wasCorrect ? '✅' : '❌'}</span>
@@ -666,14 +834,35 @@
     // Show review screen with exam answers
     const list = document.getElementById('review-list');
     list.innerHTML = examState.questions.map((q, i) => {
-      const wasCorrect = examState.answers[i] === q.correctIndex;
+      const answer = examState.answers[i];
+      const qType = q.type || 'multiple-choice';
+      let wasCorrect = false;
+      let userAnswerStr = 'Skipped';
+      let correctAnswerStr = '';
+
+      if (qType === 'text-input') {
+        const userAns = (typeof answer === 'string' ? answer : '').toLowerCase().trim();
+        wasCorrect = q.options.some(opt => opt.toLowerCase().trim() === userAns);
+        userAnswerStr = answer || 'Skipped';
+        correctAnswerStr = q.options[0];
+      } else if (qType === 'multi-select' && Array.isArray(q.correctIndex)) {
+        const sel = Array.isArray(answer) ? [...answer].sort() : [];
+        wasCorrect = JSON.stringify(sel) === JSON.stringify([...q.correctIndex].sort());
+        userAnswerStr = Array.isArray(answer) ? answer.map(idx => q.options[idx]).join(', ') : 'Skipped';
+        correctAnswerStr = q.correctIndex.map(idx => q.options[idx]).join(', ');
+      } else {
+        wasCorrect = answer === q.correctIndex;
+        userAnswerStr = typeof answer === 'number' ? (q.options[answer] || 'Skipped') : 'Skipped';
+        correctAnswerStr = q.options[q.correctIndex];
+      }
+
       const worldIcon = q.world === 'reading' ? '📖' : q.world === 'writing' ? '✍️' : '🔢';
       return `<div class="review-card ${wasCorrect ? 'correct-card' : ''}">
         <h4>${worldIcon} ${wasCorrect ? '✅' : '❌'} Question ${i + 1}</h4>
         ${q.passage ? `<p style="font-style:italic;color:var(--text-dim);margin-bottom:6px;">${q.passage.substring(0, 100)}...</p>` : ''}
         <p><strong>Q:</strong> ${q.question}</p>
-        ${!wasCorrect ? `<p style="color:var(--danger);margin-top:4px;">Your answer: ${q.options[examState.answers[i]] || 'Skipped'}</p>` : ''}
-        <p style="color:var(--success);margin-top:4px;">Correct: ${q.options[q.correctIndex]}</p>
+        ${!wasCorrect ? `<p style="color:var(--danger);margin-top:4px;">Your answer: ${userAnswerStr}</p>` : ''}
+        <p style="color:var(--success);margin-top:4px;">Correct: ${correctAnswerStr}</p>
         <p style="margin-top:6px;font-style:italic;">${q.explanation}</p>
       </div>`;
     }).join('');
@@ -814,7 +1003,8 @@
 
   function startMiniGame(gameId) {
     if (gameId === 'speed-math') startSpeedMath();
-    // Other games can be added here
+    else if (gameId === 'word-scramble') startWordScramble();
+    else if (gameId === 'boss-battle') startBossBattle();
   }
 
   function startSpeedMath() {
@@ -892,14 +1082,299 @@
   function finishSpeedMath(score, total) {
     const xpEarned = score * 5;
     player.xp = (player.xp || 0) + xpEarned;
-    player.level = Math.floor(player.xp / 500) + 1;
+    player.level = Math.min(MAX_LEVEL, Math.floor(player.xp / XP_PER_LEVEL) + 1);
     localStorage.setItem('sq_session', JSON.stringify(player));
-
+    if (score >= 10) localStorage.setItem('sq_badge_speed-demon', 'true');
+    checkAchievements();
     showScreen('dashboard');
     setTimeout(() => {
       const msg = score >= 12 ? '🔥 Math speed demon!' : score >= 8 ? '⚡ Quick thinker!' : '💪 Keep practicing!';
       alert(`Speed Math Complete!\n\n${msg}\n\nScore: ${score}/${total}\nXP earned: +${xpEarned}`);
     }, 200);
+  }
+
+  // ===== WORD SCRAMBLE =====
+  function startWordScramble() {
+    showScreen('game');
+    els.backBtn.onclick = () => showScreen('dashboard');
+    els.questionPassage.classList.add('hidden');
+    els.questionFeedback.classList.add('hidden');
+    els.progressBar.style.width = '0%';
+
+    const gameData = window.SATMiniGames?.['word-scramble'];
+    if (!gameData || !gameData.levels) { showScreen('dashboard'); return; }
+
+    // Collect all words from all levels and shuffle
+    const allWords = [];
+    gameData.levels.forEach(lvl => allWords.push(...lvl.words));
+    const words = allWords.sort(() => Math.random() - 0.5).slice(0, 12);
+
+    let current = 0;
+    let score = 0;
+    const startTime = Date.now();
+    const timeLimit = 90000; // 90 seconds
+
+    function showWord() {
+      if (current >= words.length || (Date.now() - startTime) > timeLimit) {
+        finishWordScramble(score, current);
+        return;
+      }
+      const w = words[current];
+      els.questionText.innerHTML = '';
+      els.questionOptions.innerHTML = `
+        <div class="scramble-area">
+          <div class="speed-timer" id="scramble-timer">⏱️ 90s</div>
+          <div class="scramble-letters">${w.scrambled}</div>
+          <div class="scramble-hint">💡 ${w.hint}</div>
+          <input type="text" class="scramble-input" id="scramble-answer" placeholder="Type the word..." autocomplete="off" autofocus>
+          <div class="scramble-feedback" id="scramble-feedback"></div>
+          <p class="scramble-score">Score: ${score}/${current}</p>
+        </div>
+      `;
+      const input = document.getElementById('scramble-answer');
+      input.focus();
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const guess = input.value.trim().toUpperCase();
+          const fb = document.getElementById('scramble-feedback');
+          if (guess === w.answer.toUpperCase()) {
+            score++;
+            fb.textContent = '✅ Correct!';
+            fb.className = 'scramble-feedback correct-fb';
+          } else {
+            fb.textContent = `❌ It was: ${w.answer}`;
+            fb.className = 'scramble-feedback wrong-fb';
+          }
+          input.disabled = true;
+          current++;
+          els.progressBar.style.width = Math.min(100, (current / words.length) * 100) + '%';
+          setTimeout(showWord, 1200);
+        }
+      });
+      // Timer
+      const timerInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, Math.ceil((timeLimit - elapsed) / 1000));
+        const timerEl = document.getElementById('scramble-timer');
+        if (timerEl) timerEl.textContent = `⏱️ ${remaining}s`;
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          finishWordScramble(score, current);
+        }
+      }, 1000);
+    }
+    showWord();
+  }
+
+  function finishWordScramble(score, total) {
+    const xpEarned = score * 8;
+    player.xp = (player.xp || 0) + xpEarned;
+    player.level = Math.min(MAX_LEVEL, Math.floor(player.xp / XP_PER_LEVEL) + 1);
+    localStorage.setItem('sq_session', JSON.stringify(player));
+    if (score >= 8) localStorage.setItem('sq_badge_word-wizard', 'true');
+    checkAchievements();
+    showScreen('dashboard');
+    setTimeout(() => {
+      const msg = score >= 10 ? '🔥 Word wizard!' : score >= 6 ? '⚡ Great vocabulary!' : '💪 Keep unscrambling!';
+      alert(`Word Scramble Complete!\n\n${msg}\n\nScore: ${score}/${total}\nXP earned: +${xpEarned}`);
+    }, 200);
+  }
+
+  // ===== BOSS BATTLE =====
+  function startBossBattle() {
+    showScreen('game');
+    els.backBtn.onclick = () => showScreen('dashboard');
+    els.questionPassage.classList.add('hidden');
+    els.questionFeedback.classList.add('hidden');
+    els.progressBar.style.width = '0%';
+
+    const gameData = window.SATMiniGames?.['boss-battle'];
+    if (!gameData || !gameData.bosses || gameData.bosses.length === 0) { showScreen('dashboard'); return; }
+
+    // Pick a random boss
+    const boss = gameData.bosses[Math.floor(Math.random() * gameData.bosses.length)];
+    const questions = boss.questions.sort(() => Math.random() - 0.5).slice(0, boss.hp);
+    let current = 0;
+    let bossHP = boss.hp;
+    let playerHits = 0;
+    let totalXP = 0;
+
+    function showBossQuestion() {
+      if (bossHP <= 0 || current >= questions.length) {
+        finishBossBattle(playerHits, questions.length, totalXP, boss);
+        return;
+      }
+      const q = questions[current];
+      const hpPct = Math.max(0, (bossHP / boss.hp) * 100);
+      els.questionText.innerHTML = '';
+      els.questionOptions.innerHTML = '';
+
+      // Boss header
+      const header = document.createElement('div');
+      header.className = 'boss-area';
+      header.innerHTML = `
+        <div class="boss-header">
+          <span class="boss-emoji">${boss.emoji}</span>
+          <h3>${boss.name}</h3>
+          <div class="boss-hp-bar"><div class="boss-hp-fill" style="width:${hpPct}%"></div></div>
+          <p style="color:var(--text-dim);font-size:0.85rem;">HP: ${bossHP}/${boss.hp}</p>
+        </div>
+      `;
+      els.questionOptions.appendChild(header);
+
+      // Passage if present
+      if (q.passage) {
+        const passageEl = document.createElement('div');
+        passageEl.className = 'question-passage';
+        passageEl.textContent = q.passage;
+        els.questionOptions.appendChild(passageEl);
+      }
+
+      // Question
+      const qEl = document.createElement('p');
+      qEl.className = 'boss-question';
+      qEl.textContent = q.question;
+      els.questionOptions.appendChild(qEl);
+
+      // Options
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt;
+        btn.addEventListener('click', () => {
+          const btns = els.questionOptions.querySelectorAll('.option-btn');
+          btns.forEach(b => b.disabled = true);
+          const isCorrect = i === q.correctIndex;
+          btn.classList.add(isCorrect ? 'correct' : 'wrong');
+          if (!isCorrect) btns[q.correctIndex]?.classList.add('correct');
+
+          if (isCorrect) {
+            bossHP--;
+            playerHits++;
+            const xp = Math.round(boss.xpReward / boss.hp);
+            totalXP += xp;
+            // Show damage animation
+            const dmg = document.createElement('div');
+            dmg.className = 'xp-popup';
+            dmg.textContent = `💥 -1 HP! +${xp} XP`;
+            document.body.appendChild(dmg);
+            setTimeout(() => dmg.remove(), 1000);
+          }
+
+          // Show explanation
+          const expEl = document.createElement('div');
+          expEl.className = 'feedback-explanation';
+          expEl.textContent = q.explanation;
+          expEl.style.marginTop = '12px';
+          els.questionOptions.appendChild(expEl);
+
+          const nextBtn = document.createElement('button');
+          nextBtn.className = 'btn';
+          nextBtn.style.marginTop = '12px';
+          nextBtn.textContent = bossHP <= 0 ? 'Victory! 🎉' : current >= questions.length - 1 ? 'Finish' : 'Next Attack ⚔️';
+          nextBtn.addEventListener('click', () => { current++; showBossQuestion(); });
+          els.questionOptions.appendChild(nextBtn);
+
+          els.progressBar.style.width = Math.min(100, ((boss.hp - bossHP) / boss.hp) * 100) + '%';
+        });
+        els.questionOptions.appendChild(btn);
+      });
+    }
+    showBossQuestion();
+  }
+
+  function finishBossBattle(hits, total, xpEarned, boss) {
+    player.xp = (player.xp || 0) + xpEarned;
+    player.level = Math.min(MAX_LEVEL, Math.floor(player.xp / XP_PER_LEVEL) + 1);
+    localStorage.setItem('sq_session', JSON.stringify(player));
+    if (hits >= total) localStorage.setItem('sq_badge_boss-slayer', 'true');
+    checkAchievements();
+    showScreen('dashboard');
+    setTimeout(() => {
+      const defeated = hits >= total;
+      const msg = defeated ? `🎉 You defeated ${boss.name}!` : `💪 ${boss.name} survived with ${total - hits} HP. Try again!`;
+      alert(`Boss Battle Complete!\n\n${msg}\n\nHits: ${hits}/${total}\nXP earned: +${xpEarned}`);
+    }, 200);
+  }
+
+  // ===== ACHIEVEMENTS / BADGES =====
+  const BADGES = [
+    { id: 'first-steps', name: 'First Steps', emoji: '👣', desc: 'Answer your first question', check: () => getTotalAnswered() >= 1 },
+    { id: 'ten-streak', name: 'On Fire', emoji: '🔥', desc: 'Reach a 10-day streak', check: () => (player.streak || 0) >= 10 },
+    { id: 'fifty-questions', name: 'Half Century', emoji: '⭐', desc: 'Answer 50 questions', check: () => getTotalAnswered() >= 50 },
+    { id: 'hundred-questions', name: 'Centurion', emoji: '🏆', desc: 'Answer 100 questions', check: () => getTotalAnswered() >= 100 },
+    { id: 'reading-master', name: 'Bookworm', emoji: '📚', desc: 'Reach Level 3 in Reading', check: () => getWorldLevel('reading') >= 3 },
+    { id: 'grammar-master', name: 'Grammar Guru', emoji: '✍️', desc: 'Reach Level 3 in Grammar', check: () => getWorldLevel('writing') >= 3 },
+    { id: 'maths-master', name: 'Maths Whiz', emoji: '🧮', desc: 'Reach Level 3 in Maths', check: () => getWorldLevel('math') >= 3 },
+    { id: 'speed-demon', name: 'Speed Demon', emoji: '⚡', desc: 'Score 10+ in Speed Maths', check: () => (localStorage.getItem('sq_badge_speed-demon') === 'true') },
+    { id: 'boss-slayer', name: 'Boss Slayer', emoji: '⚔️', desc: 'Defeat a Boss Battle', check: () => (localStorage.getItem('sq_badge_boss-slayer') === 'true') },
+    { id: 'word-wizard', name: 'Word Wizard', emoji: '🧙', desc: 'Score 8+ in Word Scramble', check: () => (localStorage.getItem('sq_badge_word-wizard') === 'true') },
+    { id: 'perfect-session', name: 'Perfectionist', emoji: '💎', desc: 'Get 10/10 in a session', check: () => (localStorage.getItem('sq_badge_perfect-session') === 'true') },
+    { id: 'all-worlds', name: 'Explorer', emoji: '🌍', desc: 'Play all 3 worlds', check: () => {
+      const p = db.getProgress(player.playerId);
+      return (p.reading?.answered > 0) && (p.writing?.answered > 0) && (p.math?.answered > 0);
+    }},
+    { id: 'daily-five', name: 'Daily Champion', emoji: '🏅', desc: 'Complete 5 daily questions', check: () => db.getDailyCount(player.playerId) >= 5 },
+    { id: 'two-hundred', name: 'Unstoppable', emoji: '🚀', desc: 'Answer 200 questions', check: () => getTotalAnswered() >= 200 },
+    { id: 'max-level', name: 'SATs Legend', emoji: '👑', desc: 'Reach Level 5 in any world', check: () => getWorldLevel('reading') >= 5 || getWorldLevel('writing') >= 5 || getWorldLevel('math') >= 5 },
+  ];
+
+  function getTotalAnswered() {
+    const p = db.getProgress(player.playerId);
+    return (p.reading?.answered || 0) + (p.writing?.answered || 0) + (p.math?.answered || 0);
+  }
+
+  function getWorldLevel(world) {
+    const p = db.getProgress(player.playerId);
+    return p[world]?.level || 1;
+  }
+
+  function getEarnedBadges() {
+    return JSON.parse(localStorage.getItem('sq_badges_' + player.playerId) || '[]');
+  }
+
+  function saveEarnedBadge(badgeId) {
+    const earned = getEarnedBadges();
+    if (!earned.includes(badgeId)) {
+      earned.push(badgeId);
+      localStorage.setItem('sq_badges_' + player.playerId, JSON.stringify(earned));
+    }
+  }
+
+  function checkAchievements() {
+    if (!player || !player.playerId) return;
+    const earned = getEarnedBadges();
+    for (const badge of BADGES) {
+      if (earned.includes(badge.id)) continue;
+      try {
+        if (badge.check()) {
+          saveEarnedBadge(badge.id);
+          showBadgeToast(badge);
+        }
+      } catch(e) { /* ignore check errors */ }
+    }
+  }
+
+  function showBadgeToast(badge) {
+    const toast = document.createElement('div');
+    toast.className = 'badge-toast';
+    toast.innerHTML = `${badge.emoji}<br>${badge.name}<br><span style="font-size:0.8rem;font-weight:400;">Badge Unlocked!</span>`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2800);
+  }
+
+  function renderBadges() {
+    const container = document.getElementById('badges-grid');
+    if (!container) return;
+    const earned = getEarnedBadges();
+    container.innerHTML = BADGES.map(b => {
+      const isEarned = earned.includes(b.id);
+      return `
+        <div class="badge-item ${isEarned ? 'earned' : 'locked'}" title="${b.desc}">
+          <span class="badge-emoji">${b.emoji}</span>
+          <span class="badge-name">${isEarned ? b.name : '???'}</span>
+        </div>`;
+    }).join('');
   }
 
   // ===== INIT =====
