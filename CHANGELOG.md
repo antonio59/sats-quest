@@ -20,6 +20,17 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Major update: 490 questions, new question types, mini-games, achievements, dynamic generator
+
+- Expanded content from 264 to 490 questions across Reading, Grammar, Maths
+- Added text-input, true-false, multi-select question types
+- Implemented Word Scramble and Boss Battle mini-games
+- Added 8 achievement badges with auto-unlock and toast notifications
+- Built dynamic maths question generator for infinite replayability
+- Fixed frontend/backend level/XP mismatch (standardized to 5 levels, 400 XP)
+- Fixed duplicated landing page copy
+- Updated exam mode to support all new question types
+- Added comprehensive CSS for new features
 - Await loadNextQuestion on Next button
 - Await async getQuestion
 - Debug getQuestion, fix hashStr crash
@@ -201,6 +212,7 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
