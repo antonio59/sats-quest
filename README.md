@@ -25,7 +25,7 @@ Gamified KS2 SATs revision that feels like a game, not homework.
 
 ## Setup
 ```bash
-bun install
-bunx convex dev    # deploy backend
-bunx serve .       # serve locally
+pnpm install
+pnpm convex dev    # deploy backend
+pnpm dlx serve .   # serve locally
 ```
