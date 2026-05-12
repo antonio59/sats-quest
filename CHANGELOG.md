@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Migrate to pnpm
 - Merge pull request #4 from antonio59/dependabot/npm_and_yarn/minor-patch-c39889ec24
 
 chore(deps): bump esbuild from 0.27.7 to 0.28.0 in the minor-patch group
@@ -216,6 +217,7 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
