@@ -1,7 +1,7 @@
 {
   "name": "sat-quest",
   "version": "1.0.0",
-  "description": "🧠 SAT Quest — Gamified SAT prep that feels like a game",
+  "description": "\ud83e\udde0 SAT Quest \u2014 Gamified SAT prep that feels like a game",
   "scripts": {
     "dev": "bunx convex dev",
     "start": "bunx serve ."
@@ -13,5 +13,6 @@
   "dependencies": {
     "convex": "^1.33.1",
     "esbuild": "^0.28.0"
-  }
+  },
+  "packageManager": "pnpm@10.33.0"
 }
