@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: '22'
           cache: 'pnpm'
-      - run: ppnpm install
+      - run: pnpm install
       - name: Deploy Convex
         run: |
           CONVEX_DEPLOYMENT=prod:combative-viper-883 pnpm exec convex deploy
