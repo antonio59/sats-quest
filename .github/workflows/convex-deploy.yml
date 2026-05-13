@@ -8,11 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
-        with: { bun-version: latest }
-      - run: bun install
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
       - name: Deploy Convex
         run: |
-          CONVEX_DEPLOYMENT=prod:combative-viper-883 bunx convex deploy
+          CONVEX_DEPLOYMENT=prod:combative-viper-883 pnpm exec convex deploy
         env:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}

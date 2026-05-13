@@ -12,15 +12,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: '22'
+          cache: 'pnpm'
 
       - name: Check JavaScript syntax
         run: |
           for f in src/*.js; do
             echo "Checking $f..."
-            bun -e "import('$f')" 2>/dev/null || node --check "$f"
+            node --check "$f"
           done
 
       - name: Check HTML structure

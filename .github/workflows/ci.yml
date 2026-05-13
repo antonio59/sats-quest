@@ -17,19 +17,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: '22'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: bun install
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: bun run lint || echo "No lint script"
+        run: pnpm run lint || echo "No lint script"
 
       - name: Type check
-        run: bunx tsc --noEmit || echo "No TypeScript config"
+        run: pnpm exec tsc --noEmit || echo "No TypeScript config"
 
       - name: Audit dependencies
-        run: bun audit || echo "Audit completed"
+        run: pnpm audit || echo "Audit completed"
