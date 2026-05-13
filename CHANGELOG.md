@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Migrate CI from npm/bun to pnpm
 - Correct pnpm-workspace.yaml format for v11
 - Remove build step from CI (plain JS), add env for Convex deploy
 - Use specific convex version to avoid CDN issues
@@ -219,6 +220,7 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update setup instructions from bun to pnpm
