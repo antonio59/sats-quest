@@ -366,8 +366,7 @@ window.QuestionGenerator = (function() {
   const level5Generators = [
     function algebraTwoStep() {
       const x = randInt(1, 12);
-      const a = randInt(2, 6), b = randInt(2, 6), c = randInt(1, 20);
-      const result = a * x - b * x + c;
+      const a = randInt(2, 6), b = randInt(2, 6);
       // Simplify: (a-b)x + c = result => doesn't always work nicely
       // Use: ax + b = c format instead
       const rhs = a * x + b;
@@ -441,7 +440,6 @@ window.QuestionGenerator = (function() {
     },
     function nthTerm() {
       const a = randInt(2, 7), b = randInt(-5, 10);
-      const seq = [1, 2, 3, 4].map(n => a * n + b);
       const answer5 = a * 5 + b;
       const { options, correctIndex } = makeOptions(answer5, () => answer5 + randInt(-10, 10));
       return {

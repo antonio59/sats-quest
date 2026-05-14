@@ -796,7 +796,7 @@
     breakdown.innerHTML = examState.questions.map((q, i) => {
       const answer = examState.answers[i];
       const qType = q.type || 'multiple-choice';
-      let wasCorrect = false;
+      let wasCorrect;
       if (qType === 'text-input') {
         const userAns = (typeof answer === 'string' ? answer : '').toLowerCase().trim();
         wasCorrect = q.options.some(opt => opt.toLowerCase().trim() === userAns);
@@ -836,9 +836,9 @@
     list.innerHTML = examState.questions.map((q, i) => {
       const answer = examState.answers[i];
       const qType = q.type || 'multiple-choice';
-      let wasCorrect = false;
-      let userAnswerStr = 'Skipped';
-      let correctAnswerStr = '';
+      let wasCorrect;
+      let userAnswerStr;
+      let correctAnswerStr;
 
       if (qType === 'text-input') {
         const userAns = (typeof answer === 'string' ? answer : '').toLowerCase().trim();

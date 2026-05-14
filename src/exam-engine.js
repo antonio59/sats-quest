@@ -33,7 +33,7 @@ window.ExamEngine = (function() {
 
   function selectQuestions(world, count) {
     const bank = window.QuestionBank;
-    let pool = [];
+    let pool;
 
     if (world === 'full') {
       pool = [...(bank.reading || []), ...(bank.writing || []), ...(bank.math || [])];

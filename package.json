@@ -1,18 +1,23 @@
 {
   "name": "sat-quest",
   "version": "1.0.0",
-  "description": "\ud83e\udde0 SAT Quest \u2014 Gamified SAT prep that feels like a game",
+  "description": "🧠 SAT Quest — Gamified SAT prep that feels like a game",
   "scripts": {
-    "dev": "bunx convex dev",
-    "start": "bunx serve ."
+    "dev": "pnpm exec convex dev",
+    "start": "pnpm dlx serve .",
+    "lint": "eslint src/"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/antonio59/sats-quest.git"
   },
   "dependencies": {
-    "convex": "^1.33.1",
-    "esbuild": "^0.28.0"
+    "convex": "^1.33.1"
   },
-  "packageManager": "pnpm@11.1.1"
+  "packageManager": "pnpm@11.1.1",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0"
+  }
 }

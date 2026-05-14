@@ -4,3 +4,4 @@ bun.lockb
 .netlify/
 .env
 .env.local
+dist/
