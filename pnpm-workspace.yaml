@@ -8,3 +8,4 @@ pnpm:
   autoInstallPeers: true
   strictPeerDependencies: false
   packageImportMethod: clone-or-copy
+  minimumReleaseAge: 10080
