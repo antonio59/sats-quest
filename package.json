@@ -12,12 +12,12 @@
     "url": "git+https://github.com/antonio59/sats-quest.git"
   },
   "dependencies": {
-    "convex": "^1.33.1"
+    "convex": "^1.39.1"
   },
   "packageManager": "pnpm@11.1.1",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.3.0",
+    "eslint": "^10.4.0",
     "globals": "^17.6.0"
   }
 }
