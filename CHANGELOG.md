@@ -217,6 +217,7 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Chores
 
+- **deps**: Bump the minor-patch group across 1 directory with 3 updates (#7)
 - Migrate to pnpm v11
 - **deps**: Bump esbuild from 0.27.7 to 0.28.0 in the minor-patch group
 - Add git-cliff config for changelog generation
@@ -225,6 +226,7 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
