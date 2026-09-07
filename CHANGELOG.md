@@ -217,6 +217,7 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Chores
 
+- **deps-dev**: Bump globals in the minor-patch group (#9)
 - **deps**: Bump the minor-patch group with 3 updates (#8)
 - **deps**: Bump the minor-patch group across 1 directory with 3 updates (#7)
 - Migrate to pnpm v11
@@ -227,6 +228,7 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
