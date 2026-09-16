@@ -27,6 +27,11 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Add CI deploy to Cloudflare Pages + reproducible dist build
+
+Generated with [Devin](https://devin.ai)
+
+Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>
 - Rebuild for broader KS2 SATs use: content expansion, security hardening, Cloudflare migration
 
 Content: expanded banks to 592 questions (195 reading / 201 grammar / 196 maths)
@@ -254,6 +259,7 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
