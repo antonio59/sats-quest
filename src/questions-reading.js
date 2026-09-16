@@ -2170,5 +2170,189 @@ window.ReadingQuestions = [
     correctIndex: 1,
     explanation: "Correct! The passage emphasizes the 'gradual, ominous darkening' and the slow change in the wind. It describes a build-up of tension, not a sudden event.",
     tags: ["2d", "fiction", "inference"]
+  },
+
+  // ========== Structure and Organisation (2f) ==========
+  {
+    world: "reading",
+    level: 3,
+    type: "multiple-choice",
+    passage: "HOW TO CARE FOR A HAMSTER\n\nFeeding\nGive your hamster a small amount of hamster food every day, plus fresh water.\n\nExercise\nHamsters love a wheel to run on. Let them explore safely outside the cage each week.\n\nCleaning\nClean the cage once a week and replace the bedding.",
+    question: "How is this text organised to help the reader find information?",
+    options: ["A) As one long paragraph", "B) With headings and short sections", "C) As a story with chapters", "D) In alphabetical order"],
+    correctIndex: 1,
+    explanation: "The text uses a big heading plus subheadings like 'Feeding' and 'Exercise', so readers can jump straight to the part they need.",
+    tags: ["2f", "non-fiction", "structure", "layout"]
+  },
+  {
+    world: "reading",
+    level: 4,
+    type: "multiple-choice",
+    passage: "Imagine a world without bees. No juicy apples, no sweet strawberries, no bright wildflowers. These tiny insects pollinate around a third of the food we eat, yet their numbers are falling fast. Pesticides confuse them, wild habitats are disappearing, and diseases spread between hives. The good news? Anyone can help. Plant bee-friendly flowers, avoid spraying chemicals, and leave a wild corner in your garden. Small actions, multiplied by thousands of gardens, could save the humble bee.",
+    question: "Why does the author begin the text with 'Imagine a world without bees'?",
+    options: ["A) To confuse the reader", "B) To grab the reader's attention and make them think", "C) To explain what bees eat", "D) To describe a dream they had"],
+    correctIndex: 1,
+    explanation: "Opening with a dramatic question makes the reader picture the problem instantly — it's a persuasive technique to pull you into the text.",
+    tags: ["2h", "non-fiction", "persuasive", "author-s-purpose", "structure"]
+  },
+  {
+    world: "reading",
+    level: 4,
+    type: "multiple-choice",
+    passage: "The good news? Anyone can help. Plant bee-friendly flowers, avoid spraying chemicals, and leave a wild corner in your garden. Small actions, multiplied by thousands of gardens, could save the humble bee.",
+    question: "Why does the author use the short question 'The good news?' at the start of the paragraph?",
+    options: ["A) Because they don't know the answer", "B) To test the reader", "C) To signal a change from problems to solutions", "D) To make the text longer"],
+    correctIndex: 2,
+    explanation: "The question acts like a signpost — it tells the reader the text is moving from describing the problem to offering solutions.",
+    tags: ["2f", "non-fiction", "structure", "author-s-purpose"]
+  },
+
+  // ========== Sequencing ==========
+  {
+    world: "reading",
+    level: 3,
+    type: "multiple-choice",
+    passage: "First, Maya laid the notebook, pens and lucky eraser on her desk. Next, she took a deep breath and opened the practice paper. Halfway through, she stopped to stretch her fingers. Finally, with two minutes to spare, she checked every answer one last time.",
+    question: "Which of these did Maya do LAST?",
+    options: ["A) Laid out her equipment", "B) Opened the practice paper", "C) Stretched her fingers", "D) Checked her answers"],
+    correctIndex: 3,
+    explanation: "The sequence words tell you the order: 'First' ... 'Next' ... 'Halfway through' ... 'Finally'. Checking her answers came last.",
+    tags: ["2b", "fiction", "sequencing"]
+  },
+  {
+    world: "reading",
+    level: 4,
+    type: "multiple-choice",
+    passage: "The ancient Egyptians made paper from papyrus, a tall reed that grew along the Nile. First they cut the stalk into thin strips. Then they soaked the strips in water and laid them in two criss-crossed layers. Next they pressed the layers under heavy stones until they dried into a sheet. Finally, scribes polished the surface smooth, ready to record the deeds of pharaohs and gods.",
+    question: "Put these steps in the order they happened. Which came second?",
+    options: ["A) Pressing the layers under stones", "B) Cutting the stalk into strips", "C) Soaking and layering the strips", "D) Polishing the surface"],
+    correctIndex: 2,
+    explanation: "The order is: cut → soak and layer → press → polish. Soaking and layering came second.",
+    tags: ["2b", "non-fiction", "sequencing", "history"]
+  },
+  {
+    world: "reading",
+    level: 5,
+    type: "multiple-choice",
+    passage: "News of the victory travelled slowly. A rider carried the dispatch from the battlefield to the coast, where a fast ship waited. From there, the message crossed the channel, was passed to a telegraph office in Dover, and finally reached the King in London as dawn broke.",
+    question: "What happened immediately BEFORE the message reached the telegraph office?",
+    options: ["A) The rider left the battlefield", "B) The ship crossed the channel", "C) The King woke up", "D) Dawn broke in London"],
+    correctIndex: 1,
+    explanation: "Trace the journey: battlefield → coast → ship crosses channel → telegraph office → the King. So the channel crossing came just before the telegraph office.",
+    tags: ["2b", "fiction", "sequencing"]
+  },
+
+  // ========== New Non-Fiction Passages ==========
+  {
+    world: "reading",
+    level: 4,
+    type: "multiple-choice",
+    passage: "Mary Seacole was a Jamaican nurse who became a heroine of the Crimean War. When the army refused her offer to help, she paid her own way to the war zone and built the 'British Hotel' near the front line — part restaurant, part clinic. Soldiers called her 'Mother Seacole'. She rode into battlefields under fire to treat the wounded, carrying medicines in her saddlebags. After the war she returned to Britain penniless, but the soldiers she had saved held a festival in her honour.",
+    question: "What does the passage suggest about Mary Seacole's character?",
+    options: ["A) She gave up easily when rejected", "B) She was determined and brave", "C) She only wanted to make money", "D) She disliked soldiers"],
+    correctIndex: 1,
+    explanation: "Being refused didn't stop her — she paid her own way and even rode into battlefields under fire. That shows real determination and courage.",
+    tags: ["2d", "non-fiction", "biography", "inference"]
+  },
+  {
+    world: "reading",
+    level: 4,
+    type: "multiple-choice",
+    passage: "Mary Seacole was a Jamaican nurse who became a heroine of the Crimean War. When the army refused her offer to help, she paid her own way to the war zone and built the 'British Hotel' near the front line — part restaurant, part clinic. Soldiers called her 'Mother Seacole'. She rode into battlefields under fire to treat the wounded, carrying medicines in her saddlebags. After the war she returned to Britain penniless, but the soldiers she had saved held a festival in her honour.",
+    question: "Which two jobs did the 'British Hotel' do?",
+    options: ["A) Shop and school", "B) Restaurant and clinic", "C) Hospital and church", "D) Bank and post office"],
+    correctIndex: 1,
+    explanation: "The passage describes it as 'part restaurant, part clinic' — a place to eat and a place to be treated.",
+    tags: ["2b", "non-fiction", "biography", "retrieve"]
+  },
+  {
+    world: "reading",
+    level: 5,
+    type: "true-false",
+    passage: "Mary Seacole was a Jamaican nurse who became a heroine of the Crimean War. When the army refused her offer to help, she paid her own way to the war zone and built the 'British Hotel' near the front line — part restaurant, part clinic. Soldiers called her 'Mother Seacole'. She rode into battlefields under fire to treat the wounded, carrying medicines in her saddlebags. After the war she returned to Britain penniless, but the soldiers she had saved held a festival in her honour.",
+    question: "The army welcomed Mary Seacole's offer of help.",
+    options: ["True", "False"],
+    correctIndex: 1,
+    explanation: "False — the passage says 'the army refused her offer to help'. She had to pay her own way to the war zone.",
+    tags: ["2b", "non-fiction", "biography", "retrieve"]
+  },
+  {
+    world: "reading",
+    level: 4,
+    type: "multiple-choice",
+    passage: "Rainbows appear when sunlight passes through raindrops. Inside each drop, the light bends — scientists call this refraction — and splits into its separate colours, like a fan opening. The light bounces off the back of the drop and bends again on the way out, spreading the colours wider. Every colour bends by a slightly different amount, which is why we see them separated: red on the outside of the arc, violet on the inside. You can only see a rainbow when the sun is behind you and rain is in front of you.",
+    question: "What is 'refraction'?",
+    options: ["A) Light reflecting in a mirror", "B) Light bending as it passes through something", "C) The colours of the rainbow", "D) Raindrops falling from clouds"],
+    correctIndex: 1,
+    explanation: "The passage explains it directly: 'the light bends — scientists call this refraction'. It's when light changes direction passing through a material.",
+    tags: ["2a", "non-fiction", "science", "vocabulary"]
+  },
+  {
+    world: "reading",
+    level: 4,
+    type: "multiple-choice",
+    passage: "Rainbows appear when sunlight passes through raindrops. Inside each drop, the light bends — scientists call this refraction — and splits into its separate colours, like a fan opening. The light bounces off the back of the drop and bends again on the way out, spreading the colours wider. Every colour bends by a slightly different amount, which is why we see them separated: red on the outside of the arc, violet on the inside. You can only see a rainbow when the sun is behind you and rain is in front of you.",
+    question: "According to the passage, where must the sun be for you to see a rainbow?",
+    options: ["A) In front of you", "B) Directly overhead", "C) Behind you", "D) Hidden by clouds"],
+    correctIndex: 2,
+    explanation: "The last sentence tells us: 'You can only see a rainbow when the sun is behind you and rain is in front of you.'",
+    tags: ["2b", "non-fiction", "science", "retrieve"]
+  },
+  {
+    world: "reading",
+    level: 5,
+    type: "multiple-choice",
+    passage: "Dear Councillor Patel,\n\nI am writing to ask the council to save Oakwood Playground. Last week I counted 87 children using the swings, climbing frame and basketball hoop in a single afternoon. The playground is the only safe, free place to play within walking distance of our estate. Closing it to build a car park would rob hundreds of families of somewhere to meet, play and make friends. I urge you to vote against the proposal at Thursday's meeting.\n\nYours sincerely,\nD. Okafor (aged 10)",
+    question: "What is the main purpose of this letter?",
+    options: ["A) To invite the councillor to the playground", "B) To persuade the council to keep the playground open", "C) To complain about noisy children", "D) To ask for a new car park"],
+    correctIndex: 1,
+    explanation: "The letter gives reasons (87 children, the only safe place) and ends with a clear request to 'vote against the proposal' — it's persuading the council to save the playground.",
+    tags: ["2c", "non-fiction", "persuasive", "author-s-purpose"]
+  },
+  {
+    world: "reading",
+    level: 5,
+    type: "multiple-choice",
+    passage: "Dear Councillor Patel,\n\nI am writing to ask the council to save Oakwood Playground. Last week I counted 87 children using the swings, climbing frame and basketball hoop in a single afternoon. The playground is the only safe, free place to play within walking distance of our estate. Closing it to build a car park would rob hundreds of families of somewhere to meet, play and make friends. I urge you to vote against the proposal at Thursday's meeting.\n\nYours sincerely,\nD. Okafor (aged 10)",
+    question: "Why does the writer mention counting '87 children'?",
+    options: ["A) To show they are good at maths", "B) To provide evidence that the playground is well used", "C) To show the playground is too crowded", "D) To suggest the playground is dangerous"],
+    correctIndex: 1,
+    explanation: "A specific number makes the argument stronger — it's evidence that lots of children use and need the playground.",
+    tags: ["2h", "non-fiction", "persuasive", "author-s-purpose"]
+  },
+
+  // ========== New Poetry ==========
+  {
+    world: "reading",
+    level: 4,
+    type: "multiple-choice",
+    passage: "The fog comes\non little cat feet.\n\nIt sits looking\nover harbor and city\non silent haunches\nand then moves on.\n\n(from 'Fog' by Carl Sandburg)",
+    question: "The poet compares the fog to...",
+    options: ["A) a sleeping dog", "B) a cat", "C) a sailing ship", "D) a quiet child"],
+    correctIndex: 1,
+    explanation: "The whole poem is an extended metaphor: the fog arrives 'on little cat feet' and sits on 'silent haunches' — cat-like movements, quiet and watchful.",
+    tags: ["2g", "poetry", "figurative-language", "metaphor"]
+  },
+  {
+    world: "reading",
+    level: 5,
+    type: "multiple-choice",
+    passage: "The fog comes\non little cat feet.\n\nIt sits looking\nover harbor and city\non silent haunches\nand then moves on.\n\n(from 'Fog' by Carl Sandburg)",
+    question: "What does the comparison suggest about how the fog moves?",
+    options: ["A) Loudly and quickly", "B) Silently and smoothly", "C) In a straight line", "D) Clumsily"],
+    correctIndex: 1,
+    explanation: "Cats pad around silently and settle softly. The poet wants us to imagine the fog creeping in the same quiet, graceful way.",
+    tags: ["2d", "poetry", "inference", "metaphor"]
+  },
+  {
+    world: "reading",
+    level: 5,
+    type: "multi-select",
+    passage: "Half a league, half a league,\nHalf a league onward,\nAll in the valley of Death\nRode the six hundred.\n'Forward, the Light Brigade!\nCharge for the guns!' he said:\nInto the valley of Death\nRode the six hundred.\n\n(from 'The Charge of the Light Brigade' by Alfred, Lord Tennyson)",
+    question: "Which two techniques does Tennyson use to create a feeling of galloping momentum? (Select two)",
+    options: ["A) The repeated rhythm of short phrases", "B) Rhyming every single line", "C) Repeating 'Rode the six hundred'", "D) Describing the weather in detail"],
+    correctIndex: [0, 2],
+    explanation: "The drum-beat rhythm ('half a league, half a league') and the refrain 'Rode the six hundred' drive the poem forward like galloping hooves.",
+    tags: ["2g", "poetry", "techniques", "structure"]
   }
 ];

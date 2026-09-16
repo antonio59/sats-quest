@@ -278,14 +278,14 @@ window.QuestionGenerator = (function() {
       const r1 = randInt(1, 5), r2 = randInt(1, 5);
       const multiplier = randInt(2, 8);
       const total = (r1 + r2) * multiplier;
-      const answer = r1 * multiplier;
+      const answer = Math.max(r1, r2) * multiplier;
       const { options, correctIndex } = makeOptions(answer, () => randInt(1, total));
       return {
         world: "math", level: 4, type: "multiple-choice",
         question: `Share ${total} in the ratio ${r1}:${r2}. What is the larger share?`,
         options: options.map((o, i) => `${String.fromCharCode(65+i)}) ${o}`),
-        correctIndex: options.indexOf(Math.max(r1, r2) * multiplier) >= 0 ? options.indexOf(Math.max(r1, r2) * multiplier) : correctIndex,
-        explanation: `Total parts = ${r1} + ${r2} = ${r1 + r2}. Each part = ${total} ÷ ${r1 + r2} = ${multiplier}. The shares are ${r1 * multiplier} and ${r2 * multiplier}.`,
+        correctIndex,
+        explanation: `Total parts = ${r1} + ${r2} = ${r1 + r2}. Each part = ${total} ÷ ${r1 + r2} = ${multiplier}. The shares are ${r1 * multiplier} and ${r2 * multiplier} — the larger is ${answer}.`,
         tags: ["ratio", "sharing"],
         _generated: true
       };

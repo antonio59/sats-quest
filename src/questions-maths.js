@@ -227,10 +227,10 @@ window.MathsQuestions = [
     world: "math",
     level: 2,
     type: "multiple-choice",
-    question: "Simplify the fraction 24/36.",
+    question: "Simplify the fraction 24/36 to its simplest form.",
     options: ["A) 2/3", "B) 3/4", "C) 4/6", "D) 12/18"],
     correctIndex: 0,
-    explanation: "Divide both numerator and denominator by 12: 24 ÷ 12 = 2, 36 ÷ 12 = 3. So 24/36 = 2/3.",
+    explanation: "Divide both numerator and denominator by 12: 24 ÷ 12 = 2, 36 ÷ 12 = 3. So 24/36 = 2/3. Options C and D are equal to 2/3 but are not fully simplified — SATs answers must be in simplest form.",
     tags: ["fractions", "simplifying"]
   },
   {
@@ -385,8 +385,8 @@ window.MathsQuestions = [
     world: "math",
     level: 3,
     type: "multiple-choice",
-    question: "Calculate: 2/3 × 9/10",
-    options: ["A) 18/30", "B) 3/5", "C) 11/13", "D) 6/10"],
+    question: "Calculate: 2/3 × 9/10. Give your answer in its simplest form.",
+    options: ["A) 4/5", "B) 3/5", "C) 11/13", "D) 7/10"],
     correctIndex: 1,
     explanation: "2/3 × 9/10 = 18/30 = 3/5 (simplified by dividing by 6).",
     tags: ["fractions", "multiplication"]
@@ -396,9 +396,9 @@ window.MathsQuestions = [
     level: 3,
     type: "multiple-choice",
     question: "Calculate: 3/4 ÷ 2/5",
-    options: ["A) 6/20", "B) 15/8", "C) 1 7/8", "D) Both B and C"],
-    correctIndex: 3,
-    explanation: "3/4 ÷ 2/5 = 3/4 × 5/2 = 15/8 = 1 7/8.",
+    options: ["A) 6/20", "B) 15/8", "C) 8/15", "D) 5/6"],
+    correctIndex: 1,
+    explanation: "To divide by a fraction, flip it and multiply: 3/4 ÷ 2/5 = 3/4 × 5/2 = 15/8 (which is the same as 1 7/8).",
     tags: ["fractions", "division"]
   },
   
@@ -763,10 +763,10 @@ window.MathsQuestions = [
     world: "math",
     level: 5,
     type: "multiple-choice",
-    question: "Divide £560 in the ratio 3:4:5. What is the largest share?",
-    options: ["A) £200", "B) £210", "C) £220", "D) £233.33"],
+    question: "Divide £600 in the ratio 3:4:5. What is the largest share?",
+    options: ["A) £200", "B) £250", "C) £300", "D) £350"],
     correctIndex: 1,
-    explanation: "3 + 4 + 5 = 12 parts total. Each part = £560 ÷ 12. The largest share (5 parts) = 5 × (£560 ÷ 12) = £233.33. However, if we assume the question meant a total divisible by 12 like £504, the answer would be £210. Given the options, £210 represents the middle share.",
+    explanation: "3 + 4 + 5 = 12 parts total. Each part = £600 ÷ 12 = £50. The largest share is 5 parts: 5 × £50 = £250.",
     tags: ["ratio", "sharing", "three-part-ratio"]
   },
 
@@ -869,10 +869,10 @@ window.MathsQuestions = [
     world: "math",
     level: 5,
     type: "multiple-choice",
-    question: "A triangle has vertices at (1, 1), (4, 1), and (1, 3). What type of triangle is it?",
-    options: ["A) Equilateral", "B) Isosceles", "C) Scalene", "D) Right-angled"],
-    correctIndex: 3,
-    explanation: "Plotting the points: the angle at (1, 1) is 90° (horizontal and vertical lines meet). This is a right-angled triangle.",
+    question: "A triangle has vertices at (1, 1), (4, 1), and (1, 3). Which statement about this triangle is true?",
+    options: ["A) It is equilateral", "B) It is isosceles", "C) It has a right angle", "D) It has an obtuse angle"],
+    correctIndex: 2,
+    explanation: "Plotting the points: the two sides meeting at (1, 1) run horizontally and vertically, so they form a 90° angle. The sides are 2, 3 and √13 long, so it is scalene, but 'has a right angle' is the only true statement.",
     tags: ["geometry", "coordinates", "triangles"]
   },
 
@@ -1387,10 +1387,10 @@ window.MathsQuestions = [
     world: "math",
     level: 3,
     type: "multiple-choice",
-    question: "How many degrees are in a right angle?",
-    options: ["45\u00b0", "90\u00b0", "180\u00b0", "360\u00b0"],
+    question: "How many degrees are there on a straight line?",
+    options: ["90\u00b0", "180\u00b0", "270\u00b0", "360\u00b0"],
     correctIndex: 1,
-    explanation: "Correct! A right angle is exactly 90 degrees.",
+    explanation: "Correct! A straight line is half a full turn, so it has 180 degrees.",
     tags: ["geometry", "angles"]
   },
   {
@@ -1540,9 +1540,9 @@ window.MathsQuestions = [
     level: 4,
     type: "text-input",
     question: "What is 0.25 as a percentage?",
-    options: ["25%", "25"],
+    options: ["25%"],
     correctIndex: 0,
-    explanation: "Great job! To convert a decimal to a percentage, multiply by 100. 0.25 x 100 = 25%.",
+    explanation: "Great job! To convert a decimal to a percentage, multiply by 100. 0.25 x 100 = 25%. Don't forget the % sign!",
     tags: ["percentages", "decimals", "converting"]
   },
 
@@ -1572,7 +1572,7 @@ window.MathsQuestions = [
     level: 5,
     type: "multiple-choice",
     question: "Calculate: 3/4 ÷ 2",
-    options: ["3/8", "6/4", "1 1/2", "3/2"],
+    options: ["3/8", "3/2", "1/4", "4/3"],
     correctIndex: 0,
     explanation: "Excellent! Dividing a fraction by a whole number is the same as multiplying the denominator by that number. 3 / (4x2) = 3/8.",
     tags: ["fractions", "division"]
@@ -1641,10 +1641,10 @@ window.MathsQuestions = [
     world: "math",
     level: 5,
     type: "text-input",
-    question: "Calculate: 5/6 x 3/4",
-    options: ["15/24", "5/8"],
+    question: "Calculate: 5/6 x 3/4. Give your answer in its simplest form.",
+    options: ["5/8"],
     correctIndex: 0,
-    explanation: "Well done! Multiply the numerators: 5 x 3 = 15. Multiply the denominators: 6 x 4 = 24. The answer is 15/24 (which simplifies to 5/8).",
+    explanation: "Well done! Multiply the numerators: 5 x 3 = 15. Multiply the denominators: 6 x 4 = 24. Then simplify 15/24 by dividing top and bottom by 3 to get 5/8.",
     tags: ["fractions", "multiply"]
   },
   {
@@ -1656,5 +1656,451 @@ window.MathsQuestions = [
     correctIndex: 0,
     explanation: "Excellent! 1/8 is 0.125, so 3/8 is 3 x 0.125 = 0.375. You can also calculate 3 ÷ 8.",
     tags: ["decimals", "fractions", "converting"]
+  },
+
+  // ========== Roman Numerals ==========
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    question: "What is XIV in digits?",
+    options: ["A) 14", "B) 16", "C) 24", "D) 104"],
+    correctIndex: 0,
+    explanation: "X = 10 and IV = 4 (a smaller numeral before a bigger one means subtract: 5 − 1). So XIV = 10 + 4 = 14.",
+    tags: ["number", "roman-numerals"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    question: "What is 39 written in Roman numerals?",
+    options: ["A) XXXVIIII", "B) XXXIX", "C) XXXXIX", "D) IL"],
+    correctIndex: 1,
+    explanation: "30 = XXX and 9 = IX (one before ten). So 39 = XXXIX. We never write more than three of the same numeral in a row.",
+    tags: ["number", "roman-numerals"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "What is the value of the Roman numeral D?",
+    options: ["A) 50", "B) 100", "C) 500", "D) 1000"],
+    correctIndex: 2,
+    explanation: "D = 500. Remember the big ones: L = 50, C = 100, D = 500, M = 1000.",
+    tags: ["number", "roman-numerals"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "text-input",
+    question: "Write the number 2024 in Roman numerals.",
+    options: ["MMXXIV"],
+    correctIndex: 0,
+    explanation: "2000 = MM, 20 = XX and 4 = IV, so 2024 = MMXXIV.",
+    tags: ["number", "roman-numerals"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which of these is the largest number?",
+    options: ["A) XL", "B) XC", "C) CD", "D) LIX"],
+    correctIndex: 2,
+    explanation: "XL = 40, XC = 90, LIX = 59, and CD = 400 (100 before 500 means subtract). CD is the largest.",
+    tags: ["number", "roman-numerals", "comparing"]
+  },
+
+  // ========== Square and Cube Numbers ==========
+  {
+    world: "math",
+    level: 3,
+    type: "text-input",
+    question: "What is 12 squared (12²)?",
+    options: ["144"],
+    correctIndex: 0,
+    explanation: "12² means 12 × 12 = 144. Knowing your square numbers up to 12² is a great SATs skill!",
+    tags: ["number", "square-numbers"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    question: "What is 4 cubed (4³)?",
+    options: ["A) 12", "B) 16", "C) 64", "D) 43"],
+    correctIndex: 2,
+    explanation: "4³ means 4 × 4 × 4. First 4 × 4 = 16, then 16 × 4 = 64.",
+    tags: ["number", "cube-numbers"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which of these is a cube number?",
+    options: ["A) 16", "B) 27", "C) 36", "D) 50"],
+    correctIndex: 1,
+    explanation: "27 = 3 × 3 × 3, so it's a cube number. 16 and 36 are square numbers, not cube numbers.",
+    tags: ["number", "cube-numbers"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "text-input",
+    question: "Calculate: 9² − 4²",
+    options: ["65"],
+    correctIndex: 0,
+    explanation: "9² = 81 and 4² = 16. Then 81 − 16 = 65.",
+    tags: ["number", "square-numbers", "subtraction"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "true-false",
+    question: "The number 1 is both a square number and a cube number.",
+    options: ["True", "False"],
+    correctIndex: 0,
+    explanation: "True! 1 × 1 = 1 and 1 × 1 × 1 = 1, so 1 is both a square and a cube number.",
+    tags: ["number", "square-numbers", "cube-numbers"]
+  },
+
+  // ========== Prime Numbers ==========
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which of these numbers is prime?",
+    options: ["A) 21", "B) 39", "C) 43", "D) 51"],
+    correctIndex: 2,
+    explanation: "43 is prime — only 1 and 43 divide into it. 21 = 3×7, 39 = 3×13 and 51 = 3×17.",
+    tags: ["number", "primes"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    question: "What is the only even prime number?",
+    options: ["A) 0", "B) 2", "C) 4", "D) There isn't one"],
+    correctIndex: 1,
+    explanation: "2 is the only even prime! Every other even number can be divided by 2, so it has at least three factors.",
+    tags: ["number", "primes"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multi-select",
+    question: "Which two of these numbers are prime? (Select two)",
+    options: ["27", "29", "33", "31"],
+    correctIndex: [1, 3],
+    explanation: "29 and 31 are prime. 27 = 3 × 9 and 33 = 3 × 11, so they have more than two factors.",
+    tags: ["number", "primes"]
+  },
+  {
+    world: "math",
+    level: 5,
+    type: "multiple-choice",
+    question: "What are the prime factors of 30?",
+    options: ["A) 1, 2, 3, 5", "B) 2, 3, 5", "C) 5 and 6", "D) 2, 15"],
+    correctIndex: 1,
+    explanation: "Prime factors are the prime numbers that multiply to make 30: 2 × 3 × 5 = 30. (1 isn't prime, and 6 and 15 aren't prime either.)",
+    tags: ["number", "primes", "factors"]
+  },
+
+  // ========== Order of Operations ==========
+  {
+    world: "math",
+    level: 4,
+    type: "text-input",
+    question: "Calculate: 3 + 4 × 5",
+    options: ["23"],
+    correctIndex: 0,
+    explanation: "Multiplication comes before addition! First 4 × 5 = 20, then 3 + 20 = 23. (Doing 3 + 4 first would wrongly give 35.)",
+    tags: ["number", "order-of-operations", "bodmas"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "What is (3 + 4) × 5?",
+    options: ["A) 23", "B) 35", "C) 60", "D) 17"],
+    correctIndex: 1,
+    explanation: "Brackets first! 3 + 4 = 7, then 7 × 5 = 35. The brackets change the order completely.",
+    tags: ["number", "order-of-operations", "bodmas"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "text-input",
+    question: "Calculate: 20 − 4 × 3",
+    options: ["8"],
+    correctIndex: 0,
+    explanation: "Multiply first: 4 × 3 = 12, then 20 − 12 = 8. If you subtracted first you'd get 48 — order matters!",
+    tags: ["number", "order-of-operations", "bodmas"]
+  },
+  {
+    world: "math",
+    level: 5,
+    type: "text-input",
+    question: "Calculate: 6 + 18 ÷ 3",
+    options: ["12"],
+    correctIndex: 0,
+    explanation: "Division before addition: 18 ÷ 3 = 6, then 6 + 6 = 12.",
+    tags: ["number", "order-of-operations", "bodmas"]
+  },
+
+  // ========== Missing Number Problems ==========
+  {
+    world: "math",
+    level: 2,
+    type: "text-input",
+    question: "Find the missing number: □ + 15 = 42",
+    options: ["27"],
+    correctIndex: 0,
+    explanation: "Use the inverse! 42 − 15 = 27. Check: 27 + 15 = 42. ✓",
+    tags: ["number", "missing-numbers", "inverse"]
+  },
+  {
+    world: "math",
+    level: 2,
+    type: "text-input",
+    question: "Find the missing number: □ × 6 = 54",
+    options: ["9"],
+    correctIndex: 0,
+    explanation: "54 ÷ 6 = 9. The inverse of multiplication is division. Check: 9 × 6 = 54. ✓",
+    tags: ["number", "missing-numbers", "inverse"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "text-input",
+    question: "Find the missing number: 100 − □ = 37",
+    options: ["63"],
+    correctIndex: 0,
+    explanation: "The missing number is what you subtract from 100 to get 37: 100 − 37 = 63. Check: 100 − 63 = 37. ✓",
+    tags: ["number", "missing-numbers", "inverse"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "text-input",
+    question: "Find the missing number: 2 × □ + 5 = 21",
+    options: ["8"],
+    correctIndex: 0,
+    explanation: "Work backwards: 21 − 5 = 16, then 16 ÷ 2 = 8. Check: 2 × 8 + 5 = 21. ✓",
+    tags: ["number", "missing-numbers", "inverse", "two-step"]
+  },
+
+  // ========== Data and Charts ==========
+  {
+    world: "math",
+    level: 3,
+    type: "text-input",
+    passage: "A pie chart shows the favourite sports of 40 children. Half of the chart is labelled 'Football', a quarter is 'Swimming', and the rest is 'Tennis'.",
+    question: "How many children chose tennis?",
+    options: ["10"],
+    correctIndex: 0,
+    explanation: "Football = half of 40 = 20. Swimming = a quarter of 40 = 10. So tennis = 40 − 20 − 10 = 10 children.",
+    tags: ["statistics", "pie-charts", "fractions"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    passage: "The table shows how many pages Amara read each day. Monday: 4, Tuesday: 7, Wednesday: 5, Thursday: 9, Friday: 3.",
+    question: "How many more pages did she read on Thursday than on Friday?",
+    options: ["A) 3", "B) 4", "C) 6", "D) 12"],
+    correctIndex: 2,
+    explanation: "Thursday = 9 pages, Friday = 3 pages. 9 − 3 = 6 more pages.",
+    tags: ["statistics", "tables", "subtraction"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "text-input",
+    passage: "A bar chart shows favourite fruits in a class. The bar for apples reaches 12, bananas reaches 9, and grapes reaches 6.",
+    question: "How many children were asked altogether?",
+    options: ["27"],
+    correctIndex: 0,
+    explanation: "Add the bars: 12 + 9 + 6 = 27 children.",
+    tags: ["statistics", "bar-charts", "addition"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    passage: "A line graph shows the temperature during the day. 9am: 12°C, 11am: 15°C, 1pm: 18°C, 3pm: 16°C.",
+    question: "Between which two times did the temperature fall?",
+    options: ["A) 9am and 11am", "B) 11am and 1pm", "C) 1pm and 3pm", "D) It never fell"],
+    correctIndex: 2,
+    explanation: "The temperature rose from 12°C to 18°C, then dropped to 16°C between 1pm and 3pm.",
+    tags: ["statistics", "line-graphs"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    passage: "Train timetable: Train A leaves Manchester at 09:15 and arrives in Leeds at 10:02. Train B leaves at 09:40 and arrives at 10:31.",
+    question: "How long is the journey on Train A?",
+    options: ["A) 45 minutes", "B) 47 minutes", "C) 51 minutes", "D) 57 minutes"],
+    correctIndex: 1,
+    explanation: "From 09:15 to 10:00 is 45 minutes, plus 2 more minutes = 47 minutes.",
+    tags: ["measurement", "time", "timetables"]
+  },
+  {
+    world: "math",
+    level: 5,
+    type: "text-input",
+    passage: "Train timetable: Train A leaves Manchester at 09:15 and arrives in Leeds at 10:02. Train B leaves at 09:40 and arrives at 10:31.",
+    question: "How many minutes longer is Train B's journey than Train A's?",
+    options: ["4"],
+    correctIndex: 0,
+    explanation: "Train A takes 47 minutes. Train B: 09:40 to 10:31 is 51 minutes. 51 − 47 = 4 minutes longer.",
+    tags: ["measurement", "time", "timetables", "two-step"]
+  },
+
+  // ========== Comparing and Ordering Fractions ==========
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which is larger: 3/5 or 7/10?",
+    options: ["A) 3/5", "B) 7/10", "C) They are equal", "D) You can't tell"],
+    correctIndex: 1,
+    explanation: "Make the denominators match: 3/5 = 6/10. Now compare 6/10 and 7/10 — 7/10 is larger.",
+    tags: ["fractions", "comparing"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which list orders these fractions from smallest to largest: 1/2, 3/4, 1/3?",
+    options: ["A) 1/2, 1/3, 3/4", "B) 1/3, 1/2, 3/4", "C) 3/4, 1/2, 1/3", "D) 1/3, 3/4, 1/2"],
+    correctIndex: 1,
+    explanation: "Convert to twelfths: 1/3 = 4/12, 1/2 = 6/12, 3/4 = 9/12. So the order is 1/3, 1/2, 3/4.",
+    tags: ["fractions", "ordering"]
+  },
+  {
+    world: "math",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which fraction is closest to one half?",
+    options: ["A) 5/8", "B) 3/8", "C) 5/9", "D) 7/12"],
+    correctIndex: 2,
+    explanation: "5/9 ≈ 0.556 — only about 0.06 away from 0.5. The others are further: 7/12 ≈ 0.583, and 5/8 and 3/8 are 0.125 away.",
+    tags: ["fractions", "comparing", "estimation"]
+  },
+
+  // ========== Lines and Angle Types ==========
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    question: "Two lines that never meet and stay the same distance apart are called...",
+    options: ["A) perpendicular", "B) parallel", "C) diagonal", "D) intersecting"],
+    correctIndex: 1,
+    explanation: "Parallel lines never cross — like railway tracks! Perpendicular lines cross at right angles.",
+    tags: ["geometry", "parallel-lines"]
+  },
+  {
+    world: "math",
+    level: 3,
+    type: "multiple-choice",
+    question: "Lines that cross each other at exactly 90° are called...",
+    options: ["A) parallel", "B) perpendicular", "C) curved", "D) horizontal"],
+    correctIndex: 1,
+    explanation: "Perpendicular lines meet at right angles (90°). The corner of a page is a great example.",
+    tags: ["geometry", "perpendicular-lines"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "An angle of 120° is which type of angle?",
+    options: ["A) acute", "B) right angle", "C) obtuse", "D) reflex"],
+    correctIndex: 2,
+    explanation: "Acute = less than 90°, right angle = exactly 90°, obtuse = between 90° and 180°, reflex = more than 180°. 120° is obtuse.",
+    tags: ["geometry", "angle-types"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "An angle of 200° is called a...",
+    options: ["A) obtuse angle", "B) reflex angle", "C) right angle", "D) straight angle"],
+    correctIndex: 1,
+    explanation: "A reflex angle is bigger than 180° but smaller than 360° — like the 'outside' angle of a corner.",
+    tags: ["geometry", "angle-types"]
+  },
+
+  // ========== Regular Polygons ==========
+  {
+    world: "math",
+    level: 4,
+    type: "true-false",
+    question: "All sides of a regular polygon are equal in length.",
+    options: ["True", "False"],
+    correctIndex: 0,
+    explanation: "True! A regular polygon has all sides equal AND all angles equal — like a square or an equilateral triangle.",
+    tags: ["geometry", "polygons"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "text-input",
+    question: "How many lines of symmetry does a regular hexagon have?",
+    options: ["6"],
+    correctIndex: 0,
+    explanation: "A regular polygon has as many lines of symmetry as it has sides — a regular hexagon has 6.",
+    tags: ["geometry", "polygons", "symmetry"]
+  },
+  {
+    world: "math",
+    level: 5,
+    type: "multiple-choice",
+    question: "Each interior angle of a regular pentagon measures 108°. What do all five interior angles add up to?",
+    options: ["A) 360°", "B) 540°", "C) 720°", "D) 900°"],
+    correctIndex: 1,
+    explanation: "5 × 108° = 540°. You can also split a pentagon into 3 triangles from one vertex: 3 × 180° = 540°.",
+    tags: ["geometry", "polygons", "angles"]
+  },
+
+  // ========== Money and Multi-Step Problems ==========
+  {
+    world: "math",
+    level: 3,
+    type: "text-input",
+    question: "Sam buys 3 books costing £4.75 each. How much change does he get from £20?",
+    options: ["£5.75", "5.75"],
+    correctIndex: 0,
+    explanation: "3 × £4.75 = £14.25. Change = £20 − £14.25 = £5.75.",
+    tags: ["measurement", "money", "two-step"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "text-input",
+    question: "Adult cinema tickets cost £7.50 and child tickets cost £4.25. What is the total cost for 2 adults and 3 children?",
+    options: ["£27.75", "27.75"],
+    correctIndex: 0,
+    explanation: "Adults: 2 × £7.50 = £15.00. Children: 3 × £4.25 = £12.75. Total: £15.00 + £12.75 = £27.75.",
+    tags: ["measurement", "money", "two-step"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "multiple-choice",
+    question: "A packet holds 250 g of flour. How many packets are needed to fill a 3 kg sack exactly?",
+    options: ["A) 8", "B) 10", "C) 12", "D) 15"],
+    correctIndex: 2,
+    explanation: "3 kg = 3000 g. 3000 ÷ 250 = 12 packets. (Tip: 250 g is a quarter of a kilogram, so 4 packets per kg × 3 = 12.)",
+    tags: ["measurement", "mass", "converting", "division"]
+  },
+  {
+    world: "math",
+    level: 4,
+    type: "text-input",
+    question: "Round 2.345 to one decimal place.",
+    options: ["2.3"],
+    correctIndex: 0,
+    explanation: "Look at the second decimal digit: 4. Since it's less than 5, we round down — 2.345 → 2.3.",
+    tags: ["decimals", "rounding"]
   }
 ];

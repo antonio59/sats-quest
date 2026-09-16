@@ -104,7 +104,7 @@ window.SATMiniGames = {
         hp: 5,
         xpReward: 60,
         questions: [
-          { question: 'What is 3/4 + 2/3?', options: ['A) 5/7', 'B) 17/12', 'C) 5/12', 'D) 1 5/12'], correctIndex: 1, explanation: 'Find a common denominator (12): 9/12 + 8/12 = 17/12.' },
+          { question: 'What is 3/4 + 2/3?', options: ['A) 5/7', 'B) 17/12', 'C) 5/12', 'D) 7/12'], correctIndex: 1, explanation: 'Find a common denominator (12): 9/12 + 8/12 = 17/12.' },
           { question: 'A shape has 4 right angles and 2 pairs of parallel sides. All sides are equal. What is it?', options: ['A) Rectangle', 'B) Rhombus', 'C) Square', 'D) Trapezium'], correctIndex: 2, explanation: 'A square has 4 right angles, 2 pairs of parallel sides, and all sides equal.' },
           { question: 'Solve: 4x − 7 = 21', options: ['A) x = 3.5', 'B) x = 7', 'C) x = 5.5', 'D) x = 28'], correctIndex: 1, explanation: '4x − 7 = 21. Add 7: 4x = 28. Divide by 4: x = 7.' },
           { question: 'What is 35% of 240?', options: ['A) 72', 'B) 84', 'C) 96', 'D) 60'], correctIndex: 1, explanation: '10% of 240 = 24. 30% = 72. 5% = 12. 35% = 72 + 12 = 84.' },

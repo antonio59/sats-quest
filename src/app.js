@@ -73,10 +73,28 @@
   const XP_PER_LEVEL = 400;
   const MAX_LEVEL = 5;
 
+  // HTML-escape for any string interpolated into innerHTML.
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g,
+      c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  // Normalise a free-text answer for comparison (shared by game + exam modes).
+  function normAnswer(s) {
+    return String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  }
+
+  // Track per-game intervals so they can be cleared when leaving a screen —
+  // prevents orphaned timers from ticking (and firing alerts) after exit.
+  let gameTimers = [];
+  function trackTimer(id) { gameTimers.push(id); return id; }
+  function clearGameTimers() { gameTimers.forEach(clearInterval); gameTimers = []; }
+
   function showScreen(name) {
+    clearGameTimers();
     Object.values(screens).forEach(s => s.classList.remove('active'));
     screens[name].classList.add('active');
-    if (name === 'auth') { loadProfiles(); els.authProfiles.style.display = 'flex'; els.authPin.style.display = 'none'; els.authSignup.style.display = 'none'; }
+    if (name === 'auth') { loadProfiles(); showAuthPanel('profiles'); }
     if (name === 'dashboard') { refreshDashboard(); checkAchievements(); renderBadges(); }
     if (name === 'review') renderReview();
     if (name === 'reports') renderReports();
@@ -88,12 +106,12 @@
   // ===== AUTH =====
   const PIN_LENGTH = 6;
   const PROFILE_COLORS = [
-    'linear-gradient(135deg, #fbbf24, #f97316)',
-    'linear-gradient(135deg, #60a5fa, #a855f7)',
-    'linear-gradient(135deg, #4ade80, #10b981)',
-    'linear-gradient(135deg, #f472b6, #ef4444)',
-    'linear-gradient(135deg, #22d3ee, #14b8a6)',
-    'linear-gradient(135deg, #818cf8, #7c3aed)',
+    'linear-gradient(135deg, #ffab1f, #f97316)',
+    'linear-gradient(135deg, #2f6bff, #7b61ff)',
+    'linear-gradient(135deg, #0fb5a3, #0891b2)',
+    'linear-gradient(135deg, #ff5d73, #d93b57)',
+    'linear-gradient(135deg, #7b61ff, #5a3ee0)',
+    'linear-gradient(135deg, #f97316, #d93b57)',
   ];
   const AVATARS = ['🦊','🐱','🐶','🦁','🐼','🐨','🦄','🐸','🐙','🦋','🐢','🦖','🐧','🦜','🐝','🦉','🐯','🐲','🐵'];
   let selectedProfile = null;
@@ -112,19 +130,32 @@
     renderProfiles(list);
   }
 
+  function showAuthPanel(which) {
+    els.authProfiles.classList.toggle('hidden', which !== 'profiles');
+    els.authPin.classList.toggle('hidden', which !== 'pin');
+    els.authSignup.classList.toggle('hidden', which !== 'signup');
+  }
+
   function renderProfiles(players) {
     els.profileGrid.innerHTML = '';
     if (players.length === 0) {
-      els.authProfiles.style.display = 'none';
-      els.authSignup.style.display = 'flex';
+      showAuthPanel('signup');
       renderSignupAvatars();
       return;
     }
     players.forEach((p, i) => {
-      const card = document.createElement('div');
+      const card = document.createElement('button');
       card.className = 'profile-card';
+      card.type = 'button';
       card.style.background = PROFILE_COLORS[i % PROFILE_COLORS.length];
-      card.innerHTML = `<span class="profile-card-emoji">${p.avatar}</span><span class="profile-card-name" style="color:white;">${p.name}</span>`;
+      const emoji = document.createElement('span');
+      emoji.className = 'profile-card-emoji';
+      emoji.textContent = p.avatar;
+      const name = document.createElement('span');
+      name.className = 'profile-card-name';
+      name.textContent = p.name;
+      card.appendChild(emoji);
+      card.appendChild(name);
       card.addEventListener('click', () => selectProfile(p));
       els.profileGrid.appendChild(card);
     });
@@ -137,8 +168,7 @@
     els.pinName.textContent = profile.name;
     renderPinDots();
     els.pinError.textContent = '';
-    els.authProfiles.style.display = 'none';
-    els.authPin.style.display = 'flex';
+    showAuthPanel('pin');
   }
 
   function renderPinDots() {
@@ -201,14 +231,12 @@
   els.pinBack.addEventListener('click', () => {
     selectedProfile = null;
     currentPin = '';
-    els.authPin.style.display = 'none';
-    els.authProfiles.style.display = 'flex';
+    showAuthPanel('profiles');
   });
 
   els.newPlayerBtn.addEventListener('click', () => {
     selectedSignupAvatar = '🦊';
-    els.authProfiles.style.display = 'none';
-    els.authSignup.style.display = 'flex';
+    showAuthPanel('signup');
     renderSignupAvatars();
   });
 
@@ -227,8 +255,7 @@
   }
 
   els.signupBack.addEventListener('click', () => {
-    els.authSignup.style.display = 'none';
-    els.authProfiles.style.display = 'flex';
+    showAuthPanel('profiles');
     els.signupError.textContent = '';
   });
 
@@ -348,8 +375,9 @@
       const input = document.createElement('input');
       input.type = 'text';
       input.className = 'text-answer-input';
-      input.placeholder = 'Type your answer here...';
+      input.placeholder = 'Type your answer here…';
       input.autocomplete = 'off';
+      input.setAttribute('aria-label', 'Type your answer');
       const submitBtn = document.createElement('button');
       submitBtn.className = 'btn';
       submitBtn.textContent = 'Submit ✔';
@@ -358,11 +386,10 @@
         if (!userAnswer) return;
         submitBtn.disabled = true;
         input.disabled = true;
-        // Check against accepted answers (correctIndex stores index, options[0] is the canonical answer)
-        const accepted = (currentQuestion.options || []).map(a => a.toLowerCase().replace(/[^a-z0-9]/g, ''));
-        const normalised = userAnswer.toLowerCase().replace(/[^a-z0-9]/g, '');
-        const isCorrect = accepted.includes(normalised);
-        handleAnswerResult(isCorrect ? currentQuestion.correctIndex : -1, isCorrect);
+        // options[] is the accepted-answers list; options[0] is canonical
+        const accepted = (currentQuestion.options || []).map(normAnswer);
+        const isCorrect = accepted.includes(normAnswer(userAnswer));
+        handleAnswerResult(isCorrect ? 0 : -1, isCorrect, userAnswer);
       });
       input.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitBtn.click(); });
       wrapper.appendChild(input);
@@ -406,7 +433,8 @@
           if (correctSet.has(idx)) b.classList.add('correct');
           if (selectedSet.has(idx) && !correctSet.has(idx)) b.classList.add('wrong');
         });
-        handleAnswerResult(isCorrect ? 0 : -1, isCorrect);
+        const chosenLabels = [...selectedSet].sort().map(i => currentQuestion.options[i]).join(', ');
+        handleAnswerResult(isCorrect ? 0 : -1, isCorrect, chosenLabels);
       });
       els.questionOptions.appendChild(submitBtn);
     } else {
@@ -440,7 +468,7 @@
   }
 
   // Shared post-answer logic for all question types
-  function handleAnswerResult(selectedIndex, isCorrect) {
+  function handleAnswerResult(selectedIndex, isCorrect, answerText = null) {
     const timeMs = Date.now() - questionStartTime;
     const qId = currentQuestion._id || currentQuestion._hash;
     // Build a result object locally for non-standard types
@@ -452,8 +480,9 @@
       correctIndex: Array.isArray(currentQuestion.correctIndex) ? currentQuestion.correctIndex[0] : currentQuestion.correctIndex,
       explanation: currentQuestion.explanation,
     };
-    // Still record the answer
-    db.submitAnswer(player.playerId, qId, selectedIndex, timeMs, player.streak || 0);
+    // Record the answer — pass the verdict so free-text/multi-select submits
+    // are stored correctly (their selectedIndex is just a 0/-1 sentinel).
+    db.submitAnswer(player.playerId, qId, selectedIndex, timeMs, player.streak || 0, isCorrect, answerText);
     handleAnswerCommon(result);
   }
 
@@ -505,15 +534,36 @@
       localStorage.setItem('sq_badge_perfect-session', 'true');
     }
     showScreen('dashboard');
-
-    // Show a quick summary
-    setTimeout(() => {
-      const msg = accuracy >= 80 ? `🔥 ${accuracy}% accuracy! You're crushing it!` :
-                  accuracy >= 50 ? `👍 ${accuracy}% — solid session! Keep going!` :
-                  `💪 ${accuracy}% — every question makes you stronger!`;
-      alert(`${WORLD_NAMES[currentWorld]} Session Complete!\n\n${msg}\n\nXP earned: ${sessionCorrect * 10}\nQuestions: ${questionsAnswered}`);
-    }, 200);
+    showSummary({
+      emoji: accuracy >= 80 ? '🏆' : accuracy >= 50 ? '🌟' : '💪',
+      title: `${WORLD_NAMES[currentWorld]} Session Complete!`,
+      lines: [
+        accuracy >= 80 ? `${accuracy}% accuracy! You're crushing it!` :
+        accuracy >= 50 ? `${accuracy}% — solid session! Keep going!` :
+        `${accuracy}% — every question makes you stronger!`,
+        `${sessionCorrect}/${questionsAnswered} correct · +${sessionCorrect * 10} XP`,
+      ],
+    });
   }
+
+  // Session/game-complete modal — replaces alert() so results stay on-brand,
+  // are readable, and don't block the event loop.
+  const summaryModal = document.getElementById('summary-modal');
+  function showSummary({ emoji, title, lines }) {
+    document.getElementById('summary-emoji').textContent = emoji;
+    document.getElementById('summary-title').textContent = title;
+    const body = document.getElementById('summary-body');
+    body.innerHTML = '';
+    for (const line of lines) {
+      const p = document.createElement('p');
+      p.textContent = line;
+      body.appendChild(p);
+    }
+    summaryModal.classList.remove('hidden');
+    document.getElementById('summary-ok-btn').focus();
+  }
+  document.getElementById('summary-ok-btn').addEventListener('click', () => summaryModal.classList.add('hidden'));
+  document.getElementById('summary-backdrop').addEventListener('click', () => summaryModal.classList.add('hidden'));
 
   // ===== REVIEW =====
   function renderReview() {
@@ -522,15 +572,17 @@
       els.reviewList.innerHTML = '<p style="text-align:center;color:var(--text-dim);padding:40px;">No answers yet! Play some questions first.</p>';
       return;
     }
-    els.reviewList.innerHTML = answers.map(a => `
+    els.reviewList.innerHTML = answers.map(a => {
+      const ci = Array.isArray(a.correctIndex) ? a.correctIndex[0] : a.correctIndex;
+      return `
       <div class="review-card ${a.correct ? 'correct-card' : ''}">
         <h4>${WORLD_ICONS[a.world] || '📝'} ${a.correct ? '✅ Correct' : '❌ Incorrect'}</h4>
-        <p><strong>Q:</strong> ${a.question}</p>
-        ${!a.correct ? `<p style="color:var(--danger);margin-top:4px;">Your answer: ${a.options[a.selectedIndex] || '?'}</p>` : ''}
-        <p style="color:var(--success);margin-top:4px;">Correct: ${a.options[a.correctIndex] || '?'}</p>
-        <p style="margin-top:6px;font-style:italic;">${a.explanation}</p>
-      </div>
-    `).join('');
+        <p><strong>Q:</strong> ${esc(a.question)}</p>
+        ${!a.correct ? `<p style="color:var(--danger);margin-top:4px;">Your answer: ${esc(a.selectedText ?? a.options[a.selectedIndex] ?? '?')}</p>` : ''}
+        <p style="color:var(--success);margin-top:4px;">Correct: ${esc(a.options[ci] ?? (a.options[0] || '?'))}</p>
+        <p style="margin-top:6px;font-style:italic;">${esc(a.explanation)}</p>
+      </div>`;
+    }).join('');
   }
 
   // ===== NAV =====
@@ -556,6 +608,7 @@
   const reportSendBtn = document.getElementById('report-send-btn');
   const reportCancelBtn = document.getElementById('report-cancel-btn');
   const reportSuccess = document.getElementById('report-success');
+  const reportError = document.getElementById('report-error');
 
   reportBtn.addEventListener('click', () => {
     reportModal.classList.remove('hidden');
@@ -590,13 +643,14 @@
 
       if (res.ok) {
         reportSuccess.classList.remove('hidden');
+        reportError.classList.add('hidden');
         reportText.style.borderColor = 'transparent';
         setTimeout(() => reportModal.classList.add('hidden'), 2000);
       } else {
-        alert('Failed to send report. Please try again.');
+        reportError.classList.remove('hidden');
       }
     } catch (e) {
-      alert('Failed to send report. Please try again.');
+      reportError.classList.remove('hidden');
     }
 
     reportSendBtn.disabled = false;
@@ -656,7 +710,8 @@
       const input = document.createElement('input');
       input.type = 'text';
       input.className = 'text-input-answer';
-      input.placeholder = 'Type your answer...';
+      input.placeholder = 'Type your answer…';
+      input.setAttribute('aria-label', 'Type your answer');
       input.value = typeof examState.answers[examState.current] === 'string' ? examState.answers[examState.current] : '';
       input.addEventListener('input', () => {
         examState.answers[examState.current] = input.value.trim();
@@ -688,7 +743,7 @@
         const btn = document.createElement('button');
         btn.className = 'option-btn';
         btn.textContent = opt;
-        if (examState.answers[examState.current] === i) btn.style.borderColor = 'var(--accent)';
+        if (examState.answers[examState.current] === i) btn.classList.add('selected');
         btn.addEventListener('click', () => {
           examState.answers[examState.current] = i;
           showExamQuestion();
@@ -725,8 +780,21 @@
     else finishExam();
   });
 
-  document.getElementById('exam-finish-btn').addEventListener('click', () => {
-    if (confirm('Finish exam? You can\'t go back after this.')) finishExam();
+  // Two-step finish: first tap arms the button, second tap confirms.
+  const finishBtn = document.getElementById('exam-finish-btn');
+  finishBtn.addEventListener('click', () => {
+    if (finishBtn.dataset.armed === 'true') {
+      finishBtn.dataset.armed = 'false';
+      finishBtn.textContent = 'Finish Exam';
+      finishExam();
+    } else {
+      finishBtn.dataset.armed = 'true';
+      finishBtn.textContent = 'Sure? Tap again';
+      setTimeout(() => {
+        finishBtn.dataset.armed = 'false';
+        finishBtn.textContent = 'Finish Exam';
+      }, 3000);
+    }
   });
 
   function startExamTimer() {
@@ -744,27 +812,29 @@
     }, 1000);
   }
 
+  // Shared grading for all exam question types — text answers use the same
+  // normalisation as game mode (case/punctuation-insensitive).
+  function isExamAnswerCorrect(q, answer) {
+    const qType = q.type || 'multiple-choice';
+    if (qType === 'text-input') {
+      const userAns = normAnswer(typeof answer === 'string' ? answer : '');
+      return q.options.some(opt => normAnswer(opt) === userAns);
+    }
+    if (qType === 'multi-select' && Array.isArray(q.correctIndex)) {
+      const sel = Array.isArray(answer) ? [...answer].sort() : [];
+      return JSON.stringify(sel) === JSON.stringify([...q.correctIndex].sort());
+    }
+    return answer === q.correctIndex;
+  }
+
   function finishExam() {
     clearInterval(examState.timerInterval);
     document.getElementById('exam-active-screen').classList.remove('active');
 
-    // Score — handle different question types
+    // Score — shared grading for all question types
     let correct = 0;
     examState.questions.forEach((q, i) => {
-      const answer = examState.answers[i];
-      const qType = q.type || 'multiple-choice';
-      if (qType === 'text-input') {
-        // Accept any option as correct (options array holds acceptable answers)
-        const userAns = (typeof answer === 'string' ? answer : '').toLowerCase().trim();
-        const isCorrect = q.options.some(opt => opt.toLowerCase().trim() === userAns);
-        if (isCorrect) correct++;
-      } else if (qType === 'multi-select' && Array.isArray(q.correctIndex)) {
-        const sel = Array.isArray(answer) ? [...answer].sort() : [];
-        const expected = [...q.correctIndex].sort();
-        if (JSON.stringify(sel) === JSON.stringify(expected)) correct++;
-      } else {
-        if (answer === q.correctIndex) correct++;
-      }
+      if (isExamAnswerCorrect(q, examState.answers[i])) correct++;
     });
     const total = examState.questions.length;
     const percent = Math.round((correct / total) * 100);
@@ -794,22 +864,11 @@
     // Breakdown
     const breakdown = document.getElementById('exam-results-breakdown');
     breakdown.innerHTML = examState.questions.map((q, i) => {
-      const answer = examState.answers[i];
-      const qType = q.type || 'multiple-choice';
-      let wasCorrect;
-      if (qType === 'text-input') {
-        const userAns = (typeof answer === 'string' ? answer : '').toLowerCase().trim();
-        wasCorrect = q.options.some(opt => opt.toLowerCase().trim() === userAns);
-      } else if (qType === 'multi-select' && Array.isArray(q.correctIndex)) {
-        const sel = Array.isArray(answer) ? [...answer].sort() : [];
-        wasCorrect = JSON.stringify(sel) === JSON.stringify([...q.correctIndex].sort());
-      } else {
-        wasCorrect = answer === q.correctIndex;
-      }
+      const wasCorrect = isExamAnswerCorrect(q, examState.answers[i]);
       const worldIcon = q.world === 'reading' ? '📖' : q.world === 'writing' ? '✍️' : '🔢';
       return `<div class="exam-result-row">
         <span class="exam-result-icon">${wasCorrect ? '✅' : '❌'}</span>
-        <span>${worldIcon} ${q.question.substring(0, 60)}${q.question.length > 60 ? '...' : ''}</span>
+        <span>${worldIcon} ${esc(q.question.substring(0, 60))}${q.question.length > 60 ? '…' : ''}</span>
       </div>`;
     }).join('');
 
@@ -840,18 +899,14 @@
       let userAnswerStr;
       let correctAnswerStr;
 
+      wasCorrect = isExamAnswerCorrect(q, answer);
       if (qType === 'text-input') {
-        const userAns = (typeof answer === 'string' ? answer : '').toLowerCase().trim();
-        wasCorrect = q.options.some(opt => opt.toLowerCase().trim() === userAns);
         userAnswerStr = answer || 'Skipped';
         correctAnswerStr = q.options[0];
       } else if (qType === 'multi-select' && Array.isArray(q.correctIndex)) {
-        const sel = Array.isArray(answer) ? [...answer].sort() : [];
-        wasCorrect = JSON.stringify(sel) === JSON.stringify([...q.correctIndex].sort());
         userAnswerStr = Array.isArray(answer) ? answer.map(idx => q.options[idx]).join(', ') : 'Skipped';
         correctAnswerStr = q.correctIndex.map(idx => q.options[idx]).join(', ');
       } else {
-        wasCorrect = answer === q.correctIndex;
         userAnswerStr = typeof answer === 'number' ? (q.options[answer] || 'Skipped') : 'Skipped';
         correctAnswerStr = q.options[q.correctIndex];
       }
@@ -859,11 +914,11 @@
       const worldIcon = q.world === 'reading' ? '📖' : q.world === 'writing' ? '✍️' : '🔢';
       return `<div class="review-card ${wasCorrect ? 'correct-card' : ''}">
         <h4>${worldIcon} ${wasCorrect ? '✅' : '❌'} Question ${i + 1}</h4>
-        ${q.passage ? `<p style="font-style:italic;color:var(--text-dim);margin-bottom:6px;">${q.passage.substring(0, 100)}...</p>` : ''}
-        <p><strong>Q:</strong> ${q.question}</p>
-        ${!wasCorrect ? `<p style="color:var(--danger);margin-top:4px;">Your answer: ${userAnswerStr}</p>` : ''}
-        <p style="color:var(--success);margin-top:4px;">Correct: ${correctAnswerStr}</p>
-        <p style="margin-top:6px;font-style:italic;">${q.explanation}</p>
+        ${q.passage ? `<p style="font-style:italic;color:var(--text-dim);margin-bottom:6px;">${esc(q.passage.substring(0, 100))}…</p>` : ''}
+        <p><strong>Q:</strong> ${esc(q.question)}</p>
+        ${!wasCorrect ? `<p style="color:var(--danger);margin-top:4px;">Your answer: ${esc(userAnswerStr)}</p>` : ''}
+        <p style="color:var(--success);margin-top:4px;">Correct: ${esc(correctAnswerStr)}</p>
+        <p style="margin-top:6px;font-style:italic;">${esc(q.explanation)}</p>
       </div>`;
     }).join('');
     showScreen('review');
@@ -901,13 +956,13 @@
 
     // Render tag groups
     document.getElementById('excels-list').innerHTML = excels.length
-      ? excels.map(t => `<span class="report-tag good">${formatTag(t.tag)} <span class="accuracy">${t.accuracy}%</span></span>`).join('')
+      ? excels.map(t => `<span class="report-tag good">${esc(formatTag(t.tag))} <span class="accuracy">${t.accuracy}%</span></span>`).join('')
       : '<p style="color:var(--text-dim);font-size:0.85rem;">Play more questions to see what you\'re good at!</p>';
     document.getElementById('ok-list').innerHTML = ok.length
-      ? ok.map(t => `<span class="report-tag ok">${formatTag(t.tag)} <span class="accuracy">${t.accuracy}%</span></span>`).join('')
+      ? ok.map(t => `<span class="report-tag ok">${esc(formatTag(t.tag))} <span class="accuracy">${t.accuracy}%</span></span>`).join('')
       : '<p style="color:var(--text-dim);font-size:0.85rem;">Keep going!</p>';
     document.getElementById('focus-list').innerHTML = focus.length
-      ? focus.map(t => `<span class="report-tag focus">${formatTag(t.tag)} <span class="accuracy">${t.accuracy}%</span></span>`).join('')
+      ? focus.map(t => `<span class="report-tag focus">${esc(formatTag(t.tag))} <span class="accuracy">${t.accuracy}%</span></span>`).join('')
       : '<p style="color:var(--text-dim);font-size:0.85rem;">Nothing to worry about yet — you\'re doing great!</p>';
 
     // Per-world breakdown
@@ -937,13 +992,13 @@
     // Recommendations
     const recs = [];
     if (focus.length > 0) {
-      recs.push(`<strong>Focus on:</strong> Practice ${formatTag(focus[0].tag)} questions — you're at ${focus[0].accuracy}% accuracy and could use more reps.`);
+      recs.push(`<strong>Focus on:</strong> Practice ${esc(formatTag(focus[0].tag))} questions — you're at ${focus[0].accuracy}% accuracy and could use more reps.`);
     }
     if (progress.reading && progress.reading.answered < 10) {
       recs.push(`<strong>Get started:</strong> Answer at least 10 Reading questions to unlock your first skills report.`);
     }
     if (excels.length > 2) {
-      recs.push(`<strong>Challenge yourself:</strong> Try harder questions in ${formatTag(excels[0].tag)} — you're already at ${excels[0].accuracy}%!`);
+      recs.push(`<strong>Challenge yourself:</strong> Try harder questions in ${esc(formatTag(excels[0].tag))} — you're already at ${excels[0].accuracy}%!`);
     }
     const session = db.getDailyCount(player.playerId);
     if (session < 3) {
@@ -1038,14 +1093,13 @@
       els.questionOptions.innerHTML = `
         <div class="speed-math-area">
           <div class="speed-timer" id="speed-timer">⏱️ 60s</div>
-          <div class="speed-problem">${p.q} = ?</div>
-          <input type="number" class="speed-input" id="speed-answer" autofocus>
+          <div class="speed-problem">${esc(p.q)} = ?</div>
+          <input type="number" class="speed-input" id="speed-answer" autofocus aria-label="Type your answer">
           <p class="speed-score" id="speed-score">Score: ${score}/${current}</p>
         </div>
       `;
 
       const input = document.getElementById('speed-answer');
-      const timer = document.getElementById('speed-timer');
 
       input.focus();
       input.addEventListener('keydown', (e) => {
@@ -1063,23 +1117,22 @@
           setTimeout(showProblem, 400);
         }
       });
-
-      // Timer
-      const timerInterval = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        const remaining = Math.max(0, Math.ceil((timeLimit - elapsed) / 1000));
-        if (timer) timer.textContent = `⏱️ ${remaining}s`;
-        if (remaining <= 0) {
-          clearInterval(timerInterval);
-          finishSpeedMath(score, current);
-        }
-      }, 1000);
     }
+
+    // One timer for the whole game — tracked so it clears on screen change.
+    trackTimer(setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, Math.ceil((timeLimit - elapsed) / 1000));
+      const timerEl = document.getElementById('speed-timer');
+      if (timerEl) timerEl.textContent = `⏱️ ${remaining}s`;
+      if (remaining <= 0) finishSpeedMath(score, current);
+    }, 1000));
 
     showProblem();
   }
 
   function finishSpeedMath(score, total) {
+    clearGameTimers();
     const xpEarned = score * 5;
     player.xp = (player.xp || 0) + xpEarned;
     player.level = Math.min(MAX_LEVEL, Math.floor(player.xp / XP_PER_LEVEL) + 1);
@@ -1087,10 +1140,14 @@
     if (score >= 10) localStorage.setItem('sq_badge_speed-demon', 'true');
     checkAchievements();
     showScreen('dashboard');
-    setTimeout(() => {
-      const msg = score >= 12 ? '🔥 Math speed demon!' : score >= 8 ? '⚡ Quick thinker!' : '💪 Keep practicing!';
-      alert(`Speed Math Complete!\n\n${msg}\n\nScore: ${score}/${total}\nXP earned: +${xpEarned}`);
-    }, 200);
+    showSummary({
+      emoji: score >= 12 ? '🔥' : score >= 8 ? '⚡' : '💪',
+      title: 'Speed Math Complete!',
+      lines: [
+        score >= 12 ? 'Math speed demon!' : score >= 8 ? 'Quick thinker!' : 'Keep practicing!',
+        `Score: ${score}/${total} · +${xpEarned} XP`,
+      ],
+    });
   }
 
   // ===== WORD SCRAMBLE =====
@@ -1124,9 +1181,9 @@
       els.questionOptions.innerHTML = `
         <div class="scramble-area">
           <div class="speed-timer" id="scramble-timer">⏱️ 90s</div>
-          <div class="scramble-letters">${w.scrambled}</div>
-          <div class="scramble-hint">💡 ${w.hint}</div>
-          <input type="text" class="scramble-input" id="scramble-answer" placeholder="Type the word..." autocomplete="off" autofocus>
+          <div class="scramble-letters">${esc(w.scrambled)}</div>
+          <div class="scramble-hint">💡 ${esc(w.hint)}</div>
+          <input type="text" class="scramble-input" id="scramble-answer" placeholder="Type the word..." autocomplete="off" autofocus aria-label="Type the unscrambled word">
           <div class="scramble-feedback" id="scramble-feedback"></div>
           <p class="scramble-score">Score: ${score}/${current}</p>
         </div>
@@ -1151,22 +1208,22 @@
           setTimeout(showWord, 1200);
         }
       });
-      // Timer
-      const timerInterval = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        const remaining = Math.max(0, Math.ceil((timeLimit - elapsed) / 1000));
-        const timerEl = document.getElementById('scramble-timer');
-        if (timerEl) timerEl.textContent = `⏱️ ${remaining}s`;
-        if (remaining <= 0) {
-          clearInterval(timerInterval);
-          finishWordScramble(score, current);
-        }
-      }, 1000);
     }
+
+    // One timer for the whole game — tracked so it clears on screen change.
+    trackTimer(setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, Math.ceil((timeLimit - elapsed) / 1000));
+      const timerEl = document.getElementById('scramble-timer');
+      if (timerEl) timerEl.textContent = `⏱️ ${remaining}s`;
+      if (remaining <= 0) finishWordScramble(score, current);
+    }, 1000));
+
     showWord();
   }
 
   function finishWordScramble(score, total) {
+    clearGameTimers();
     const xpEarned = score * 8;
     player.xp = (player.xp || 0) + xpEarned;
     player.level = Math.min(MAX_LEVEL, Math.floor(player.xp / XP_PER_LEVEL) + 1);
@@ -1174,10 +1231,14 @@
     if (score >= 8) localStorage.setItem('sq_badge_word-wizard', 'true');
     checkAchievements();
     showScreen('dashboard');
-    setTimeout(() => {
-      const msg = score >= 10 ? '🔥 Word wizard!' : score >= 6 ? '⚡ Great vocabulary!' : '💪 Keep unscrambling!';
-      alert(`Word Scramble Complete!\n\n${msg}\n\nScore: ${score}/${total}\nXP earned: +${xpEarned}`);
-    }, 200);
+    showSummary({
+      emoji: score >= 10 ? '🔥' : score >= 6 ? '⚡' : '💪',
+      title: 'Word Scramble Complete!',
+      lines: [
+        score >= 10 ? 'Word wizard!' : score >= 6 ? 'Great vocabulary!' : 'Keep unscrambling!',
+        `Score: ${score}/${total} · +${xpEarned} XP`,
+      ],
+    });
   }
 
   // ===== BOSS BATTLE =====
@@ -1214,8 +1275,8 @@
       header.className = 'boss-area';
       header.innerHTML = `
         <div class="boss-header">
-          <span class="boss-emoji">${boss.emoji}</span>
-          <h3>${boss.name}</h3>
+          <span class="boss-emoji">${esc(boss.emoji)}</span>
+          <h3>${esc(boss.name)}</h3>
           <div class="boss-hp-bar"><div class="boss-hp-fill" style="width:${hpPct}%"></div></div>
           <p style="color:var(--text-dim);font-size:0.85rem;">HP: ${bossHP}/${boss.hp}</p>
         </div>
@@ -1290,11 +1351,15 @@
     if (hits >= total) localStorage.setItem('sq_badge_boss-slayer', 'true');
     checkAchievements();
     showScreen('dashboard');
-    setTimeout(() => {
-      const defeated = hits >= total;
-      const msg = defeated ? `🎉 You defeated ${boss.name}!` : `💪 ${boss.name} survived with ${total - hits} HP. Try again!`;
-      alert(`Boss Battle Complete!\n\n${msg}\n\nHits: ${hits}/${total}\nXP earned: +${xpEarned}`);
-    }, 200);
+    const defeated = hits >= total;
+    showSummary({
+      emoji: defeated ? '🏆' : '⚔️',
+      title: 'Boss Battle Complete!',
+      lines: [
+        defeated ? `You defeated ${boss.name}!` : `${boss.name} survived with ${total - hits} HP. Try again!`,
+        `Hits: ${hits}/${total} · +${xpEarned} XP`,
+      ],
+    });
   }
 
   // ===== ACHIEVEMENTS / BADGES =====

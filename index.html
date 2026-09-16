@@ -1,24 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>SATs Quest 🚀</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
 
   <!-- Open Graph / Link Preview -->
-  <meta name="description" content="SATs prep that feels like a game — 700+ questions across Reading, Grammar &amp; Maths. 15 minutes a day. Zero boredom.">
+  <meta name="description" content="KS2 SATs prep that feels like a game — 590+ questions across Reading, Grammar &amp; Maths. 15 minutes a day. Zero boredom.">
   <meta property="og:title" content="SATs Quest 🚀">
-  <meta property="og:description" content="Gamified KS2 SATs revision — Reading, Grammar &amp; Maths. 700+ questions, exam mode, daily challenges!">
+  <meta property="og:description" content="Gamified KS2 SATs revision — Reading, Grammar &amp; Maths. 590+ questions, exam mode, daily challenges!">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://sats-quest.antoniosmith.xyz/">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="SATs Quest 🚀">
-  <meta name="twitter:description" content="Gamified KS2 SATs revision — Reading, Grammar &amp; Maths. 700+ questions, exam mode, daily challenges!">
-  <meta name="theme-color" content="#0f0e17">
+  <meta name="twitter:description" content="Gamified KS2 SATs revision — Reading, Grammar &amp; Maths. 590+ questions, exam mode, daily challenges!">
+  <meta name="theme-color" content="#eaf2ff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Comic+Neue:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <a href="#app" class="skip-link">Skip to content</a>
   <div id="app">
 
     <!-- ===== LANDING ===== -->
@@ -69,7 +73,7 @@
     <div id="auth-screen" class="screen">
       <!-- Profile Selection -->
       <div id="auth-profiles" class="auth-container">
-        <div class="text-center w-full" style="max-width:600px;">
+        <div class="text-center w-full auth-profiles-inner">
           <h1 class="auth-title">Who's playing? 🚀</h1>
           <p class="auth-subtitle">Pick your profile</p>
           <div id="profile-grid" class="profile-grid"></div>
@@ -78,7 +82,7 @@
       </div>
 
       <!-- PIN Entry -->
-      <div id="auth-pin" class="auth-container" style="display:none;">
+      <div id="auth-pin" class="auth-container hidden">
         <div class="auth-pin-card">
           <div class="auth-pin-header">
             <button class="btn-back" id="pin-back">←</button>
@@ -86,32 +90,32 @@
               <span id="pin-avatar" class="pin-avatar-large">🚀</span>
               <span id="pin-name" class="pin-name">Player</span>
             </div>
-            <div style="width:40px;"></div>
+            <div class="header-spacer"></div>
           </div>
           <div class="auth-pin-body">
             <div class="pin-lock">🔒</div>
             <h2>Enter your PIN</h2>
-            <div id="pin-dots" class="pin-dots"></div>
-            <p id="pin-error" class="auth-error"></p>
+            <div id="pin-dots" class="pin-dots" aria-hidden="true"></div>
+            <p id="pin-error" class="auth-error" role="alert"></p>
           </div>
           <div id="pin-numpad" class="pin-numpad"></div>
         </div>
       </div>
 
       <!-- Signup Form -->
-      <div id="auth-signup" class="auth-container" style="display:none;">
+      <div id="auth-signup" class="auth-container hidden">
         <div class="auth-signup-card">
           <div class="auth-pin-header">
             <button class="btn-back" id="signup-back">←</button>
             <h2>Create Account</h2>
-            <div style="width:40px;"></div>
+            <div class="header-spacer"></div>
           </div>
           <div id="signup-avatars" class="signup-avatars"></div>
-          <input type="text" id="signup-name" placeholder="Your name" maxlength="20" autocomplete="off" class="signup-input">
-          <input type="password" id="signup-pin" placeholder="6-digit passcode" maxlength="6" inputmode="numeric" class="signup-input">
-          <input type="password" id="signup-pin-confirm" placeholder="Confirm passcode" maxlength="6" inputmode="numeric" class="signup-input">
-          <p class="auth-hint">Choose a 6-digit passcode you'll remember</p>
-          <p id="signup-error" class="auth-error"></p>
+          <input type="text" id="signup-name" placeholder="Your name" maxlength="20" autocomplete="off" spellcheck="false" aria-label="Your name" class="signup-input">
+          <input type="password" id="signup-pin" placeholder="6-digit passcode" maxlength="6" inputmode="numeric" autocomplete="new-password" aria-label="6-digit passcode" class="signup-input">
+          <input type="password" id="signup-pin-confirm" placeholder="Confirm passcode" maxlength="6" inputmode="numeric" autocomplete="new-password" aria-label="Confirm passcode" class="signup-input">
+          <p class="auth-hint">Choose a 6-digit passcode you’ll remember</p>
+          <p id="signup-error" class="auth-error" role="alert"></p>
           <button class="btn" id="signup-btn">Create Account 🎉</button>
         </div>
       </div>
@@ -128,10 +132,10 @@
           </div>
         </div>
         <div class="dash-nav">
-          <button class="nav-btn" data-view="reports" title="Reports">📊</button>
-          <button class="nav-btn" data-view="review" title="Review">📝</button>
-          <button class="nav-btn" id="report-btn" title="Report a problem">🐛</button>
-          <button class="nav-btn" id="logout-btn" title="Log out">🚪</button>
+          <button class="nav-btn" data-view="reports" title="Reports" aria-label="View progress reports">📊</button>
+          <button class="nav-btn" data-view="review" title="Review" aria-label="Review past answers">📝</button>
+          <button class="nav-btn" id="report-btn" title="Report a problem" aria-label="Report a problem">🐛</button>
+          <button class="nav-btn" id="logout-btn" title="Log out" aria-label="Log out">🚪</button>
         </div>
       </header>
 
@@ -153,7 +157,7 @@
 
         <h2 class="section-title">Choose Your World</h2>
         <div class="worlds-grid" id="worlds-grid">
-          <div class="world-card reading" data-world="reading">
+          <button type="button" class="world-card reading" data-world="reading">
             <span class="world-emoji">📖</span>
             <h3>Reading</h3>
             <p>Stories, non-fiction &amp; inference</p>
@@ -161,8 +165,8 @@
               <div class="world-bar"><div class="world-bar-fill" id="reading-bar"></div></div>
               <span id="reading-level">Level 1</span>
             </div>
-          </div>
-          <div class="world-card writing" data-world="writing">
+          </button>
+          <button type="button" class="world-card writing" data-world="writing">
             <span class="world-emoji">✍️</span>
             <h3>Grammar</h3>
             <p>Punctuation, spelling &amp; grammar rules</p>
@@ -170,8 +174,8 @@
               <div class="world-bar"><div class="world-bar-fill" id="writing-bar"></div></div>
               <span id="writing-level">Level 1</span>
             </div>
-          </div>
-          <div class="world-card math" data-world="math">
+          </button>
+          <button type="button" class="world-card math" data-world="math">
             <span class="world-emoji">🔢</span>
             <h3>Maths</h3>
             <p>Number, fractions, geometry &amp; data</p>
@@ -179,53 +183,53 @@
               <div class="world-bar"><div class="world-bar-fill" id="math-bar"></div></div>
               <span id="math-level">Level 1</span>
             </div>
-          </div>
+          </button>
         </div>
 
         <div class="mini-games-section" id="mini-games-section">
           <h2 class="section-title">Quick Games</h2>
           <div class="mini-games-grid">
-            <div class="mini-game-card" data-game="speed-math">
+            <button type="button" class="mini-game-card" data-game="speed-math">
               <span class="mini-game-emoji">⚡</span>
               <h4>Speed Math</h4>
               <p>Race the clock</p>
-            </div>
-            <div class="mini-game-card" data-game="word-scramble">
+            </button>
+            <button type="button" class="mini-game-card" data-game="word-scramble">
               <span class="mini-game-emoji">🔤</span>
               <h4>Word Scramble</h4>
               <p>Unscramble vocab</p>
-            </div>
-            <div class="mini-game-card" data-game="boss-battle">
+            </button>
+            <button type="button" class="mini-game-card" data-game="boss-battle">
               <span class="mini-game-emoji">👾</span>
               <h4>Boss Battle</h4>
               <p>2× XP challenges</p>
-            </div>
+            </button>
           </div>
         </div>
 
         <div class="exam-section">
           <h2 class="section-title">📝 Exam Mode</h2>
           <div class="exam-cards-grid">
-            <div class="exam-card" data-exam="reading">
+            <button type="button" class="exam-card" data-exam="reading">
               <span class="exam-card-emoji">📖</span>
               <h4>Reading Paper</h4>
               <p>15 questions · 30 min</p>
-            </div>
-            <div class="exam-card" data-exam="writing">
+            </button>
+            <button type="button" class="exam-card" data-exam="writing">
               <span class="exam-card-emoji">✍️</span>
               <h4>Grammar Paper</h4>
               <p>20 questions · 20 min</p>
-            </div>
-            <div class="exam-card" data-exam="math">
+            </button>
+            <button type="button" class="exam-card" data-exam="math">
               <span class="exam-card-emoji">🔢</span>
               <h4>Maths Paper</h4>
               <p>20 questions · 30 min</p>
-            </div>
-            <div class="exam-card exam-card-full" data-exam="full">
+            </button>
+            <button type="button" class="exam-card exam-card-full" data-exam="full">
               <span class="exam-card-emoji">📝</span>
               <h4>Full Mock SATs</h4>
               <p>30 questions · 45 min</p>
-            </div>
+            </button>
           </div>
         </div>
 
@@ -269,7 +273,7 @@
         <div id="question-options" class="question-options"></div>
       </div>
 
-      <div id="question-feedback" class="question-feedback hidden">
+      <div id="question-feedback" class="question-feedback hidden" aria-live="polite">
         <div id="feedback-icon" class="feedback-icon"></div>
         <p id="feedback-text" class="feedback-text"></p>
         <p id="feedback-explanation" class="feedback-explanation"></p>
@@ -336,23 +340,10 @@
       </div>
     </div>
 
-    <!-- ===== EXAM SELECT SCREEN ===== -->
-    <div id="exam-screen" class="screen">
-      <div class="screen-header">
-        <button class="btn-back" data-back>← Back</button>
-        <h2>📝 Exam Mode</h2>
-        <div></div>
-      </div>
-      <div class="exam-body">
-        <p class="exam-intro">Pick a paper to start. You'll be timed — just like the real thing!</p>
-        <div id="exam-list" class="exam-list"></div>
-      </div>
-    </div>
-
     <!-- ===== EXAM ACTIVE SCREEN ===== -->
     <div id="exam-active-screen" class="screen">
       <div class="exam-active-header">
-        <div class="exam-timer" id="exam-timer">⏱️ 30:00</div>
+        <div class="exam-timer" id="exam-timer" role="timer" aria-label="Time remaining">⏱️ 30:00</div>
         <div class="exam-progress-text" id="exam-progress-text">1 / 15</div>
         <button class="btn-back btn-sm" id="exam-finish-btn">Finish Exam</button>
       </div>
@@ -363,7 +354,7 @@
       </div>
       <div class="exam-nav">
         <button class="btn btn-secondary btn-sm" id="exam-prev-btn">← Back</button>
-        <span id="exam-nav-dots" class="exam-nav-dots"></span>
+        <span id="exam-nav-dots" class="exam-nav-dots" aria-hidden="true"></span>
         <button class="btn btn-sm" id="exam-next-btn">Next →</button>
       </div>
     </div>
@@ -397,15 +388,29 @@
     <!-- ===== REPORT PROBLEM MODAL ===== -->
     <div id="report-modal" class="modal hidden">
       <div class="modal-backdrop" id="report-backdrop"></div>
-      <div class="modal-content">
-        <h3>🐛 Report a Problem</h3>
-        <p style="color:var(--text-dim);font-size:0.88rem;margin-bottom:14px;">Something not working? Tell Uncle Antonio and he'll fix it!</p>
-        <textarea id="report-text" class="report-textarea" placeholder="Describe what happened..." rows="4"></textarea>
+      <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="report-title">
+        <h3 id="report-title">🐛 Report a Problem</h3>
+        <p class="report-intro">Something not working? Tell Uncle Antonio and he'll fix it!</p>
+        <textarea id="report-text" class="report-textarea" placeholder="Describe what happened…" rows="4" aria-label="Describe the problem"></textarea>
         <div class="modal-actions">
           <button class="btn" id="report-send-btn">Send Report 📧</button>
           <button class="btn btn-secondary" id="report-cancel-btn">Cancel</button>
         </div>
-        <p id="report-success" class="hidden" style="color:var(--success);text-align:center;margin-top:10px;">✅ Thanks! Report sent.</p>
+        <p id="report-success" class="report-status report-success hidden">✅ Thanks! Report sent.</p>
+        <p id="report-error" class="report-status report-err hidden">⚠️ Couldn't send that — please try again.</p>
+      </div>
+    </div>
+
+    <!-- ===== SESSION SUMMARY MODAL ===== -->
+    <div id="summary-modal" class="modal hidden">
+      <div class="modal-backdrop" id="summary-backdrop"></div>
+      <div class="modal-content summary-content" role="dialog" aria-modal="true" aria-labelledby="summary-title">
+        <div class="summary-emoji" id="summary-emoji" aria-hidden="true">🎉</div>
+        <h3 id="summary-title">Session Complete!</h3>
+        <div id="summary-body" class="summary-body"></div>
+        <div class="modal-actions">
+          <button class="btn" id="summary-ok-btn">Awesome! ✨</button>
+        </div>
       </div>
     </div>
 
@@ -414,18 +419,11 @@
   <script src="src/convex-client.js"></script>
   <script src="src/mini-games.js"></script>
   <script src="src/exam-engine.js"></script>
-  <script src="src/questions.js"></script>
   <script src="src/questions-reading.js"></script>
   <script src="src/questions-grammar.js"></script>
   <script src="src/questions-maths.js"></script>
+  <script src="src/questions.js"></script>
   <script src="src/question-generator.js"></script>
-  <script>
-    // Merge separate question banks into one
-    if (!window.QuestionBank) window.QuestionBank = { reading: [], writing: [], math: [] };
-    if (window.ReadingQuestions) window.QuestionBank.reading.push(...window.ReadingQuestions);
-    if (window.GrammarQuestions) window.QuestionBank.writing.push(...window.GrammarQuestions);
-    if (window.MathsQuestions) window.QuestionBank.math.push(...window.MathsQuestions);
-  </script>
   <script src="src/app.js"></script>
 </body>
 </html>

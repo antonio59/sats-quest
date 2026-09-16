@@ -1,114 +1,110 @@
-// Game functions — questions, answers, progress
+// Game functions — answer recording, progress sync, review data.
+// Questions live in the client's bundled bank; the server stores a snapshot
+// with each answer so review works offline of any server-side question table.
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
 const MAX_LEVEL = 5;
-const XP_PER_LEVEL = 400; // Faster level progression
+const XP_PER_LEVEL = 400;
+const WORLDS = new Set(["reading", "writing", "math"]);
 
-// Get a question for a world/level
-export const getQuestion = query({
-  args: {
-    world: v.string(),
-    level: v.number(),
-    excludeIds: v.optional(v.array(v.id("questions"))),
-  },
+const answerArgs = {
+  playerId: v.id("players"),
+  questionRef: v.string(),
+  world: v.string(),
+  question: v.string(),
+  options: v.array(v.string()),
+  correctIndex: v.union(v.number(), v.array(v.number())),
+  selectedIndex: v.number(),
+  selectedText: v.optional(v.string()),
+  questionType: v.optional(v.string()),
+  correct: v.boolean(),
+  explanation: v.string(),
+  level: v.number(),
+  timeMs: v.number(),
+  streak: v.optional(v.number()),
+};
+
+// Record one answered question. All untrusted input is range-checked and the
+// XP award is computed server-side from the question level — never trusted.
+export const recordAnswer = mutation({
+  args: answerArgs,
   handler: async (ctx, args) => {
-    const level = Math.min(MAX_LEVEL, Math.max(1, args.level));
-    // Try exact level first, then adjacent levels
-    for (const l of [level, level - 1, level + 1, level - 2, level + 2]) {
-      if (l < 1 || l > MAX_LEVEL) continue;
-      const questions = await ctx.db
-        .query("questions")
-        .withIndex("by_world_level", q => q.eq("world", args.world).eq("level", l))
-        .collect();
-      const filtered = args.excludeIds
-        ? questions.filter(q => !args.excludeIds.includes(q._id))
-        : questions;
-      if (filtered.length > 0) {
-        const q = filtered[Math.floor(Math.random() * filtered.length)];
-        return { id: q._id, question: q.question, passage: q.passage, options: q.options, world: q.world, level: q.level, type: q.type };
-      }
+    const player = await ctx.db.get(args.playerId);
+    if (!player) return { error: "Player not found" };
+    if (!WORLDS.has(args.world)) return { error: "Unknown world" };
+    if (args.question.length > 2000 || args.explanation.length > 2000) {
+      return { error: "Question data too large" };
     }
-    return null;
-  },
-});
+    if (args.options.length > 10 || args.options.some(o => o.length > 500)) {
+      return { error: "Invalid options" };
+    }
+    const level = Math.min(MAX_LEVEL, Math.max(1, Math.floor(args.level || 1)));
+    const selectedIndex = Math.floor(args.selectedIndex);
+    if (selectedIndex < -1 || selectedIndex >= 20) return { error: "Bad selection" };
+    const timeMs = Math.min(3_600_000, Math.max(0, Math.floor(args.timeMs || 0)));
+    const streak = Math.min(365, Math.max(0, Math.floor(args.streak || 0)));
 
-// Submit an answer
-export const submitAnswer = mutation({
-  args: {
-    playerId: v.id("players"),
-    questionId: v.id("questions"),
-    selectedIndex: v.number(),
-    timeMs: v.number(),
-    streak: v.optional(v.number()), // Current streak when answering
-  },
-  handler: async (ctx, args) => {
-    const question = await ctx.db.get(args.questionId);
-    if (!question) return { error: "Question not found" };
+    // Correctness is re-derived server-side only for indexed types
+    // (multiple-choice / true-false). Free-text and multi-select verdicts are
+    // graded client-side (normalised accepted-answer matching / set compare)
+    // and trusted — for those, selectedIndex is just a 0/-1 sentinel.
+    const indexed = (args.questionType ?? 'multiple-choice') === 'multiple-choice'
+      || args.questionType === 'true-false';
+    const correct = indexed && !Array.isArray(args.correctIndex) && args.options.length > 1
+      ? selectedIndex === args.correctIndex
+      : !!args.correct;
 
-    const correct = args.selectedIndex === question.correctIndex;
-    
-    // XP calculation with streak bonus
-    let baseXp = correct ? (question.level * 15) + Math.max(0, 60 - Math.floor(args.timeMs / 1000)) : 2;
-    
-    // Streak bonus: +5 XP per streak level (10+ streak = +50 XP bonus!)
-    const streakBonus = correct && args.streak ? Math.min(args.streak * 5, 50) : 0;
+    const baseXp = correct ? level * 15 + Math.max(0, 60 - Math.floor(timeMs / 1000)) : 2;
+    const streakBonus = correct ? Math.min(streak * 5, 50) : 0;
     const xpGain = baseXp + streakBonus;
 
-    // Save answer
     await ctx.db.insert("answers", {
       playerId: args.playerId,
-      questionId: args.questionId,
-      world: question.world,
-      selectedIndex: args.selectedIndex,
+      questionRef: args.questionRef.slice(0, 120),
+      world: args.world,
+      question: args.question,
+      options: args.options,
+      correctIndex: args.correctIndex,
+      selectedIndex,
+      selectedText: args.selectedText?.slice(0, 200),
       correct,
-      timeMs: args.timeMs,
+      explanation: args.explanation,
+      timeMs,
       answeredAt: Date.now(),
     });
 
-    // Update player XP and level (faster progression)
-    const player = await ctx.db.get(args.playerId);
-    if (player) {
-      const newXp = player.xp + xpGain;
-      const newLevel = Math.floor(newXp / XP_PER_LEVEL) + 1;
-      await ctx.db.patch(args.playerId, { xp: newXp, level: Math.min(newLevel, MAX_LEVEL) });
-    }
+    const newXp = player.xp + xpGain;
+    const newLevel = Math.min(MAX_LEVEL, Math.floor(newXp / XP_PER_LEVEL) + 1);
+    await ctx.db.patch(args.playerId, {
+      xp: newXp,
+      level: newLevel,
+      totalXp: (player.totalXp ?? player.xp) + xpGain,
+      totalCorrect: (player.totalCorrect ?? 0) + (correct ? 1 : 0),
+    });
 
-    // Update world progress
     const progress = await ctx.db
       .query("progress")
-      .withIndex("by_player_world", q => q.eq("playerId", args.playerId).eq("world", question.world))
+      .withIndex("by_player_world", q => q.eq("playerId", args.playerId).eq("world", args.world))
       .unique();
 
     if (progress) {
       const newCorrect = progress.correctAnswers + (correct ? 1 : 0);
       const newAnswered = progress.questionsAnswered + 1;
       const accuracy = newCorrect / newAnswered;
-      const newLevel = accuracy > 0.75 && newAnswered > 5
+      const newWorldLevel = accuracy > 0.75 && newAnswered > 5
         ? Math.min(MAX_LEVEL, progress.currentLevel + 1)
         : progress.currentLevel;
-      
-      // Update best streak if current is higher
-      const newBestStreak = args.streak 
-        ? Math.max(progress.bestStreak || 0, args.streak) 
-        : progress.bestStreak || 0;
-
       await ctx.db.patch(progress._id, {
         xpInWorld: progress.xpInWorld + xpGain,
         questionsAnswered: newAnswered,
         correctAnswers: newCorrect,
-        currentLevel: newLevel,
-        bestStreak: newBestStreak,
+        currentLevel: newWorldLevel,
+        bestStreak: Math.max(progress.bestStreak || 0, streak),
       });
     }
 
-    return {
-      correct,
-      xpGain,
-      streakBonus,
-      correctIndex: question.correctIndex,
-      explanation: question.explanation,
-    };
+    return { correct, xpGain, streakBonus };
   },
 });
 
@@ -116,12 +112,17 @@ export const submitAnswer = mutation({
 export const getProgress = query({
   args: { playerId: v.id("players") },
   handler: async (ctx, args) => {
+    const player = await ctx.db.get(args.playerId);
+    if (!player) return null;
     const progressList = await ctx.db
       .query("progress")
       .withIndex("by_player", q => q.eq("playerId", args.playerId))
       .collect();
 
-    const result = {};
+    const result: Record<string, {
+      level: number; xp: number; answered: number; correct: number;
+      bestStreak: number; accuracy: number;
+    }> = {};
     for (const p of progressList) {
       result[p.world] = {
         level: p.currentLevel,
@@ -129,115 +130,41 @@ export const getProgress = query({
         answered: p.questionsAnswered,
         correct: p.correctAnswers,
         bestStreak: p.bestStreak || 0,
-        accuracy: p.questionsAnswered > 0 ? Math.round((p.correctAnswers / p.questionsAnswered) * 100) : 0,
+        accuracy: p.questionsAnswered > 0
+          ? Math.round((p.correctAnswers / p.questionsAnswered) * 100)
+          : 0,
       };
     }
     return result;
   },
 });
 
-// Get recent answers for review
+// Recent answers for the review screen — read from stored snapshots.
 export const getRecentAnswers = query({
   args: { playerId: v.id("players"), limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
-    const limit = args.limit ?? 10;
+    const limit = Math.min(50, Math.max(1, args.limit ?? 10));
     const answers = await ctx.db
       .query("answers")
       .withIndex("by_player", q => q.eq("playerId", args.playerId))
       .order("desc")
       .take(limit);
 
-    const result = [];
-    for (const a of answers) {
-      const q = await ctx.db.get(a.questionId);
-      result.push({
-        question: q?.question ?? '',
-        options: q?.options ?? [],
-        correctIndex: q?.correctIndex ?? 0,
-        selectedIndex: a.selectedIndex,
-        correct: a.correct,
-        explanation: q?.explanation ?? '',
-        world: a.world,
-      });
-    }
-    return result;
+    return answers.map(a => ({
+      question: a.question,
+      options: a.options,
+      correctIndex: a.correctIndex,
+      selectedIndex: a.selectedIndex,
+      selectedText: a.selectedText,
+      correct: a.correct,
+      explanation: a.explanation,
+      world: a.world,
+    }));
   },
 });
 
-// Daily challenge
-export const getDailyChallenge = query({
-  args: {},
-  handler: async (ctx) => {
-    const today = new Date().toISOString().split('T')[0];
-    const challenge = await ctx.db
-      .query("dailyChallenges")
-      .withIndex("by_date", q => q.eq("date", today))
-      .first();
-    
-    if (!challenge) return null;
-    
-    // Get the questions for today
-    const questions = [];
-    for (const qId of challenge.questionIds) {
-      const q = await ctx.db.get(qId);
-      if (q) questions.push({ id: q._id, question: q.question, passage: q.passage, options: q.options, world: q.world, level: q.level });
-    }
-    
-    return { date: challenge.date, world: challenge.world, questions };
-  },
-});
-
-// Record daily challenge completion
-export const completeDailyChallenge = mutation({
-  args: { playerId: v.id("players"), score: v.number(), total: v.number() },
-  handler: async (ctx, args) => {
-    const today = new Date().toISOString().split('T')[0];
-    
-    // Check if already completed today
-    const existing = await ctx.db.query("answers")
-      .filter(q => q.field("playerId").eq(args.playerId))
-      .first();
-    
-    if (existing) return { alreadyCompleted: true, bonus: 0 };
-    
-    // Award bonus XP for completing daily
-    const accuracy = args.score / args.total;
-    const bonusXp = Math.floor(args.total * 10 * accuracy);
-    
-    // Update player XP
-    const player = await ctx.db.get(args.playerId);
-    if (player) {
-      await ctx.db.patch(args.playerId, { xp: player.xp + bonusXp });
-    }
-    
-    return { alreadyCompleted: false, bonus: bonusXp };
-  },
-});
-
-// Seed questions (admin)
-export const seedQuestions = mutation({
-  args: { questions: v.array(v.object({
-    world: v.string(),
-    level: v.number(),
-    type: v.string(),
-    question: v.string(),
-    passage: v.optional(v.string()),
-    options: v.array(v.string()),
-    correctIndex: v.number(),
-    explanation: v.string(),
-    tags: v.array(v.string()),
-  }))},
-  handler: async (ctx, args) => {
-    let count = 0;
-    for (const q of args.questions) {
-      await ctx.db.insert("questions", q);
-      count++;
-    }
-    return { inserted: count };
-  },
-});
-
-// Migrate progress from localStorage
+// One-off sync when a local-only player creates a cloud account. Values are
+// merged with max() semantics so the server can only ever move forward.
 export const migrateProgress = mutation({
   args: {
     playerId: v.id("players"),
@@ -249,6 +176,22 @@ export const migrateProgress = mutation({
     bestStreak: v.number(),
   },
   handler: async (ctx, args) => {
+    const player = await ctx.db.get(args.playerId);
+    if (!player) return { error: "Player not found" };
+    if (!WORLDS.has(args.world)) return { error: "Unknown world" };
+
+    const clamp = (n: number, lo: number, hi: number) =>
+      Math.min(hi, Math.max(lo, Math.floor(n || 0)));
+    const safe = {
+      playerId: args.playerId,
+      world: args.world,
+      currentLevel: clamp(args.currentLevel, 1, MAX_LEVEL),
+      xpInWorld: clamp(args.xpInWorld, 0, 1_000_000),
+      questionsAnswered: clamp(args.questionsAnswered, 0, 1_000_000),
+      correctAnswers: clamp(args.correctAnswers, 0, 1_000_000),
+      bestStreak: clamp(args.bestStreak, 0, 365),
+    };
+
     const existing = await ctx.db
       .query("progress")
       .withIndex("by_player_world", q => q.eq("playerId", args.playerId).eq("world", args.world))
@@ -256,15 +199,57 @@ export const migrateProgress = mutation({
 
     if (existing) {
       await ctx.db.patch(existing._id, {
-        currentLevel: Math.max(existing.currentLevel, args.currentLevel),
-        xpInWorld: Math.max(existing.xpInWorld, args.xpInWorld),
-        questionsAnswered: Math.max(existing.questionsAnswered, args.questionsAnswered),
-        correctAnswers: Math.max(existing.correctAnswers, args.correctAnswers),
-        bestStreak: Math.max(existing.bestStreak || 0, args.bestStreak),
+        currentLevel: Math.max(existing.currentLevel, safe.currentLevel),
+        xpInWorld: Math.max(existing.xpInWorld, safe.xpInWorld),
+        questionsAnswered: Math.max(existing.questionsAnswered, safe.questionsAnswered),
+        correctAnswers: Math.max(existing.correctAnswers, safe.correctAnswers),
+        bestStreak: Math.max(existing.bestStreak || 0, safe.bestStreak),
       });
     } else {
-      await ctx.db.insert("progress", args);
+      await ctx.db.insert("progress", safe);
     }
     return { success: true };
+  },
+});
+
+// Bulk-import a player's locally stored answer history (max 50 rows).
+export const migrateAnswers = mutation({
+  args: {
+    playerId: v.id("players"),
+    answers: v.array(v.object({
+      question: v.string(),
+      questionRef: v.string(),
+      world: v.string(),
+      options: v.array(v.string()),
+      correctIndex: v.union(v.number(), v.array(v.number())),
+      selectedIndex: v.number(),
+      correct: v.boolean(),
+      explanation: v.string(),
+      timeMs: v.number(),
+      answeredAt: v.number(),
+    })),
+  },
+  handler: async (ctx, args) => {
+    const player = await ctx.db.get(args.playerId);
+    if (!player) return { error: "Player not found" };
+    let count = 0;
+    for (const a of args.answers.slice(0, 50)) {
+      if (!WORLDS.has(a.world)) continue;
+      await ctx.db.insert("answers", {
+        playerId: args.playerId,
+        questionRef: a.questionRef.slice(0, 120),
+        world: a.world,
+        question: a.question.slice(0, 2000),
+        options: a.options.slice(0, 10).map(o => o.slice(0, 500)),
+        correctIndex: a.correctIndex,
+        selectedIndex: Math.max(-1, Math.min(19, Math.floor(a.selectedIndex))),
+        correct: !!a.correct,
+        explanation: a.explanation.slice(0, 2000),
+        timeMs: Math.min(3_600_000, Math.max(0, Math.floor(a.timeMs || 0))),
+        answeredAt: a.answeredAt,
+      });
+      count++;
+    }
+    return { inserted: count };
   },
 });

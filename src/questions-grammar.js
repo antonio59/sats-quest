@@ -868,7 +868,7 @@ window.GrammarQuestions = [
     level: 4,
     type: "multiple-choice",
     question: "Which word is spelled correctly?",
-    options: ["A) visable", "B) visible", "C) visibel", "D) visable"],
+    options: ["A) visable", "B) visible", "C) visibel", "D) vizible"],
     correctIndex: 1,
     explanation: "'Visible' uses '-ible' because it comes from Latin. It means 'able to be seen'.",
     tags: ["spelling", "able-ible"]
@@ -1029,7 +1029,7 @@ window.GrammarQuestions = [
     level: 2,
     type: "multiple-choice",
     question: "Which word is spelled correctly?",
-    options: ["A) freind", "B) friend", "C) frend", "D) friend"],
+    options: ["A) freind", "B) friend", "C) frend", "D) freinde"],
     correctIndex: 1,
     explanation: "'Friend' is spelled F-R-I-E-N-D. The 'i' comes before the 'e' in this word.",
     tags: ["spelling", "commonly-misspelled"]
@@ -1491,7 +1491,7 @@ window.GrammarQuestions = [
     level: 4,
     type: "multiple-choice",
     question: "Which sentence uses an apostrophe for possession correctly?",
-    options: ["A) The dogs' bone was buried in the garden.", "B) The dog's bone was buried in the garden.", "C) The dogs bone was buried in the garden.", "D) The dog's bones' were buried in the garden."],
+    options: ["A) The dogs's bone was buried in the garden.", "B) The dog's bone was buried in the garden.", "C) The dogs bone was buried in the garden.", "D) The dog's bones' were buried in the garden."],
     correctIndex: 1,
     explanation: "Spot on! For a single dog, we show possession by adding an apostrophe and then 's'. If there were multiple dogs, it would be 'the dogs' bone'.",
     tags: ["punctuation", "apostrophes", "possession"]
@@ -1553,7 +1553,7 @@ window.GrammarQuestions = [
     level: 5,
     type: "multiple-choice",
     question: "Which sentence is written in the passive voice?",
-    options: ["A) The dog chased the ball.", "B) The ball was chased by the dog.", "C) The girl threw the frisbee.", "D) The frisbee was thrown by the girl."],
+    options: ["A) The dog chased the ball.", "B) The ball was chased by the dog.", "C) The girl threw the frisbee.", "D) The girl caught the frisbee."],
     correctIndex: 1,
     explanation: "You've got it! In the passive voice, the object of the action becomes the subject. Here, 'the ball' is the subject, and the action ('was chased') is done to it. The active version is 'The dog chased the ball.'",
     tags: ["grammar", "active-voice", "passive-voice"]
@@ -1777,5 +1777,469 @@ window.GrammarQuestions = [
     correctIndex: 1,
     explanation: "That's false, and you've correctly identified it! A fronted adverbial can be a single word (e.g., 'Suddenly,') or a phrase (e.g., 'In the dead of night,'). You really know your grammar!",
     tags: ["grammar", "fronted-adverbials"]
+  },
+
+  // ========== Modal Verbs ==========
+  {
+    world: "writing",
+    level: 2,
+    type: "multiple-choice",
+    question: "Which of these words is a modal verb?",
+    options: ["A) quickly", "B) might", "C) happy", "D) running"],
+    correctIndex: 1,
+    explanation: "Well done! Modal verbs like 'might', 'must', 'could', 'should' and 'will' come before a main verb to show how likely, possible or necessary something is.",
+    tags: ["grammar", "modal-verbs"]
+  },
+  {
+    world: "writing",
+    level: 2,
+    type: "multiple-choice",
+    question: "'You ___ eat your vegetables.' Which modal verb best shows that this is a good idea?",
+    options: ["A) should", "B) won't", "C) can't", "D) might"],
+    correctIndex: 0,
+    explanation: "'Should' is used to give advice or say something is a good idea. 'Might' only shows possibility, and 'won't' or 'can't' don't fit the meaning.",
+    tags: ["grammar", "modal-verbs"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which sentence uses a modal verb to show that something is possible?",
+    options: ["A) It might rain tomorrow.", "B) It rained yesterday.", "C) The rain was heavy.", "D) Rain is made of water."],
+    correctIndex: 0,
+    explanation: "Correct! 'Might' is a modal verb that shows possibility — the rain isn't certain, it just could happen.",
+    tags: ["grammar", "modal-verbs"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "true-false",
+    question: "Modal verbs like 'must' and 'could' show how likely or necessary something is.",
+    options: ["True", "False"],
+    correctIndex: 0,
+    explanation: "That's right! 'Must' shows something is necessary, while 'could' or 'might' show something is possible. That's the job of modal verbs.",
+    tags: ["grammar", "modal-verbs"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which sentence gives the strongest order?",
+    options: ["A) You could tidy your room.", "B) You might tidy your room.", "C) You must tidy your room.", "D) You may tidy your room."],
+    correctIndex: 2,
+    explanation: "'Must' is the strongest modal verb here — it means the tidying is necessary and not a choice. 'Could', 'might' and 'may' all sound optional.",
+    tags: ["grammar", "modal-verbs"]
+  },
+
+  // ========== Sentence Types ==========
+  {
+    world: "writing",
+    level: 2,
+    type: "multiple-choice",
+    question: "What type of sentence is this: 'Close the door.'",
+    options: ["A) A statement", "B) A question", "C) A command", "D) An exclamation"],
+    correctIndex: 2,
+    explanation: "It's a command! It tells someone to do something. Commands often start with a bossy verb (called an imperative verb) like 'close', 'sit' or 'put'.",
+    tags: ["grammar", "sentence-types"]
+  },
+  {
+    world: "writing",
+    level: 2,
+    type: "multiple-choice",
+    question: "What type of sentence is this: 'What a fantastic goal that was!'",
+    options: ["A) A statement", "B) A question", "C) A command", "D) An exclamation"],
+    correctIndex: 3,
+    explanation: "It's an exclamation! Exclamations show strong feeling, often start with 'What' or 'How', and end with an exclamation mark.",
+    tags: ["grammar", "sentence-types"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which of these is a statement?",
+    options: ["A) Put your coat on.", "B) Where is my coat?", "C) What a warm coat!", "D) My coat is hanging by the door."],
+    correctIndex: 3,
+    explanation: "A statement tells us something and ends with a full stop. The others are a command, a question and an exclamation.",
+    tags: ["grammar", "sentence-types"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "An exclamation sentence that begins with 'What' or 'How' must end with which punctuation mark?",
+    options: ["A) A full stop", "B) A question mark", "C) An exclamation mark", "D) A comma"],
+    correctIndex: 2,
+    explanation: "Correct! Sentences like 'What a day we've had!' or 'How kind you are!' always end with an exclamation mark.",
+    tags: ["grammar", "sentence-types", "punctuation"]
+  },
+
+  // ========== Simple, Compound and Complex Sentences ==========
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which of these is a compound sentence?",
+    options: ["A) I wanted to play outside.", "B) I wanted to play outside, but it started to rain.", "C) Although it rained, I played outside.", "D) Playing outside in the rain."],
+    correctIndex: 1,
+    explanation: "A compound sentence joins two complete sentences (main clauses) with a coordinating conjunction like 'and', 'but' or 'so'. Both sides could stand alone.",
+    tags: ["grammar", "compound-sentences"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which of these is a complex sentence?",
+    options: ["A) The dog barked and the cat hid.", "B) The dog barked loudly.", "C) When the dog barked, the cat hid.", "D) The dog barked, so the cat hid."],
+    correctIndex: 2,
+    explanation: "A complex sentence has a main clause plus a subordinate clause that can't stand alone. 'When the dog barked' depends on the rest of the sentence.",
+    tags: ["grammar", "complex-sentences"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "true-false",
+    question: "'The dog barked loudly and the cat ran away' is a complex sentence.",
+    options: ["True", "False"],
+    correctIndex: 1,
+    explanation: "False — it's a compound sentence! 'And' is a coordinating conjunction joining two main clauses. A complex sentence needs a subordinate clause.",
+    tags: ["grammar", "complex-sentences", "compound-sentences"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "In the sentence 'Although she was tired, Amara finished her homework,' which part is the subordinate clause?",
+    options: ["A) Amara finished her homework", "B) Although she was tired", "C) she was tired, Amara", "D) finished her homework"],
+    correctIndex: 1,
+    explanation: "Correct! 'Although she was tired' is the subordinate clause — it starts with a subordinating conjunction and can't stand alone as a sentence.",
+    tags: ["grammar", "complex-sentences", "clauses"]
+  },
+
+  // ========== Standard English & Subject-Verb Agreement ==========
+  {
+    world: "writing",
+    level: 2,
+    type: "multiple-choice",
+    question: "Which sentence is written in Standard English?",
+    options: ["A) We was late for school.", "B) We were late for school.", "C) We is late for school.", "D) We be late for school."],
+    correctIndex: 1,
+    explanation: "'We were' is correct Standard English. 'We was' is common in some dialects, but in Standard English 'were' goes with 'we', 'you' and 'they'.",
+    tags: ["grammar", "standard-english", "subject-verb-agreement"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which sentence is written in Standard English?",
+    options: ["A) I done my homework.", "B) I did my homework.", "C) I seen the film.", "D) He don't like peas."],
+    correctIndex: 1,
+    explanation: "'I did' is the correct past tense in Standard English. It should be 'I did', 'I saw', and 'he doesn't'.",
+    tags: ["grammar", "standard-english"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Choose the correct verb: 'Neither of the boys ___ finished his lunch.'",
+    options: ["A) have", "B) has", "C) are", "D) were"],
+    correctIndex: 1,
+    explanation: "'Neither' is singular, so it takes a singular verb: 'has finished'. It feels tricky because 'boys' is plural, but 'neither' is the word doing the work!",
+    tags: ["grammar", "subject-verb-agreement"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Choose the correct verb: 'The flock of sheep ___ grazing in the field.'",
+    options: ["A) are", "B) were", "C) is", "D) have"],
+    correctIndex: 2,
+    explanation: "Tricky one! 'Flock' is a collective noun — it's a singular word for a group — so it takes the singular verb 'is'.",
+    tags: ["grammar", "subject-verb-agreement", "collective-nouns"]
+  },
+
+  // ========== Conjunctions ==========
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which of these is a subordinating conjunction?",
+    options: ["A) and", "B) but", "C) although", "D) so"],
+    correctIndex: 2,
+    explanation: "'Although' is a subordinating conjunction — it starts a clause that can't stand alone. 'And', 'but' and 'so' are coordinating conjunctions (FANBOYS).",
+    tags: ["grammar", "conjunctions"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which of these is a coordinating conjunction?",
+    options: ["A) because", "B) although", "C) when", "D) but"],
+    correctIndex: 3,
+    explanation: "'But' is a coordinating conjunction — it joins two equal main clauses. Remember them with FANBOYS: for, and, nor, but, or, yet, so.",
+    tags: ["grammar", "conjunctions"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "What job does 'after' do in this sentence? 'I'll come round after I've finished my homework.'",
+    options: ["A) A preposition of place", "B) A subordinating conjunction", "C) An adverb of time", "D) A coordinating conjunction"],
+    correctIndex: 1,
+    explanation: "Here 'after' introduces the subordinate clause 'after I've finished my homework' — it can't stand alone, so 'after' is a subordinating conjunction.",
+    tags: ["grammar", "conjunctions"]
+  },
+
+  // ========== Speech Punctuation ==========
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which sentence uses inverted commas correctly?",
+    options: ["A) \"Where are you going?\" asked Tom.", "B) \"Where are you going\"? asked Tom.", "C) Where are you \"going?\" asked Tom.", "D) asked Tom \"Where are you going?\""],
+    correctIndex: 0,
+    explanation: "The inverted commas wrap around exactly what Tom said — including the question mark. The punctuation belongs inside the speech marks.",
+    tags: ["punctuation", "inverted-commas", "speech"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Where should the inverted commas go? said Mum it's time for bed",
+    options: ["A) \"said Mum\" it's time for bed", "B) said Mum \"it's time for bed\"", "C) \"said Mum it's\" time for bed", "D) said Mum it's \"time for bed\""],
+    correctIndex: 1,
+    explanation: "Inverted commas only surround the exact words spoken. Mum said 'it's time for bed' — so the speech marks go around just those words.",
+    tags: ["punctuation", "inverted-commas", "speech"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which sentence is punctuated correctly?",
+    options: ["A) \"I'm tired.\" whispered Sam.", "B) \"I'm tired,\" whispered Sam.", "C) \"I'm tired\" whispered Sam.", "D) \"I'm tired?\" whispered Sam."],
+    correctIndex: 1,
+    explanation: "When the speech comes before words like 'whispered Sam', use a comma (not a full stop) inside the speech marks. A question mark is only used for questions.",
+    tags: ["punctuation", "inverted-commas", "speech"]
+  },
+
+  // ========== Formal and Informal Language ==========
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which sentence is the most formal?",
+    options: ["A) Give us a hand with this.", "B) I need some help, mate.", "C) I request your assistance.", "D) Help me out, would you?"],
+    correctIndex: 2,
+    explanation: "'I request your assistance' is formal — the kind of language you'd use in a letter to someone important. 'Mate' and 'give us a hand' are informal.",
+    tags: ["grammar", "formal-language", "register"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which word would you use in a formal letter instead of 'ask for'?",
+    options: ["A) bag", "B) request", "C) grab", "D) nag for"],
+    correctIndex: 1,
+    explanation: "'Request' is the formal version of 'ask for'. Formal writing avoids casual words like 'bag' or 'grab'.",
+    tags: ["grammar", "formal-language", "register", "vocabulary"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which phrase is most appropriate in a formal report about a school trip?",
+    options: ["A) The kids had a brilliant time.", "B) Everyone was well chuffed.", "C) The pupils enjoyed the visit immensely.", "D) It was proper good fun."],
+    correctIndex: 2,
+    explanation: "Formal writing uses precise vocabulary ('pupils', 'enjoyed immensely') rather than slang like 'kids', 'chuffed' or 'proper good'.",
+    tags: ["grammar", "formal-language", "register"]
+  },
+
+  // ========== Cohesion ==========
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which adverbial best links these two ideas? 'The bridge was closed. ___, we had to take a much longer route.'",
+    options: ["A) Nevertheless", "B) Consequently", "C) Similarly", "D) Meanwhile"],
+    correctIndex: 1,
+    explanation: "'Consequently' means 'as a result' — the closed bridge caused the longer journey. The other words show contrast, comparison or time, not cause.",
+    tags: ["grammar", "cohesion", "adverbials"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "In a formal report, which word could you use at the start of a paragraph to add another point?",
+    options: ["A) Anyway", "B) So", "C) Furthermore", "D) Plus"],
+    correctIndex: 2,
+    explanation: "'Furthermore' is a formal adverbial meaning 'in addition'. 'Anyway', 'so' and 'plus' are too informal for a report.",
+    tags: ["grammar", "cohesion", "adverbials", "formal-language"]
+  },
+
+  // ========== Synonyms and Antonyms ==========
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which word is a synonym for 'brave'?",
+    options: ["A) fearful", "B) courageous", "C) timid", "D) worried"],
+    correctIndex: 1,
+    explanation: "A synonym means the same or nearly the same. 'Courageous' means brave. The other words mean the opposite!",
+    tags: ["vocabulary", "synonyms"]
+  },
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "Which word is an antonym for 'generous'?",
+    options: ["A) kind", "B) giving", "C) selfish", "D) helpful"],
+    correctIndex: 2,
+    explanation: "An antonym means the opposite. 'Selfish' is the opposite of 'generous'. 'Kind' and 'giving' are near-synonyms.",
+    tags: ["vocabulary", "antonyms"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which pair of words are antonyms?",
+    options: ["A) ancient and old", "B) ancient and modern", "C) happy and cheerful", "D) tiny and small"],
+    correctIndex: 1,
+    explanation: "'Ancient' and 'modern' are opposites — antonyms. The other pairs are synonyms because they mean nearly the same thing.",
+    tags: ["vocabulary", "antonyms", "synonyms"]
+  },
+
+  // ========== Word Families ==========
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which word belongs to the same word family as 'sign'?",
+    options: ["A) signature", "B) resigning", "C) signal", "D) All of these"],
+    correctIndex: 3,
+    explanation: "Tricky — all three! 'Signature', 'resigning' and 'signal' all share the root 'sign' (from Latin signum, meaning a mark). Words in a family share a root.",
+    tags: ["vocabulary", "word-families"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "multiple-choice",
+    question: "Which word does NOT belong to the same word family as 'act'?",
+    options: ["A) action", "B) react", "C) actor", "D) tactic"],
+    correctIndex: 3,
+    explanation: "'Tactic' comes from a different root (Greek 'taktikos', meaning arrangement). 'Action', 'react' and 'actor' all grow from 'act'.",
+    tags: ["vocabulary", "word-families"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "What does the prefix 'mis-' mean in 'misunderstand'?",
+    options: ["A) again", "B) before", "C) wrongly or badly", "D) not"],
+    correctIndex: 2,
+    explanation: "'Mis-' means wrongly or badly — to misunderstand is to understand wrongly. 'Re-' means again and 'pre-' means before.",
+    tags: ["vocabulary", "prefixes"]
+  },
+
+  // ========== Year 5/6 Spelling List ==========
+  {
+    world: "writing",
+    level: 4,
+    type: "text-input",
+    question: "There is a spelling mistake in this sentence. Correct the misspelled word: 'The yaht sailed into the harbour.'",
+    options: ["yacht"],
+    correctIndex: 0,
+    explanation: "'Yacht' is a famous tricky word — the 'ch' is silent. It's on the Year 5/6 spelling list!",
+    tags: ["spelling", "year-5-6-word-list"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "text-input",
+    question: "There is a spelling mistake in this sentence. Correct the misspelled word: 'He felt a pain in his stomack after lunch.'",
+    options: ["stomach"],
+    correctIndex: 0,
+    explanation: "'Stomach' ends with '-ach' (it comes from Greek). Another Year 5/6 list word mastered!",
+    tags: ["spelling", "year-5-6-word-list"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "text-input",
+    question: "There is a spelling mistake in this sentence. Correct the misspelled word: 'Please join the que at the door.'",
+    options: ["queue"],
+    correctIndex: 0,
+    explanation: "'Queue' is Q-U-E-U-E — it has four vowels in a row! It's a classic on the Year 5/6 spelling list.",
+    tags: ["spelling", "year-5-6-word-list"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "text-input",
+    question: "There is a spelling mistake in this sentence. Correct the misspelled word: 'The drummer kept a steady rythm.'",
+    options: ["rhythm"],
+    correctIndex: 0,
+    explanation: "'Rhythm' is one of the trickiest words in English — no vowels except 'y'! Try the trick: Rhythm Has Your Two Hips Moving.",
+    tags: ["spelling", "year-5-6-word-list"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "text-input",
+    question: "There is a spelling mistake in this sentence. Correct the misspelled word: 'Don't exagerate — it wasn't that big!'",
+    options: ["exaggerate"],
+    correctIndex: 0,
+    explanation: "'Exaggerate' has a double 'g' in the middle — one 'x', two g's. Well spotted!",
+    tags: ["spelling", "year-5-6-word-list"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "text-input",
+    question: "There is a spelling mistake in this sentence. Correct the misspelled word: 'Her concience told her to tell the truth.'",
+    options: ["conscience"],
+    correctIndex: 0,
+    explanation: "'Conscience' has a silent 's' hidden in it: con-science. It's on the Year 5/6 spelling list.",
+    tags: ["spelling", "year-5-6-word-list"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "text-input",
+    question: "There is a spelling mistake in this sentence. Correct the misspelled word: 'The accident occured near the school.'",
+    options: ["occurred"],
+    correctIndex: 0,
+    explanation: "'Occurred' doubles the 'r' — occur → occurred → occurring. Words ending in a single consonant often double it before '-ed'.",
+    tags: ["spelling", "year-5-6-word-list", "doubling-rule"]
+  },
+  {
+    world: "writing",
+    level: 5,
+    type: "text-input",
+    question: "There is a spelling mistake in this sentence. Correct the misspelled word: 'She was so embarassed that she blushed.'",
+    options: ["embarrassed"],
+    correctIndex: 0,
+    explanation: "'Embarrassed' has a double 'r' AND a double 's' — two lots of doubling to remember!",
+    tags: ["spelling", "year-5-6-word-list", "double-consonants"]
+  },
+
+  // ========== Determiners ==========
+  {
+    world: "writing",
+    level: 3,
+    type: "multiple-choice",
+    question: "In the sentence 'The fluffy cat sat on a mat,' which words are determiners?",
+    options: ["A) fluffy and sat", "B) The and a", "C) cat and mat", "D) on and sat"],
+    correctIndex: 1,
+    explanation: "Determiners come before a noun to tell us which or how many. 'The' and 'a' are articles — the most common determiners.",
+    tags: ["grammar", "determiners"]
+  },
+  {
+    world: "writing",
+    level: 4,
+    type: "multiple-choice",
+    question: "Which sentence uses 'an' correctly?",
+    options: ["A) I ate an apple.", "B) I ate an banana.", "C) I ate an orange and an pear.", "D) She has an dog."],
+    correctIndex: 0,
+    explanation: "We use 'an' before a vowel sound: 'an apple'. 'Banana', 'pear' and 'dog' start with consonant sounds, so they take 'a'.",
+    tags: ["grammar", "determiners", "articles"]
   }
 ];

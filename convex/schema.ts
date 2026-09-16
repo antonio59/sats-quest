@@ -2,42 +2,40 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
-  // Players
+  // Players — PINs are stored only as SHA-256 hashes (pinHash), never plaintext.
+  // nameLower/pinHash/pin are optional ONLY to accommodate legacy rows created
+  // before hashing existed; those fields are backfilled on next login.
   players: defineTable({
     name: v.string(),
-    pin: v.string(),           // 6-digit passcode
+    nameLower: v.optional(v.string()), // normalised name for uniqueness/login lookups
+    pinHash: v.optional(v.string()),   // hex SHA-256 of the 6-digit passcode
+    pin: v.optional(v.string()),       // LEGACY plaintext PIN — removed on upgrade
     avatar: v.string(),
     xp: v.number(),
-    level: v.number(),        // 1-15
+    level: v.number(),            // 1-5
     streak: v.number(),
-    lastActiveDate: v.string(), // YYYY-MM-DD
+    lastActiveDate: v.string(),   // YYYY-MM-DD
     createdAt: v.number(),
-    theme: v.string(),         // unlockable visual theme
-    totalXp: v.optional(v.number()),       // Lifetime XP for leaderboards
-    totalCorrect: v.optional(v.number()),    // Lifetime correct answers
-  }).index("by_name", ["name"]),
+    theme: v.string(),
+    totalXp: v.optional(v.number()),
+    totalCorrect: v.optional(v.number()),
+    failedLogins: v.optional(v.number()),
+    lockedUntil: v.optional(v.number()),
+  }).index("by_name", ["nameLower"]),
 
-  // Questions bank
-  questions: defineTable({
-    world: v.string(),         // "reading", "writing", "math"
-    level: v.number(),         // difficulty 1-15
-    type: v.string(),          // "multiple-choice", "grid-in", "true-false"
-    question: v.string(),
-    passage: v.optional(v.string()),  // for reading comprehension
-    options: v.array(v.string()),
-    correctIndex: v.number(),
-    explanation: v.string(),
-    tags: v.array(v.string()), // ["algebra", "vocabulary", "grammar", etc.]
-  })
-    .index("by_world_level", ["world", "level"]),
-
-  // Player answers
+  // Player answers — stores a snapshot of the question so review works without
+  // a server-side question bank (the canonical bank ships with the client).
   answers: defineTable({
     playerId: v.id("players"),
-    questionId: v.id("questions"),
+    questionRef: v.string(),      // client-side stable hash of the question
     world: v.string(),
-    selectedIndex: v.number(),
+    question: v.string(),
+    options: v.array(v.string()),
+    correctIndex: v.union(v.number(), v.array(v.number())),
+    selectedIndex: v.number(),    // -1 = incorrect free-text/multi-select submit
+    selectedText: v.optional(v.string()), // typed answer / chosen labels for free-text & multi-select
     correct: v.boolean(),
+    explanation: v.string(),
     timeMs: v.number(),
     answeredAt: v.number(),
   })
@@ -63,11 +61,4 @@ export default defineSchema({
     badgeId: v.string(),
     earnedAt: v.number(),
   }).index("by_player", ["playerId"]),
-
-  // Daily challenges
-  dailyChallenges: defineTable({
-    date: v.string(),          // YYYY-MM-DD
-    questionIds: v.array(v.id("questions")),
-    world: v.string(),
-  }).index("by_date", ["date"]),
 });

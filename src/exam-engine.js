@@ -33,17 +33,22 @@ window.ExamEngine = (function() {
 
   function selectQuestions(world, count) {
     const bank = window.QuestionBank;
-    let pool;
+    const pool = (world === 'full'
+      ? [...(bank.reading || []), ...(bank.writing || []), ...(bank.math || [])]
+      : (bank[world] || [])).slice();
 
-    if (world === 'full') {
-      pool = [...(bank.reading || []), ...(bank.writing || []), ...(bank.math || [])];
-    } else {
-      pool = bank[world] || [];
+    // Sample an even spread across levels, then order easy → hard like a
+    // real SATs paper (marks build in difficulty through the paper).
+    const picked = [];
+    const perLevel = Math.ceil(count / 5);
+    for (let lvl = 1; lvl <= 5; lvl++) {
+      const atLevel = pool.filter(q => q.level === lvl).sort(() => Math.random() - 0.5);
+      picked.push(...atLevel.slice(0, perLevel));
     }
-
-    // Shuffle and pick
-    const shuffled = pool.sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, Math.min(count, shuffled.length));
+    return picked
+      .sort(() => Math.random() - 0.5)
+      .slice(0, count)
+      .sort((a, b) => a.level - b.level);
   }
 
   function getExamConfig(world) {

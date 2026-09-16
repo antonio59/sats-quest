@@ -1,0 +1,3 @@
+name = "sats-quest"
+pages_build_output_dir = "."
+compatibility_date = "2025-01-01"

@@ -5,3 +5,6 @@ window.QuestionBank = {
   writing: [],
   math: [],
 };
+if (window.ReadingQuestions) window.QuestionBank.reading.push(...window.ReadingQuestions);
+if (window.GrammarQuestions) window.QuestionBank.writing.push(...window.GrammarQuestions);
+if (window.MathsQuestions) window.QuestionBank.math.push(...window.MathsQuestions);
