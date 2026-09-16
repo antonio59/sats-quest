@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "pnpm exec convex dev",
     "start": "pnpm dlx serve .",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "build": "sh scripts/build-pages.sh",
+    "deploy": "pnpm run build && pnpm dlx wrangler pages deploy dist --project-name sats-quest --branch main"
   },
   "repository": {
     "type": "git",
