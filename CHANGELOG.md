@@ -27,6 +27,31 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Rebuild for broader KS2 SATs use: content expansion, security hardening, Cloudflare migration
+
+Content: expanded banks to 592 questions (195 reading / 201 grammar / 196 maths)
+covering modal verbs, sentence types, Roman numerals, data interpretation,
+formal/informal register, spelling-list words and more; fixed all audited
+errors (ambiguous fractions, wrong ratio answer, dual-answer traps); validator
+enforces structure, bounds, duplicates and numeric equivalence.
+
+Frontend: eliminated stored-XSS paths (textContent/esc everywhere), unified
+exam grading via isExamAnswerCorrect, fixed mini-game timer leaks, replaced
+alert/confirm with a summary modal and two-step finish, added aria-labels,
+focus-visible rings, skip link, reduced-motion support and semantic <button>
+cards. New "exercise-book blocks" design (Baloo 2 + Comic Neue, blue/gold).
+
+Backend: SHA-256 PINs with legacy plaintext auto-upgrade, server-side XP and
+correctness re-derivation, input validation, login lockout throttling,
+getAllPlayers trimmed to name+avatar, open seed mutation removed.
+
+Cloudflare: /api/report as a Pages Function (Resend via fetch, HTML-escaped),
+_headers with strict CSP/security headers, SRI on the Convex bundle, Netlify
+artifacts removed.
+
+Generated with [Devin](https://devin.ai)
+
+Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>
 - Migrate to pnpm
 - Merge pull request #4 from antonio59/dependabot/npm_and_yarn/minor-patch-c39889ec24
 
@@ -229,6 +254,7 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
