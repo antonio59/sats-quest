@@ -145,7 +145,7 @@
     }
     players.forEach((p, i) => {
       const card = document.createElement('button');
-      card.className = 'profile-card';
+      card.className = 'profile-card' + (p.status === 'pending' ? ' pending' : '');
       card.type = 'button';
       card.style.background = PROFILE_COLORS[i % PROFILE_COLORS.length];
       const emoji = document.createElement('span');
@@ -156,6 +156,12 @@
       name.textContent = p.name;
       card.appendChild(emoji);
       card.appendChild(name);
+      if (p.status === 'pending') {
+        const badge = document.createElement('span');
+        badge.className = 'profile-card-pending';
+        badge.textContent = '⏳ waiting for grown-up';
+        card.appendChild(badge);
+      }
       card.addEventListener('click', () => selectProfile(p));
       els.profileGrid.appendChild(card);
     });
@@ -269,7 +275,12 @@
     if (pin !== confirm) { els.signupError.textContent = 'PINs don\'t match!'; return; }
     els.signupError.textContent = 'Creating account...';
     const result = await db.signUp(name, pin);
-    if (result.error) els.signupError.textContent = result.error;
+    if (result.error) { els.signupError.classList.remove('auth-success'); els.signupError.textContent = result.error; }
+    else if (result.pending) {
+      els.signupError.classList.add('auth-success');
+      els.signupError.textContent = `🎉 Account created, ${name}! Ask a grown-up to check their email and approve it, then you can log in.`;
+      els.signupName.value = els.signupPin.value = els.signupPinConfirm.value = '';
+    }
     else { player = result; showScreen('dashboard'); }
   });
 

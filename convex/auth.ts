@@ -2,6 +2,7 @@
 // The server only ever sees/stores the hash; a legacy plaintext `pin` value in
 // the database is transparently upgraded to a hash on next successful login.
 import { mutation, query } from "./_generated/server";
+import { internal } from "./_generated/api";
 import { v } from "convex/values";
 
 const AVATARS = ['🦊','🐱','🐶','🦁','🐼','🐨','🦄','🐸','🐙','🦋','🐢','🦖','🐧','🦜','🐝','🦉','🐯','🐲','🐵'];
@@ -23,6 +24,18 @@ async function findPlayerByName(ctx: any, nameLower: string) {
   if (byIndex) return byIndex;
   const all = await ctx.db.query("players").collect();
   return all.find((p: any) => p.name?.toLowerCase() === nameLower) ?? null;
+}
+
+// Remove a player and every row attached to them.
+async function deletePlayerData(ctx: any, playerId: any) {
+  for (const table of ["progress", "answers", "achievements"]) {
+    const rows = await ctx.db
+      .query(table)
+      .withIndex("by_player", (q: any) => q.eq("playerId", playerId))
+      .collect();
+    for (const row of rows) await ctx.db.delete(row._id);
+  }
+  await ctx.db.delete(playerId);
 }
 
 export const signUp = mutation({
@@ -53,6 +66,7 @@ export const signUp = mutation({
       lastActiveDate: today,
       createdAt: Date.now(),
       theme: 'default',
+      status: "pending",
     });
 
     for (const world of ['reading', 'writing', 'math']) {
@@ -67,7 +81,59 @@ export const signUp = mutation({
       });
     }
 
-    return { playerId, avatar, name };
+    // Notify the site owner for approval — async so email hiccups never block signup.
+    await ctx.scheduler.runAfter(0, internal.emails.notifySignup, {
+      playerId,
+      name,
+    });
+
+    return { pending: true, name };
+  },
+});
+
+// Called by the /api/approve Pages Function after it verifies the shared key.
+// The key check is repeated here so the public mutation can't be driven directly.
+export const moderateSignup = mutation({
+  args: {
+    playerId: v.id("players"),
+    key: v.string(),
+    action: v.union(v.literal("approve"), v.literal("deny")),
+  },
+  handler: async (ctx, args) => {
+    const expected = process.env.APPROVAL_KEY;
+    if (!expected || args.key !== expected) {
+      return { error: "Invalid approval key." };
+    }
+    const player = await ctx.db.get(args.playerId);
+    if (!player) return { error: "Player not found — maybe already removed." };
+    if (player.status !== "pending") {
+      return { ok: true, name: player.name, action: "already-" + (player.status ?? "approved") };
+    }
+
+    if (args.action === "approve") {
+      await ctx.db.patch(player._id, { status: "approved" });
+      return { ok: true, name: player.name, action: "approved" };
+    }
+
+    // deny — remove the pending account and all of its rows
+    await deletePlayerData(ctx, player._id);
+    return { ok: true, name: player.name, action: "denied" };
+  },
+});
+
+// Owner-only account removal, gated by the same APPROVAL_KEY. Works on any
+// player (unlike moderateSignup which only touches pending rows).
+export const adminRemovePlayer = mutation({
+  args: { playerId: v.id("players"), key: v.string() },
+  handler: async (ctx, args) => {
+    const expected = process.env.APPROVAL_KEY;
+    if (!expected || args.key !== expected) {
+      return { error: "Invalid approval key." };
+    }
+    const player = await ctx.db.get(args.playerId);
+    if (!player) return { error: "Player not found." };
+    await deletePlayerData(ctx, player._id);
+    return { ok: true, name: player.name };
   },
 });
 
@@ -129,6 +195,11 @@ export const logIn = mutation({
       return { error: "Wrong passcode!" };
     }
 
+    // Correct PIN but the account is still awaiting owner approval.
+    if (player.status === "pending") {
+      return { error: "Almost there! A grown-up needs to approve your account first 📬" };
+    }
+
     const today = new Date().toISOString().split('T')[0];
     const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
     let newStreak = player.streak;
@@ -178,6 +249,6 @@ export const getAllPlayers = query({
   args: {},
   handler: async (ctx) => {
     const players = await ctx.db.query("players").collect();
-    return players.map(p => ({ name: p.name, avatar: p.avatar }));
+    return players.map(p => ({ name: p.name, avatar: p.avatar, status: p.status ?? "approved" }));
   },
 });

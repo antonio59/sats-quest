@@ -9,6 +9,7 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as emails from "../emails.js";
 import type * as games from "../games.js";
 
 import type {
@@ -19,6 +20,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  emails: typeof emails;
   games: typeof games;
 }>;
 

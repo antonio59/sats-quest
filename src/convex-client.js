@@ -109,6 +109,9 @@ window.SATClient = (function() {
         try {
           const r = await convexClient.mutation("auth:signUp", { name: cleanName, pinHash });
           if (r.error) return r;
+          // New accounts sit pending until the site owner approves via email —
+          // no session is created until first successful login after that.
+          if (r.pending) return { pending: true, name: r.name };
           await migrateLocalData(cleanName, r.playerId);
           const player = sessionFor({ ...r, xp: 0, level: 1, streak: 1 });
           localStorage.setItem('sq_session', JSON.stringify(player));

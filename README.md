@@ -22,7 +22,9 @@ Gamified KS2 SATs revision that feels like a game, not homework.
 ## Tech Stack
 - **Frontend:** Pure HTML/CSS/JS (no framework)
 - **Backend:** Convex (real-time database)
-- **Hosting:** Cloudflare Pages + Pages Functions (`/api/report` via Resend)
+- **Hosting:** Cloudflare Pages + Pages Functions (`/api/report` bug reports, `/api/signup-notify` + `/api/approve` signup approval via Resend)
+
+New signups are held as `pending` until approved — the owner gets an email with approve/deny links.
 
 ## Setup
 ```bash
@@ -38,6 +40,7 @@ wrangler pages deploy . --project-name sats-quest
 ```
 
 Secrets (Cloudflare Pages → Settings → Environment variables):
-- `RESEND_API_KEY` — for the `/api/report` bug-report function
+- `RESEND_API_KEY` — for `/api/report` + `/api/signup-notify` emails
+- `APPROVAL_KEY` — shared secret authorising approval requests (also set on Convex: `npx convex env set APPROVAL_KEY …`)
 
 Local Convex env lives in `.env.local` (gitignored).

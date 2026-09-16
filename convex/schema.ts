@@ -21,6 +21,8 @@ export default defineSchema({
     totalCorrect: v.optional(v.number()),
     failedLogins: v.optional(v.number()),
     lockedUntil: v.optional(v.number()),
+    // Approval gate for new signups — absent on legacy rows means "approved".
+    status: v.optional(v.union(v.literal("pending"), v.literal("approved"))),
   }).index("by_name", ["nameLower"]),
 
   // Player answers — stores a snapshot of the question so review works without

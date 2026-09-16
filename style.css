@@ -214,6 +214,8 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin
 .profile-card:active { transform: var(--block-press); box-shadow: 0 1px 0 var(--ink); }
 .profile-card-emoji { font-size: 3rem; display: block; margin-bottom: 8px; }
 .profile-card-name { font-size: 1.05rem; font-weight: 700; color: #fff; text-transform: capitalize; font-family: var(--font-display); text-shadow: 0 2px 0 rgba(0,0,0,0.18); }
+.profile-card.pending { filter: grayscale(0.45) opacity(0.85); }
+.profile-card-pending { display: inline-block; margin-top: 6px; font-size: 0.72rem; font-weight: 800; color: #fff; background: rgba(0,0,0,0.28); border-radius: 999px; padding: 3px 10px; }
 .btn-new-player {
   background: var(--card); border: 3px dashed var(--text-muted); color: var(--text-dim);
   padding: 14px 28px; border-radius: var(--radius-sm); cursor: pointer;
@@ -279,6 +281,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin
 .signup-input::placeholder { color: var(--text-muted); font-weight: 400; }
 .auth-hint { color: var(--text-muted); font-size: 0.82rem; text-align: center; font-weight: 600; }
 .auth-error { color: var(--danger); font-size: 0.92rem; text-align: center; min-height: 1.2em; margin-top: 8px; font-weight: 700; }
+.auth-error.auth-success { color: var(--success); }
 
 /* ===== DASHBOARD ===== */
 .dash-header {
