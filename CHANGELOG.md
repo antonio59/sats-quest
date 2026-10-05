@@ -249,6 +249,7 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Chores
 
+- **deps-dev**: Bump globals (#13)
 - **deps-dev**: Bump eslint in the minor-patch group (#12)
 - **deps**: Bump convex from 1.45.0 to 1.46.0 in the minor-patch group (#11)
 - **deps-dev**: Bump eslint in the minor-patch group (#10)
@@ -263,6 +264,7 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
