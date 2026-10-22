@@ -1,14 +1,16 @@
 // Auth functions — PINs are handled as SHA-256 hashes computed client-side.
 // The server only ever sees/stores the hash; a legacy plaintext `pin` value in
 // the database is transparently upgraded to a hash on next successful login.
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { v } from "convex/values";
+import { randomHex, SESSION_TTL_MS, sha256Hex } from "./security";
 
 const AVATARS = ['🦊','🐱','🐶','🦁','🐼','🐨','🦄','🐸','🐙','🦋','🐢','🦖','🐧','🦜','🐝','🦉','🐯','🐲','🐵'];
 
 const NAME_RE = /^[\p{L}][\p{L} .'-]{0,23}$/u;
 const HASH_RE = /^[0-9a-f]{64}$/;
+const TOKEN_RE = /^[0-9a-f]{64}$/i;
 
 function validName(name: string): boolean {
   return NAME_RE.test(name);
@@ -28,7 +30,7 @@ async function findPlayerByName(ctx: any, nameLower: string) {
 
 // Remove a player and every row attached to them.
 async function deletePlayerData(ctx: any, playerId: any) {
-  for (const table of ["progress", "answers", "achievements"]) {
+  for (const table of ["progress", "answers", "achievements", "approvalTokens"]) {
     const rows = await ctx.db
       .query(table)
       .withIndex("by_player", (q: any) => q.eq("playerId", playerId))
@@ -91,19 +93,60 @@ export const signUp = mutation({
   },
 });
 
-// Called by the /api/approve Pages Function after it verifies the shared key.
-// The key check is repeated here so the public mutation can't be driven directly.
+// Store the hash of a single-use approval token minted by emails.notifySignup.
+// Replaces any earlier unused token for this player so only the latest email works.
+export const issueApprovalToken = internalMutation({
+  args: {
+    playerId: v.id("players"),
+    tokenHash: v.string(),
+    expiresAt: v.number(),
+  },
+  handler: async (ctx, args) => {
+    if (!HASH_RE.test(args.tokenHash) || args.expiresAt < Date.now()) {
+      return { error: "Bad token." };
+    }
+    const player = await ctx.db.get(args.playerId);
+    if (!player || player.status !== "pending") return { error: "Not pending." };
+    const existing = await ctx.db
+      .query("approvalTokens")
+      .withIndex("by_player", q => q.eq("playerId", args.playerId))
+      .collect();
+    for (const row of existing) await ctx.db.delete(row._id);
+    await ctx.db.insert("approvalTokens", {
+      playerId: args.playerId,
+      tokenHash: args.tokenHash,
+      expiresAt: args.expiresAt,
+    });
+    return { ok: true as const };
+  },
+});
+
+// Called by the /api/approve Pages Function. The emailed link carries a
+// per-player token, not APPROVAL_KEY. The token is single-use and expiring;
+// consuming it is the authorisation for this public mutation.
 export const moderateSignup = mutation({
   args: {
     playerId: v.id("players"),
-    key: v.string(),
+    token: v.string(),
     action: v.union(v.literal("approve"), v.literal("deny")),
   },
   handler: async (ctx, args) => {
-    const expected = process.env.APPROVAL_KEY;
-    if (!expected || args.key !== expected) {
-      return { error: "Invalid approval key." };
+    const invalid = { error: "This approval link isn't valid anymore. Ask for a fresh signup notification." };
+    if (!TOKEN_RE.test(args.token)) return invalid;
+    const tokenHash = await sha256Hex(args.token.toLowerCase());
+    const row = await ctx.db
+      .query("approvalTokens")
+      .withIndex("by_token_hash", q => q.eq("tokenHash", tokenHash))
+      .unique();
+    if (!row || row.expiresAt < Date.now()) {
+      if (row) await ctx.db.delete(row._id);
+      return invalid;
     }
+    // A wrong player id must not burn a token the caller merely guessed an id for.
+    if (row.playerId !== args.playerId) return invalid;
+    // Single-use: delete before the side effect. The mutation commits together.
+    await ctx.db.delete(row._id);
+
     const player = await ctx.db.get(args.playerId);
     if (!player) return { error: "Player not found — maybe already removed." };
     if (player.status !== "pending") {
@@ -141,8 +184,8 @@ export const logIn = mutation({
   args: {
     name: v.string(),
     pinHash: v.string(),
-    // Legacy accounts stored a plaintext 6-digit PIN. The client still sends it
-    // once so the server can verify-and-upgrade those rows to hashed storage.
+    // Legacy accounts stored a plaintext 6-digit PIN. The client sends this
+    // only after a `{ legacy: true }` response, and only for those rows.
     pin: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
@@ -159,40 +202,41 @@ export const logIn = mutation({
       return { error: `Too many tries — wait ${wait}s and try again!` };
     }
 
-    if (player.pinHash === args.pinHash) {
-      // good — hashed login
-    } else if (
-      // Legacy plaintext row: `pin` holds the raw 6-digit code, `pinHash` is
-      // absent. Verify against the raw PIN, then upgrade to hashed storage and
-      // drop the plaintext field (patching a field to undefined removes it).
-      player.pin && /^\d{6}$/.test(player.pin) && args.pin === player.pin
-    ) {
-      if (HASH_RE.test(args.pinHash)) {
-        await ctx.db.patch(player._id, {
-          pinHash: args.pinHash,
-          pin: undefined,
-          nameLower: name.toLowerCase(),
-        });
+    const storedHash = player.pinHash ?? "";
+    const hashOk = HASH_RE.test(args.pinHash) && storedHash === args.pinHash;
+    // Legacy plaintext row: `pin` holds the raw code and pinHash is absent.
+    const legacyPlain = typeof player.pin === "string" && /^\d{6}$/.test(player.pin);
+    // Transitional row: pinHash itself still holds the raw 6-digit code.
+    const legacyTransitional = !player.pin && /^\d{6}$/.test(storedHash);
+    const legacyRow = legacyPlain || legacyTransitional;
+    const pinProvided = typeof args.pin === "string" && args.pin.length > 0;
+
+    if (!hashOk) {
+      // Don't count the hash-only probe as a failure — the client retries once
+      // with the raw PIN, and only for rows that are actually still legacy.
+      if (legacyRow && !pinProvided) return { legacy: true as const };
+
+      const pinOk = HASH_RE.test(args.pinHash) && (
+        (legacyPlain && args.pin === player.pin) ||
+        (legacyTransitional && args.pin === storedHash)
+      );
+      if (!pinOk) {
+        const fails = (player.failedLogins ?? 0) + 1;
+        const patch: Record<string, number> = { failedLogins: fails };
+        if (fails >= 5) {
+          const lockMs = Math.min(60_000 * Math.pow(2, Math.floor(fails / 5) - 1), 3_600_000);
+          patch.lockedUntil = now + lockMs;
+        }
+        await ctx.db.patch(player._id, patch);
+        return { error: "Wrong passcode!" };
       }
-    } else if (
-      // Transitional row: pinHash still literally contains a plaintext PIN.
-      !player.pin && /^\d{6}$/.test(player.pinHash ?? "") && args.pin === player.pinHash
-    ) {
-      if (HASH_RE.test(args.pinHash)) {
-        await ctx.db.patch(player._id, {
-          pinHash: args.pinHash,
-          nameLower: player.nameLower ?? name.toLowerCase(),
-        });
-      }
-    } else {
-      const fails = (player.failedLogins ?? 0) + 1;
-      const patch: Record<string, number> = { failedLogins: fails };
-      if (fails >= 5) {
-        const lockMs = Math.min(60_000 * Math.pow(2, Math.floor(fails / 5) - 1), 3_600_000);
-        patch.lockedUntil = now + lockMs;
-      }
-      await ctx.db.patch(player._id, patch);
-      return { error: "Wrong passcode!" };
+      // Verify-and-upgrade: store the hash and drop the plaintext field
+      // (patching a field to undefined removes it).
+      await ctx.db.patch(player._id, {
+        pinHash: args.pinHash,
+        pin: undefined,
+        nameLower: player.nameLower ?? name.toLowerCase(),
+      });
     }
 
     // Correct PIN but the account is still awaiting owner approval.
@@ -206,11 +250,15 @@ export const logIn = mutation({
     if (player.lastActiveDate === yesterday) newStreak++;
     else if (player.lastActiveDate !== today) newStreak = 1;
 
+    const sessionSecret = randomHex(32);
+    const sessionSecretHash = await sha256Hex(sessionSecret);
     await ctx.db.patch(player._id, {
       lastActiveDate: today,
       streak: newStreak,
       failedLogins: 0,
       lockedUntil: 0,
+      sessionSecretHash,
+      sessionExpiresAt: now + SESSION_TTL_MS,
       ...(player.nameLower ? {} : { nameLower: name.toLowerCase() }),
     });
 
@@ -222,6 +270,7 @@ export const logIn = mutation({
       level: player.level,
       streak: newStreak,
       theme: player.theme,
+      sessionSecret,
     };
   },
 });

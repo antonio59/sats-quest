@@ -2,6 +2,56 @@
 // Sends bug reports via the Resend API. Set RESEND_API_KEY as a Pages secret.
 
 const MAX_DESCRIPTION = 4000;
+const IP_LIMIT = 10;
+const IP_WINDOW_MS = 15 * 60 * 1000;
+const GLOBAL_LIMIT = 30;
+const GLOBAL_WINDOW_MS = 15 * 60 * 1000;
+
+// Per-isolate window. Enough to stop a script from draining Resend; a shared
+// store would be stronger, but Pages has no KV binding for this route.
+const buckets = new Map();
+
+function pruneBuckets(now) {
+  if (buckets.size < 500) return;
+  for (const [key, entry] of buckets) {
+    if (entry.resetAt <= now) buckets.delete(key);
+  }
+}
+
+function isRateLimited(key, limit, windowMs) {
+  const now = Date.now();
+  pruneBuckets(now);
+  const entry = buckets.get(key);
+  if (!entry || entry.resetAt <= now) {
+    buckets.set(key, { count: 1, resetAt: now + windowMs });
+    return false;
+  }
+  entry.count += 1;
+  return entry.count > limit;
+}
+
+function clientIp(request) {
+  const cf = request.headers.get('CF-Connecting-IP');
+  if (cf) return cf.trim();
+  const forwarded = request.headers.get('x-forwarded-for');
+  if (forwarded) return forwarded.split(',')[0].trim();
+  return 'unknown';
+}
+
+// Browser bug reports are same-origin fetches. A secret baked into the static
+// client would not be a server-side secret, so require the calling origin and
+// a rate limit before anything is sent through Resend.
+function isSameOrigin(request) {
+  const requestOrigin = new URL(request.url).origin;
+  const origin = request.headers.get('Origin');
+  if (!origin) return false;
+  let declared;
+  try { declared = new URL(origin).origin; } catch { return false; }
+  if (declared !== requestOrigin) return false;
+  const fetchSite = request.headers.get('Sec-Fetch-Site');
+  if (fetchSite && fetchSite !== 'same-origin') return false;
+  return true;
+}
 
 function escHtml(s) {
   return String(s ?? '').replace(/[&<>"']/g, c => ({
@@ -22,6 +72,15 @@ export async function onRequestPost(context) {
   if (!env.RESEND_API_KEY) {
     console.error('RESEND_API_KEY is not configured');
     return json({ error: 'Report service unavailable' }, 503);
+  }
+
+  if (!isSameOrigin(request)) {
+    return json({ error: 'Forbidden' }, 403);
+  }
+
+  const ip = clientIp(request);
+  if (isRateLimited(`ip:${ip}`, IP_LIMIT, IP_WINDOW_MS) || isRateLimited('global', GLOBAL_LIMIT, GLOBAL_WINDOW_MS)) {
+    return json({ error: 'Too many reports — try again later' }, 429);
   }
 
   let body;

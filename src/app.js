@@ -62,6 +62,9 @@
   };
 
   let player = null;
+  // Bumped when another tab logs out or switches player, so an in-flight
+  // answer can't award XP to whoever the session belongs to afterwards.
+  let sessionGeneration = 0;
   let currentWorld = null;
   let questionsAnswered = 0;
   let sessionCorrect = 0;
@@ -87,8 +90,13 @@
   // Track per-game intervals so they can be cleared when leaving a screen —
   // prevents orphaned timers from ticking (and firing alerts) after exit.
   let gameTimers = [];
+  let gamePlayerId = null;
   function trackTimer(id) { gameTimers.push(id); return id; }
   function clearGameTimers() { gameTimers.forEach(clearInterval); gameTimers = []; }
+  function noteGamePlayer() { gamePlayerId = player?.playerId || null; }
+  function gameStillCurrent() {
+    return !!(gamePlayerId && player && player.playerId === gamePlayerId);
+  }
 
   function showScreen(name) {
     clearGameTimers();
@@ -291,10 +299,57 @@
   });
 
   // ===== DASHBOARD =====
+  // Another tab logged in, logged out, or switched player. Don't keep playing
+  // as the in-memory user, and don't write that user back over storage.
+  function applyExternalSession(session) {
+    const previousId = player?.playerId || null;
+    const nextId = session?.playerId || null;
+    if (previousId !== nextId) sessionGeneration++;
+    if (!session || !session.playerId) {
+      if (!player) return;
+      player = null;
+      showScreen('landing');
+      return;
+    }
+    const switched = previousId !== nextId;
+    const xp = switched ? (session.xp || 0) : Math.max(player?.xp || 0, session.xp || 0);
+    player = {
+      ...(switched ? {} : player),
+      ...session,
+      xp,
+      level: Math.min(MAX_LEVEL, Math.floor(xp / XP_PER_LEVEL) + 1),
+    };
+    if (switched || screens.landing.classList.contains('active') || screens.auth.classList.contains('active')) {
+      showScreen('dashboard');
+      return;
+    }
+    if (screens.dashboard.classList.contains('active')) refreshDashboard();
+  }
+
+  // XP updates from this tab. A stale tab (storage player changed, or the
+  // session was cleared) bails out instead of overwriting sq_session.
+  function persistPlayer() {
+    if (!player || !player.playerId) return false;
+    const saved = db.writeSession(player);
+    if (!saved) return false;
+    player = saved;
+    return true;
+  }
+
   function refreshDashboard() {
     if (!player) return;
-    const session = JSON.parse(localStorage.getItem('sq_session') || '{}');
-    player = { ...player, ...session };
+    const session = db.readSession();
+    if (!session || session.playerId !== player.playerId) {
+      applyExternalSession(session);
+      return;
+    }
+    const xp = Math.max(player.xp || 0, session.xp || 0);
+    player = {
+      ...player,
+      ...session,
+      xp,
+      level: Math.min(MAX_LEVEL, Math.floor(xp / XP_PER_LEVEL) + 1),
+    };
 
     els.dashAvatar.textContent = player.avatar || '🚀';
     els.dashName.textContent = player.name;
@@ -332,6 +387,7 @@
     currentWorld = world;
     questionsAnswered = 0;
     sessionCorrect = 0;
+    noteGamePlayer();
     showScreen('game');
     await loadNextQuestion();
   }
@@ -469,7 +525,10 @@
     btns.forEach(b => b.disabled = true);
 
     const qId = currentQuestion._id || currentQuestion._hash;
-    const result = await db.submitAnswer(player.playerId, qId, selectedIndex, timeMs, player.streak || 0);
+    const answeredAs = player.playerId;
+    const generation = sessionGeneration;
+    const result = await db.submitAnswer(answeredAs, qId, selectedIndex, timeMs, player.streak || 0);
+    if (!player || player.playerId !== answeredAs || generation !== sessionGeneration) return;
 
     // Highlight correct/wrong for standard MC and true-false
     if (btns[selectedIndex]) btns[selectedIndex].classList.add(result.correct ? 'correct' : 'wrong');
@@ -498,6 +557,7 @@
   }
 
   function handleAnswerCommon(result) {
+    if (!gameStillCurrent()) return;
     questionsAnswered++;
 
     // XP popup
@@ -512,7 +572,7 @@
       // Update session XP
       player.xp = (player.xp || 0) + result.xpGain;
       player.level = Math.min(MAX_LEVEL, Math.floor(player.xp / XP_PER_LEVEL) + 1);
-      localStorage.setItem('sq_session', JSON.stringify(player));
+      if (!persistPlayer()) return;
     }
 
     // Daily challenge
@@ -677,6 +737,7 @@
   });
 
   function startExamFromDashboard(world) {
+    noteGamePlayer();
     const config = window.ExamEngine.getExamConfig(world);
     examState.questions = window.ExamEngine.selectQuestions(world, config.questions);
     examState.answers = new Array(examState.questions.length).fill(-1);
@@ -810,7 +871,7 @@
 
   function startExamTimer() {
     const totalMs = examState.config.timeMinutes * 60 * 1000;
-    examState.timerInterval = setInterval(() => {
+    examState.timerInterval = trackTimer(setInterval(() => {
       examState.elapsed = Date.now() - examState.startTime;
       const remaining = Math.max(0, totalMs - examState.elapsed);
       const mins = Math.floor(remaining / 60000);
@@ -820,7 +881,7 @@
         document.getElementById('exam-timer').style.color = 'var(--danger)';
         finishExam();
       }
-    }, 1000);
+    }, 1000));
   }
 
   // Shared grading for all exam question types — text answers use the same
@@ -840,6 +901,8 @@
 
   function finishExam() {
     clearInterval(examState.timerInterval);
+    examState.timerInterval = null;
+    if (!gameStillCurrent()) return;
     document.getElementById('exam-active-screen').classList.remove('active');
 
     // Score — shared grading for all question types
@@ -855,7 +918,7 @@
     const xpEarned = correct * 15;
     player.xp = (player.xp || 0) + xpEarned;
     player.level = Math.min(MAX_LEVEL, Math.floor(player.xp / XP_PER_LEVEL) + 1);
-    localStorage.setItem('sq_session', JSON.stringify(player));
+    if (!persistPlayer()) return;
 
     // Results screen
     document.getElementById('exam-results-screen').classList.add('active');
@@ -1074,6 +1137,7 @@
   }
 
   function startSpeedMath() {
+    noteGamePlayer();
     showScreen('game');
     els.backBtn.onclick = () => showScreen('dashboard');
     els.questionPassage.classList.add('hidden');
@@ -1144,10 +1208,11 @@
 
   function finishSpeedMath(score, total) {
     clearGameTimers();
+    if (!gameStillCurrent()) return;
     const xpEarned = score * 5;
     player.xp = (player.xp || 0) + xpEarned;
     player.level = Math.min(MAX_LEVEL, Math.floor(player.xp / XP_PER_LEVEL) + 1);
-    localStorage.setItem('sq_session', JSON.stringify(player));
+    if (!persistPlayer()) return;
     if (score >= 10) localStorage.setItem('sq_badge_speed-demon', 'true');
     checkAchievements();
     showScreen('dashboard');
@@ -1163,6 +1228,7 @@
 
   // ===== WORD SCRAMBLE =====
   function startWordScramble() {
+    noteGamePlayer();
     showScreen('game');
     els.backBtn.onclick = () => showScreen('dashboard');
     els.questionPassage.classList.add('hidden');
@@ -1235,10 +1301,11 @@
 
   function finishWordScramble(score, total) {
     clearGameTimers();
+    if (!gameStillCurrent()) return;
     const xpEarned = score * 8;
     player.xp = (player.xp || 0) + xpEarned;
     player.level = Math.min(MAX_LEVEL, Math.floor(player.xp / XP_PER_LEVEL) + 1);
-    localStorage.setItem('sq_session', JSON.stringify(player));
+    if (!persistPlayer()) return;
     if (score >= 8) localStorage.setItem('sq_badge_word-wizard', 'true');
     checkAchievements();
     showScreen('dashboard');
@@ -1254,6 +1321,7 @@
 
   // ===== BOSS BATTLE =====
   function startBossBattle() {
+    noteGamePlayer();
     showScreen('game');
     els.backBtn.onclick = () => showScreen('dashboard');
     els.questionPassage.classList.add('hidden');
@@ -1356,9 +1424,10 @@
   }
 
   function finishBossBattle(hits, total, xpEarned, boss) {
+    if (!gameStillCurrent()) return;
     player.xp = (player.xp || 0) + xpEarned;
     player.level = Math.min(MAX_LEVEL, Math.floor(player.xp / XP_PER_LEVEL) + 1);
-    localStorage.setItem('sq_session', JSON.stringify(player));
+    if (!persistPlayer()) return;
     if (hits >= total) localStorage.setItem('sq_badge_boss-slayer', 'true');
     checkAchievements();
     showScreen('dashboard');
@@ -1455,10 +1524,21 @@
 
   // ===== INIT =====
   function init() {
-    const session = JSON.parse(localStorage.getItem('sq_session') || 'null');
+    db.onSessionChange(applyExternalSession);
+    const session = db.readSession();
     if (session && session.playerId) {
-      player = session;
-      showScreen('dashboard');
+      // Cloud accounts minted before session secrets existed cannot call
+      // player-scoped mutations. Drop the stale session so the next login
+      // issues a secret instead of silently skipping the server.
+      const cloudPlayer = typeof session.playerId === 'string' && !session.playerId.startsWith('p_');
+      if (cloudPlayer && !session.sessionSecret) {
+        db.logout();
+        player = null;
+        showScreen('landing');
+      } else {
+        player = session;
+        showScreen('dashboard');
+      }
     } else {
       showScreen('landing');
     }
