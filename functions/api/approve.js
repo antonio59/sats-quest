@@ -1,8 +1,9 @@
 // Cloudflare Pages Function — GET /api/approve
 // Owner-facing approval endpoint linked from signup notification emails.
-// Step 1 (?id&key&a=approve|deny) renders a confirm page so email link
+// Step 1 (?id&token&a=approve|deny) renders a confirm page so email link
 // scanners can't auto-approve. Step 2 (&confirm=1) calls the Convex
-// auth:moderateSignup mutation, which re-verifies APPROVAL_KEY server-side.
+// auth:moderateSignup mutation, which checks the single-use token server-side.
+// The link never carries APPROVAL_KEY.
 
 const CONVEX_MUTATION_URL = 'https://combative-viper-883.eu-west-1.convex.cloud/api/mutation';
 
@@ -32,30 +33,32 @@ function page(title, bodyHtml) {
 </head>
 <body><div class="card">${bodyHtml}</div></body>
 </html>`, {
-    headers: { 'Content-Type': 'text/html; charset=utf-8' },
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+      // The token is in the query string — don't leak it via Referer or caches.
+      'Referrer-Policy': 'no-referrer',
+      'Cache-Control': 'no-store',
+    },
   });
 }
 
 export async function onRequestGet(context) {
-  const { env, request } = context;
+  const { request } = context;
   const url = new URL(request.url);
   const id = url.searchParams.get('id') || '';
-  const key = url.searchParams.get('key') || '';
+  const token = url.searchParams.get('token') || '';
   const action = url.searchParams.get('a') || '';
   const confirm = url.searchParams.get('confirm') === '1';
   const name = escHtml(String(url.searchParams.get('name') || 'this player').slice(0, 30));
 
-  if (!env.APPROVAL_KEY || key !== env.APPROVAL_KEY) {
+  if (!/^[a-z0-9]+$/i.test(id) || !/^[0-9a-f]{64}$/i.test(token) || (action !== 'approve' && action !== 'deny')) {
     return page('Invalid link', '<h1>🔒 Invalid link</h1><p>This approval link isn\'t valid. Ask for a fresh signup notification.</p>');
-  }
-  if (!/^[a-z0-9]+$/i.test(id) || (action !== 'approve' && action !== 'deny')) {
-    return page('Invalid link', '<h1>🔒 Invalid link</h1><p>This approval link is malformed.</p>');
   }
 
   if (!confirm) {
     const verb = action === 'approve' ? 'approve' : 'deny and delete';
     const colour = action === 'approve' ? 'btn-approve' : 'btn-deny';
-    const qs = `id=${encodeURIComponent(id)}&key=${encodeURIComponent(key)}&a=${action}&confirm=1`;
+    const qs = `id=${encodeURIComponent(id)}&token=${encodeURIComponent(token)}&a=${action}&confirm=1`;
     return page('Confirm', `
       <h1>🚀 SATs Quest</h1>
       <p>Really <strong>${verb}</strong> the account for <strong>${name}</strong>?</p>
@@ -70,7 +73,7 @@ export async function onRequestGet(context) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         path: 'auth:moderateSignup',
-        args: { playerId: id, key, action },
+        args: { playerId: id, token, action },
       }),
     });
     result = await res.json();

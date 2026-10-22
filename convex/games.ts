@@ -3,13 +3,36 @@
 // with each answer so review works offline of any server-side question table.
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { sha256Hex, timingSafeEqual } from "./security";
 
 const MAX_LEVEL = 5;
 const XP_PER_LEVEL = 400;
 const WORLDS = new Set(["reading", "writing", "math"]);
 
+const SESSION_EXPIRED = "Session expired — log in again.";
+
+// Player-scoped writes must present the secret issued by auth.logIn.
+// The hash lives on the player row; a mismatch looks the same as expiry.
+async function requireSession(ctx: { db: { get: (id: any) => Promise<any> } }, playerId: any, sessionSecret: string) {
+  if (typeof sessionSecret !== "string" || sessionSecret.length < 32 || sessionSecret.length > 128) {
+    return { error: SESSION_EXPIRED, player: null };
+  }
+  const player = await ctx.db.get(playerId);
+  if (!player) return { error: "Player not found", player: null };
+  const expiresAt = player.sessionExpiresAt ?? 0;
+  if (!player.sessionSecretHash || expiresAt < Date.now()) {
+    return { error: SESSION_EXPIRED, player: null };
+  }
+  const hash = await sha256Hex(sessionSecret);
+  if (!timingSafeEqual(hash, player.sessionSecretHash)) {
+    return { error: SESSION_EXPIRED, player: null };
+  }
+  return { error: null, player };
+}
+
 const answerArgs = {
   playerId: v.id("players"),
+  sessionSecret: v.string(),
   questionRef: v.string(),
   world: v.string(),
   question: v.string(),
@@ -30,8 +53,9 @@ const answerArgs = {
 export const recordAnswer = mutation({
   args: answerArgs,
   handler: async (ctx, args) => {
-    const player = await ctx.db.get(args.playerId);
-    if (!player) return { error: "Player not found" };
+    const gate = await requireSession(ctx, args.playerId, args.sessionSecret);
+    if (gate.error || !gate.player) return { error: gate.error ?? "Session expired — log in again." };
+    const player = gate.player;
     if (!WORLDS.has(args.world)) return { error: "Unknown world" };
     if (args.question.length > 2000 || args.explanation.length > 2000) {
       return { error: "Question data too large" };
@@ -168,6 +192,7 @@ export const getRecentAnswers = query({
 export const migrateProgress = mutation({
   args: {
     playerId: v.id("players"),
+    sessionSecret: v.string(),
     world: v.string(),
     currentLevel: v.number(),
     xpInWorld: v.number(),
@@ -176,8 +201,8 @@ export const migrateProgress = mutation({
     bestStreak: v.number(),
   },
   handler: async (ctx, args) => {
-    const player = await ctx.db.get(args.playerId);
-    if (!player) return { error: "Player not found" };
+    const gate = await requireSession(ctx, args.playerId, args.sessionSecret);
+    if (gate.error || !gate.player) return { error: gate.error ?? "Session expired — log in again." };
     if (!WORLDS.has(args.world)) return { error: "Unknown world" };
 
     const clamp = (n: number, lo: number, hi: number) =>
@@ -216,6 +241,7 @@ export const migrateProgress = mutation({
 export const migrateAnswers = mutation({
   args: {
     playerId: v.id("players"),
+    sessionSecret: v.string(),
     answers: v.array(v.object({
       question: v.string(),
       questionRef: v.string(),
@@ -230,8 +256,8 @@ export const migrateAnswers = mutation({
     })),
   },
   handler: async (ctx, args) => {
-    const player = await ctx.db.get(args.playerId);
-    if (!player) return { error: "Player not found" };
+    const gate = await requireSession(ctx, args.playerId, args.sessionSecret);
+    if (gate.error || !gate.player) return { error: gate.error ?? "Session expired — log in again." };
     let count = 0;
     for (const a of args.answers.slice(0, 50)) {
       if (!WORLDS.has(a.world)) continue;

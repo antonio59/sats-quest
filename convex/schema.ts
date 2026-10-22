@@ -23,7 +23,21 @@ export default defineSchema({
     lockedUntil: v.optional(v.number()),
     // Approval gate for new signups — absent on legacy rows means "approved".
     status: v.optional(v.union(v.literal("pending"), v.literal("approved"))),
+    // SHA-256 of the session secret issued at login. Player-scoped mutations
+    // must present the raw secret; it is never stored or returned again.
+    sessionSecretHash: v.optional(v.string()),
+    sessionExpiresAt: v.optional(v.number()),
   }).index("by_name", ["nameLower"]),
+
+  // Single-use signup approval tokens. Only the SHA-256 of the emailed token
+  // is stored, bound to one pending player, and deleted when consumed.
+  approvalTokens: defineTable({
+    playerId: v.id("players"),
+    tokenHash: v.string(),
+    expiresAt: v.number(),
+  })
+    .index("by_token_hash", ["tokenHash"])
+    .index("by_player", ["playerId"]),
 
   // Player answers — stores a snapshot of the question so review works without
   // a server-side question bank (the canonical bank ships with the client).
