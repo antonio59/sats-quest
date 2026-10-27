@@ -38,6 +38,67 @@ window.SATClient = (function() {
 
   const AVATARS = ['🦊','🐱','🐶','🦁','🐼','🐨','🦄','🐸','🐙','🦋','🐢','🦖','🐧','🦜','🐝','🦉','🐯','🐲','🐵'];
   const WORLDS = ['reading', 'writing', 'math'];
+  const sessionListeners = new Set();
+
+  function readStoredSession() {
+    try {
+      const raw = localStorage.getItem('sq_session');
+      if (!raw) return null;
+      const session = JSON.parse(raw);
+      return session && typeof session === 'object' ? session : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function emitSession(session) {
+    for (const fn of sessionListeners) {
+      try { fn(session); } catch (e) { console.warn(e); }
+    }
+  }
+
+  // authoritative: this tab just logged in, signed up, or logged out.
+  // Otherwise refuse to write when storage no longer holds this player —
+  // a background tab must not resurrect a session another tab replaced.
+  function commitSession(next, opts = {}) {
+    const authoritative = !!opts.authoritative;
+    const current = readStoredSession();
+    if (!next) {
+      if (!authoritative) {
+        emitSession(current && current.playerId ? current : null);
+        return null;
+      }
+      localStorage.removeItem('sq_session');
+      return null;
+    }
+    if (!authoritative) {
+      if (!current || current.playerId !== next.playerId) {
+        emitSession(current && current.playerId ? current : null);
+        return null;
+      }
+      const xp = Math.max(Number(current.xp) || 0, Number(next.xp) || 0);
+      next = {
+        ...current,
+        xp,
+        level: Math.min(5, Math.floor(xp / 400) + 1),
+        sessionRev: Date.now(),
+      };
+      if (current.sessionSecret) next.sessionSecret = current.sessionSecret;
+    } else {
+      next = { ...next, sessionRev: Date.now() };
+    }
+    localStorage.setItem('sq_session', JSON.stringify(next));
+    return next;
+  }
+
+  window.addEventListener('storage', (e) => {
+    if (e.key !== 'sq_session') return;
+    let next = null;
+    if (e.newValue) {
+      try { next = JSON.parse(e.newValue); } catch { next = null; }
+    }
+    emitSession(next && next.playerId ? next : null);
+  });
 
   async function hashPin(pin) {
     if (window.crypto?.subtle) {
@@ -60,11 +121,20 @@ window.SATClient = (function() {
   }
 
   function sessionFor(p) {
-    // Never persist passcode material in the session.
-    return {
+    // Never persist the PIN. The session secret is the login credential for
+    // player-scoped mutations and has to survive a refresh.
+    const session = {
       playerId: p.playerId, name: p.name, avatar: p.avatar,
       xp: p.xp || 0, level: p.level || 1, streak: p.streak || 1,
     };
+    if (p.sessionSecret) session.sessionSecret = p.sessionSecret;
+    return session;
+  }
+
+  function sessionSecretFor(playerId) {
+    const session = readStoredSession();
+    if (!session || session.playerId !== playerId || !session.sessionSecret) return null;
+    return session.sessionSecret;
   }
 
   // Merge server progress into local cache (max-wins per field).
@@ -89,6 +159,12 @@ window.SATClient = (function() {
   return {
     isConnected() { return convexLoaded; },
     getConvexUrl() { return CONVEX_URL; },
+    readSession() { return readStoredSession(); },
+    writeSession(next, opts) { return commitSession(next, opts); },
+    onSessionChange(fn) {
+      sessionListeners.add(fn);
+      return () => sessionListeners.delete(fn);
+    },
 
     async getAllPlayers() {
       await loadConvex();
@@ -114,7 +190,7 @@ window.SATClient = (function() {
           if (r.pending) return { pending: true, name: r.name };
           await migrateLocalData(cleanName, r.playerId);
           const player = sessionFor({ ...r, xp: 0, level: 1, streak: 1 });
-          localStorage.setItem('sq_session', JSON.stringify(player));
+          commitSession(player, { authoritative: true });
           return player;
         } catch(e) { console.error('Convex signUp error:', e); }
       }
@@ -128,7 +204,7 @@ window.SATClient = (function() {
       };
       local._set('players', players);
       const player = sessionFor({ playerId: id, name: cleanName, avatar });
-      localStorage.setItem('sq_session', JSON.stringify(player));
+      commitSession(player, { authoritative: true });
       const progress = local._get(`progress_${id}`) || {};
       for (const w of WORLDS) {
         if (!progress[w]) progress[w] = { level: 1, xp: 0, answered: 0, correct: 0 };
@@ -143,10 +219,16 @@ window.SATClient = (function() {
       await loadConvex();
       if (convexLoaded && convexClient) {
         try {
-          const r = await convexClient.mutation("auth:logIn", { name: cleanName, pinHash, pin });
-          if (r.error) return r;
+          // Hash first. The raw PIN is sent only when the row is still legacy.
+          let r = await convexClient.mutation("auth:logIn", { name: cleanName, pinHash });
+          if (r?.error) return r;
+          if (r?.legacy) {
+            r = await convexClient.mutation("auth:logIn", { name: cleanName, pinHash, pin });
+            if (r?.error) return r;
+          }
+          if (!r?.playerId) return { error: 'Wrong passcode!' };
           const player = sessionFor(r);
-          localStorage.setItem('sq_session', JSON.stringify(player));
+          commitSession(player, { authoritative: true });
           // Pull server progress so a different device picks up where it left off.
           try {
             const sp = await convexClient.query("games:getProgress", { playerId: r.playerId });
@@ -170,11 +252,11 @@ window.SATClient = (function() {
         return { error: 'Wrong passcode!' };
       }
       const session = sessionFor(stored);
-      localStorage.setItem('sq_session', JSON.stringify(session));
+      commitSession(session, { authoritative: true });
       return session;
     },
 
-    logout() { localStorage.removeItem('sq_session'); },
+    logout() { commitSession(null, { authoritative: true }); },
 
     // Record an answer. Returns { correct, xpGain, correctIndex, explanation }.
     // Always updates local storage; also syncs to Convex when connected.
@@ -194,10 +276,12 @@ window.SATClient = (function() {
       const level = q?.level || 1;
       const xpGain = correct ? (level * 15) + Math.max(0, 60 - Math.floor(timeMs/1000)) : 2;
 
-      if (convexLoaded && convexClient && q) {
+      const sessionSecret = sessionSecretFor(playerId);
+      if (convexLoaded && convexClient && q && sessionSecret) {
         try {
           const r = await convexClient.mutation("games:recordAnswer", {
             playerId,
+            sessionSecret,
             questionRef: questionId || hashStr(q.question),
             world: q.world || 'reading',
             question: q.question || '',
@@ -285,10 +369,15 @@ window.SATClient = (function() {
     }
     local._set(`progress_${playerId}`, progress);
 
-    const session = JSON.parse(localStorage.getItem('sq_session') || '{}');
-    session.xp = (session.xp || 0) + xpGain;
-    session.level = Math.min(5, Math.floor(session.xp / 400) + 1);
-    localStorage.setItem('sq_session', JSON.stringify(session));
+    const session = readStoredSession();
+    if (session && session.playerId === playerId) {
+      const xp = (session.xp || 0) + xpGain;
+      commitSession({
+        ...session,
+        xp,
+        level: Math.min(5, Math.floor(xp / 400) + 1),
+      });
+    }
 
     const answers = local._get(`answers_${playerId}`) || [];
     answers.unshift({
@@ -326,6 +415,9 @@ window.SATClient = (function() {
     const localPlayer = localPlayers[normalizedName];
     if (!localPlayer || !convexClient) return;
 
+    const sessionSecret = sessionSecretFor(newPlayerId);
+    if (!sessionSecret) return;
+
     const progress = local._get(`progress_${localPlayer.playerId}`);
     if (progress) {
       for (const world of WORLDS) {
@@ -333,6 +425,7 @@ window.SATClient = (function() {
           try {
             await convexClient.mutation("games:migrateProgress", {
               playerId: newPlayerId,
+              sessionSecret,
               world,
               currentLevel: progress[world].level || 1,
               xpInWorld: progress[world].xp || 0,
@@ -350,6 +443,7 @@ window.SATClient = (function() {
       try {
         await convexClient.mutation("games:migrateAnswers", {
           playerId: newPlayerId,
+          sessionSecret,
           answers: answers.slice(0, 50).map(a => ({
             question: String(a.question || ''),
             questionRef: hashStr(String(a.question || '')),

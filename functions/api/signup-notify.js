@@ -1,7 +1,8 @@
 // Cloudflare Pages Function — POST /api/signup-notify
 // Called by the Convex emails.notifySignup action when a new player registers.
-// Sends the site owner an approval email via Resend. Requires APPROVAL_KEY
-// (Pages secret, shared with Convex) so it can't be used to spam the owner.
+// Sends the site owner an approval email via Resend. APPROVAL_KEY authenticates
+// that server-to-server call. The emailed links carry a single-use per-player
+// token minted by Convex — never APPROVAL_KEY.
 
 function escHtml(s) {
   return String(s ?? '').replace(/[&<>"']/g, c => ({
@@ -31,15 +32,20 @@ export async function onRequestPost(context) {
     return json({ error: 'Invalid JSON' }, 400);
   }
 
-  const { playerId, name, key } = body || {};
+  const { playerId, name, key, token } = body || {};
   if (key !== env.APPROVAL_KEY) return json({ error: 'Unauthorised' }, 401);
   if (typeof playerId !== 'string' || !/^[a-z0-9]+$/i.test(playerId)) {
     return json({ error: 'Invalid playerId' }, 400);
   }
+  // 32-byte hex token. Reject anything else so the master key can never be
+  // substituted into the link.
+  if (typeof token !== 'string' || !/^[0-9a-f]{64}$/i.test(token)) {
+    return json({ error: 'Invalid token' }, 400);
+  }
   const displayName = String(name || 'A new player').slice(0, 30);
 
   const base = new URL(request.url).origin;
-  const qs = `id=${encodeURIComponent(playerId)}&key=${encodeURIComponent(env.APPROVAL_KEY)}&name=${encodeURIComponent(displayName)}`;
+  const qs = `id=${encodeURIComponent(playerId)}&token=${encodeURIComponent(token)}&name=${encodeURIComponent(displayName)}`;
   const approveUrl = `${base}/api/approve?${qs}&a=approve`;
   const denyUrl = `${base}/api/approve?${qs}&a=deny`;
 
