@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Close the 22 Oct security audit findings (#16)
 - Deploy via npx wrangler — avoids pnpm blocking workerd postinstall
 - Add pnpm/node setup so wrangler-action can install wrangler
 - **validate**: Remove pnpm cache from setup-node
@@ -267,6 +268,7 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
