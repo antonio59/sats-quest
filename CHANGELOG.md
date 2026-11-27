@@ -1,6 +1,31 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project are documented here.
+
+## Release notes
+
+## [1.0.0] - 2026-11-23
+
+Initial release of SATs Quest — a gamified UK KS2 (Year 6) SATs revision app built to make daily practice feel like a game.
+
+### Learning worlds & questions
+- **Three KS2 worlds** covering **Reading**, **Grammar (GPS)**, and **Maths** with 5 difficulty levels each and over 590 questions.
+- **Varied question types** including multiple choice, true/false, multi-select, and typed answers, plus a dynamic Maths question generator for extra practice.
+- **Instant explanations & review** so players can learn from mistakes and revisit recent answers.
+
+### Games, exams & motivation
+- **Quick mini-games**: Speed Maths, Word Scramble, and 2× XP Boss Battles.
+- **Timed Exam Mode** with Reading, Grammar, Maths, and Full Mock SATs papers, score breakdowns, and answer review.
+- **Daily challenges, streaks & rewards**: earn XP, level up, keep daily 5-question streaks going, and unlock achievement badges.
+- **Progress reports** highlighting strong topics, areas to practise next, recommendations, and 7-day activity history.
+
+### Profiles, safety & polish
+- **Kid-friendly profiles & PIN login** with fun avatars, a 6-digit passcode numpad, and grown-up approval for new signups.
+- **Playful, accessible design** styled like an exercise book, optimised for phones and tablets, with keyboard focus, reduced-motion support, and a built-in "Report a Problem" button.
+- **Security and dependency updates**, including PIN hashing, session protection, login throttling, and regular package updates.
+
+## Commit log
+
 ## [Unreleased]
 
 ### Bug Fixes
@@ -271,6 +296,8 @@ Gamified SAT prep with 3 worlds (Reading, Writing, Math), 10 levels each.
 
 ### Documentation
 
+- **release**: Versioning from package.json, release notes and version in the app (#21)
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
