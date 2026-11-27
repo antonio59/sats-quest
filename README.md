@@ -44,3 +44,12 @@ Secrets (Cloudflare Pages → Settings → Environment variables):
 - `APPROVAL_KEY` — shared secret authorising approval requests (also set on Convex: `npx convex env set APPROVAL_KEY …`)
 
 Local Convex env lives in `.env.local` (gitignored).
+
+## Versioning and releases
+
+`package.json` (`version`) is the single source of truth for the app version. Running `pnpm build` (`scripts/build-pages.sh`) injects it into `dist/src/version.js` so the app shows it in the footer (falling back to `dev` when served directly without a build).
+
+To release a user-facing change:
+1. Bump `version` in `package.json` (minor for new features, patch for fixes).
+2. Add a plain-English `## [x.y.z] - YYYY-MM-DD` section under `## Release notes` in the `header` of `cliff.toml` (newest first). Do **not** edit `CHANGELOG.md` directly — it is regenerated automatically by `git-cliff` on every push to `main`.
+3. Merge to `main` — no manual git tags are needed; Cloudflare Pages deploys automatically and `CHANGELOG.md` updates from `cliff.toml`.

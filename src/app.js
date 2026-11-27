@@ -1522,8 +1522,17 @@
     }).join('');
   }
 
+  function renderAppVersion() {
+    const raw = typeof window.APP_VERSION === 'string' ? window.APP_VERSION.trim() : '';
+    const label = raw && raw !== 'dev' ? `v${raw.replace(/^v/i, '')}` : 'dev';
+    document.querySelectorAll('.app-version').forEach(el => {
+      el.textContent = label;
+    });
+  }
+
   // ===== INIT =====
   function init() {
+    renderAppVersion();
     db.onSessionChange(applyExternalSession);
     const session = db.readSession();
     if (session && session.playerId) {
